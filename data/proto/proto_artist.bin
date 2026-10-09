@@ -1,0 +1,106 @@
+
+«
+proto_artist.proto	ZeroProtoproto_type.proto"
+artist_info_c2s"›
+artist_info_s2c
+team_max (RteamMaxB
+artist_teams (2.ZeroProto.p_preset_artist_teamRartistTeams)
+items (2.ZeroProto.p_artistRitems"A
+artist_add_items_s2c)
+items (2.ZeroProto.p_artistRitems"+
+artist_delete_items_s2c
+ids (Rids"V
+artist_update_attr_s2c
+id (Rid,
+attrs (2.ZeroProto.p_key_valueRattrs"f
+artist_update_fans_s2c
+id (Rid
+	male_fans (RmaleFans
+female_fans (R
+femaleFans"M
+artist_update_attr_point_s2c
+id (Rid
+
+attr_point (R	attrPoint"h
+artist_update_film_adepts_s2c
+id (Rid7
+film_adepts (2.ZeroProto.p_key_valueR
+filmAdepts"i
+artist_update_film_grades_s2c
+id (Rid8
+film_grades (2.ZeroProto.p_film_gradeR
+filmGrades"B
+artist_update_labour_s2c
+id (Rid
+labour (Rlabour"R
+artist_lvl_up_s2c
+id (Rid
+lvl (Rlvl
+	need_fans (RneedFans"'
+artist_change_job_c2s
+id (Rid"€
+artist_change_job_s2c
+result (Rresult
+id (Rid
+job (Rjob
+lvl (Rlvl
+	need_fans (RneedFans"?
+artist_up_star_c2s
+id (Rid
+cost_ids (RcostIds"P
+artist_up_star_s2c
+result (Rresult
+id (Rid
+star (Rstar"<
+artist_change_name_c2s
+id (Rid
+name (	Rname"T
+artist_change_name_s2c
+result (Rresult
+id (Rid
+name (	Rname"&
+artist_resolve_c2s
+ids (Rids",
+artist_resolve_s2c
+result (Rresult"~
+artist_set_team_artist_c2s
+team_id (RteamId
+index (Rindex
+id (Rid!
+refresh_time (RrefreshTime"–
+artist_set_team_artist_s2c
+result (Rresult
+team_id (RteamId
+index (Rindex
+id (Rid!
+refresh_time (RrefreshTime"N
+artist_remove_team_artist_c2s
+team_id (RteamId
+index (Rindex"v
+artist_remove_team_artist_s2c
+result (Rresult
+team_id (RteamId
+index (Rindex
+id (Rid"G
+artist_set_team_name_c2s
+team_id (RteamId
+name (	Rname"_
+artist_set_team_name_s2c
+result (Rresult
+team_id (RteamId
+name (	Rname">
+!artist_notify_update_team_max_s2c
+team_max (RteamMax")
+artist_change_color_c2s
+id (Rid"W
+artist_change_color_s2c
+result (Rresult
+id (Rid
+color (Rcolor";
+artist_notify_delete_teams_s2c
+team_ids (RteamIds"e
+artist_notify_refresh_teams_s2cB
+artist_teams (2.ZeroProto.p_preset_artist_teamRartistTeams"?
+artist_update_state_s2c
+id (Rid
+state (Rstate

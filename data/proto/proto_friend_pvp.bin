@@ -1,0 +1,37 @@
+
+¾
+proto_friend_pvp.proto	ZeroProtoproto_type.proto".
+friend_pvp_invite_c2s
+role_b (RroleB"
+friend_pvp_phase_c2s" 
+friend_pvp_phase_s2c
+id (Rid
+phase (Rphase
+role_a (RroleA
+role_b (RroleB
+end_time (RendTime
+role_ids (RroleIds"<
+friend_pvp_reply_c2s
+reply (Rreply
+id (Rid"C
+friend_pvp_notify_reply_s2c
+reply (Rreply
+id (Rid"A
+friend_pvp_confirm_c2s
+id (Rid
+team_id (RteamId"'
+friend_pvp_cancel_c2s
+id (Rid"B
+friend_pvp_notify_cancel_s2c
+id (Rid
+name (	Rname"&
+friend_pvp_close_s2c
+id (Rid"L
+friend_pvp_notify_close_s2c
+id (Rid
+
+is_confirm (R	isConfirm"
+friend_pvp_match_info_c2s"V
+friend_pvp_match_info_s2c9
+
+match_team (2.ZeroProto.p_nf_match_teamR	matchTeam

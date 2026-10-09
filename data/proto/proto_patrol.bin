@@ -1,0 +1,28 @@
+
+ç
+proto_patrol.proto	ZeroProtoproto_type.proto"
+patrol_info_c2s"<
+patrol_info_s2c)
+doing (2.ZeroProto.p_patrolRdoing"T
+patrol_start_c2s
+	patrol_id (RpatrolId#
+children_list (RchildrenList"O
+patrol_start_s2c
+code (Rcode'
+info (2.ZeroProto.p_patrolRinfo".
+patrol_stop_c2s
+	patrol_id (RpatrolId"N
+patrol_stop_s2c
+code (Rcode'
+info (2.ZeroProto.p_patrolRinfo"0
+patrol_finish_c2s
+	patrol_id (RpatrolId"P
+patrol_finish_s2c
+code (Rcode'
+info (2.ZeroProto.p_patrolRinfo"<
+patrol_update_s2c'
+info (2.ZeroProto.p_patrolRinfo"A
+patrol_children_s2c*
+info (2.ZeroProto.p_key_valueRinfo"7
+patrol_client_notice_s2c
+	patrol_id (RpatrolId

@@ -1,0 +1,38 @@
+
+ù
+proto_pvp_equip.proto	ZeroProtoproto_type.proto"
+pvp_equip_info_c2s"r
+pvp_equip_info_s2c.
+equips (2.ZeroProto.p_pvp_equipRequips,
+slots (2.ZeroProto.p_key_valueRslots"F
+pvp_equip_update_s2c.
+equips (2.ZeroProto.p_pvp_equipRequips"(
+pvp_equip_delete_s2c
+ids (Rids">
+pvp_equip_dress_c2s
+team_id (RteamId
+id (Rid"V
+pvp_equip_dress_s2c
+result (Rresult
+team_id (RteamId
+id (Rid"@
+pvp_equip_undress_c2s
+team_id (RteamId
+id (Rid"X
+pvp_equip_undress_s2c
+result (Rresult
+team_id (RteamId
+id (Rid"*
+pvp_equip_strengthen_c2s
+id (Rid"B
+pvp_equip_strengthen_s2c
+result (Rresult
+id (Rid"
+pvp_equip_season_end_c2s"x
+pvp_equip_season_end_s2c.
+equips (2.ZeroProto.p_key_valueRequips,
+items (2.ZeroProto.p_item_gainRitems"5
+pvp_equip_summon_child_c2s
+team_id (RteamId"V
+pvp_equip_summon_child_s2c8
+summon_child (2.ZeroProto.p_childrenRsummonChild

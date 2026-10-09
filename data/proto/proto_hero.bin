@@ -1,0 +1,82 @@
+
+ô
+proto_hero.proto	ZeroProtoproto_type.proto"
+hero_info_c2s"6
+hero_info_s2c%
+list (2.ZeroProto.p_heroRlist"=
+hero_awake_c2s
+form (Rform
+hero_id (RheroId"’
+hero_awake_s2c
+code (Rcode
+form (Rform%
+hero (2.ZeroProto.p_heroRhero1
+children (2.ZeroProto.p_childrenRchildren"B
+hero_alter_c2s
+team_id (RteamId
+hero_id (RheroId"x
+hero_alter_s2c
+code (Rcode
+team_id (RteamId
+form (Rform%
+hero (2.ZeroProto.p_heroRhero"=
+hero_notify_hero_s2c%
+hero (2.ZeroProto.p_heroRhero"\
+hero_hero_children_info_c2s
+form (Rform
+hero_id (RheroId
+lvl (Rlvl"‘
+hero_hero_children_info_s2c
+code (Rcode
+form (Rform
+hero_id (RheroId1
+children (2.ZeroProto.p_childrenRchildren"
+hero_all_skin_info_c2s"R
+hero_all_skin_info_s2c8
+	skin_list (2.ZeroProto.p_hero_skin_infoRskinList"\
+hero_change_skin_c2s
+form (Rform
+hero_id (RheroId
+skin_id (RskinId"p
+hero_change_skin_s2c
+code (Rcode
+form (Rform
+hero_id (RheroId
+skin_id (RskinId"1
+hero_one_skin_info_c2s
+hero_id (RheroId"R
+hero_one_skin_info_s2c8
+	skin_info (2.ZeroProto.p_hero_skin_infoRskinInfo"3
+hero_sync_c2s
+id (Rid
+form (Rform"®
+hero_sync_s2c
+result (Rresult
+id (Rid
+form (Rform%
+hero (2.ZeroProto.p_heroRhero:
+children_info (2.ZeroProto.p_childrenRchildrenInfo"k
+hero_upgrade_c2s
+id (Rid
+form (Rform3
+	item_list (2.ZeroProto.p_key_valueRitemList"­
+hero_upgrade_s2c
+code (Rcode
+id (Rid
+form (Rform:
+children_info (2.ZeroProto.p_childrenRchildrenInfo%
+hero (2.ZeroProto.p_heroRhero"<
+hero_unlock_c2s
+sys_id (RsysId
+form (Rform"w
+hero_unlock_s2c
+code (Rcode
+sys_id (RsysId
+form (Rform%
+hero (2.ZeroProto.p_heroRhero"M
+hero_once_change_skin_c2s
+hero_id (RheroId
+skin_id (RskinId"i
+hero_once_change_skin_s2c
+code (Rcode8
+	skin_list (2.ZeroProto.p_hero_skin_infoRskinList

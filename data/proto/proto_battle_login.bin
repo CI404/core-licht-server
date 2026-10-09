@@ -1,0 +1,24 @@
+
+Æ
+proto_battle_login.proto	ZeroProto"°
+battle_login_info_s2c
+token (	Rtoken
+serv_id (RservId!
+serv_address (	RservAddress
+	serv_port (RservPort(
+serv_con_address (	RservConAddress"G
+battle_login_login_c2s
+role_id (RroleId
+token (	Rtoken",
+battle_login_login_s2c
+code (Rcode"H
+battle_login_repeat_c2s
+role_id (RroleId
+token (	Rtoken"-
+battle_login_repeat_s2c
+code (Rcode"
+battle_login_enter_map_c2s"0
+battle_login_enter_map_s2c
+code (Rcode",
+battle_login_leave_s2c
+code (Rcode

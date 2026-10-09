@@ -1,0 +1,177 @@
+
+Ø!
+proto_map.proto	ZeroProtoproto_type.proto"
+map_relogin_c2s"B
+map_enter_c2s
+mapid (Rmapid
+	child_ids (RchildIds"—
+map_enter_s2c
+result (Rresult
+mapid (Rmapid
+line (Rline
+temp_id (RtempId4
+children (2.ZeroProto.p_fight_childRchildren=
+
+spell_list (2.ZeroProto.p_fight_spell_skillR	spellList6
+
+skill_card (2.ZeroProto.p_skill_cardR	skillCard"{
+map_objects_enter_s2c
+mapid (Rmapid
+line (Rline8
+map_objects (2.ZeroProto.p_map_objectR
+mapObjects"`
+map_objects_leave_s2c
+mapid (Rmapid
+line (Rline
+
+object_ids (R	objectIds"h
+map_walk_c2s
+mapid (Rmapid
+line (Rline.
+walks (2.ZeroProto.p_object_walkRwalks"´
+map_walk_s2c
+mapid (Rmapid
+line (Rline
+	object_id (RobjectId)
+site (2.ZeroProto.p_positionRsite2
+	desc_site (2.ZeroProto.p_positionRdescSite"k
+map_move_step_c2s
+mapid (Rmapid
+line (Rline,
+steps (2.ZeroProto.p_move_stepRsteps"k
+map_move_stop_c2s
+mapid (Rmapid
+line (Rline,
+steps (2.ZeroProto.p_move_stepRsteps"…
+map_move_stop_s2c
+mapid (Rmapid
+line (Rline
+	object_id (RobjectId)
+site (2.ZeroProto.p_positionRsite"W
+map_single_dup_info_s2c
+mapid (Rmapid
+line (Rline
+star (Rstar"H
+map_update_object_s2c/
+object (2.ZeroProto.p_map_objectRobject"
+map_update_object_buffs_s2c
+mapid (Rmapid
+line (Rline
+	object_id (RobjectId'
+buffs (2.ZeroProto.p_buffRbuffs"Y
+map_change_pkmode_c2s
+mapid (Rmapid
+line (Rline
+pkmode (Rpkmode"q
+map_change_pkmode_s2c
+result (Rresult
+mapid (Rmapid
+line (Rline
+pkmode (Rpkmode"’
+map_update_object_kv_s2c
+mapid (Rmapid
+line (Rline
+	object_id (RobjectId/
+kv_list (2.ZeroProto.p_key_valueRkvList"v
+map_release_childs_c2s
+mapid (Rmapid
+line (Rline2
+childs (2.ZeroProto.p_release_childRchilds"Ž
+map_release_childs_s2c
+result (Rresult
+mapid (Rmapid
+line (Rline2
+childs (2.ZeroProto.p_release_childRchilds"=
+map_start_dup_c2s
+mapid (Rmapid
+line (Rline"r
+map_dup_left_time_s2c
+mapid (Rmapid
+line (Rline
+state (Rstate
+end_time (RendTime"9
+map_leave_c2s
+mapid (Rmapid
+line (Rline"Q
+map_leave_s2c
+result (Rresult
+mapid (Rmapid
+line (Rline"g
+map_dup_end_s2c
+mapid (Rmapid
+line (Rline
+result (Rresult
+star (Rstar"F
+map_enter_dup_c2s
+mapid (Rmapid
+	child_ids (RchildIds"9
+map_pause_c2s
+mapid (Rmapid
+line (Rline"Z
+map_pause_s2c
+mapid (Rmapid
+line (Rline
+pause_start (R
+pauseStart"@
+map_cancel_pause_c2s
+mapid (Rmapid
+line (Rline"_
+map_cancel_pause_s2c
+mapid (Rmapid
+line (Rline
+
+pause_time (R	pauseTime"•
+map_time_s2c
+mapid (Rmapid
+line (Rline
+	init_time (RinitTime
+
+pause_time (R	pauseTime
+pause_start (R
+pauseStart"-
+map_notice_agent_s2c
+map_id (RmapId"*
+map_set_agent_c2s
+map_id (RmapId">
+map_set_agent_s2c
+code (Rcode
+map_id (RmapId"+
+map_agent_team_c2s
+map_id (RmapId"é
+map_agent_team_s2c
+code (Rcode
+map_id (RmapId
+hero_id (RheroId
+	hero_form (RheroForm;
+children_list (2.ZeroProto.p_key_valueRchildrenList5
+
+spell_list (2.ZeroProto.p_key_valueR	spellList"7
+map_kill_mon_info_c2s
+mon_id_list (R	monIdList"k
+map_kill_mon_info_s2c
+code (Rcode>
+kill_mon_list (2.ZeroProto.p_kill_mon_infoRkillMonList".
+map_agent_can_use_c2s
+map_id (RmapId"M
+map_agent_can_use_s2c
+map_id (RmapId
+
+have_agent (R	haveAgent"H
+map_agent_manual_switch_c2s
+map_id (RmapId
+line (Rline"\
+map_agent_manual_switch_s2c
+code (Rcode
+map_id (RmapId
+line (Rline"~
+map_mon_fly_out_c2s
+map_id (RmapId
+line (Rline
+object_type (R
+objectType
+	object_id (RobjectId"q
+map_mon_fly_out_s2c
+code (Rcode
+map_id (RmapId
+line (Rline
+	object_id (RobjectId

@@ -1,0 +1,29 @@
+
+ä
+proto_badge.proto	ZeroProtoproto_type.proto"
+badge_list_c2s"C
+badge_list_s2c1
+
+badge_list (2.ZeroProto.p_badgeR	badgeList")
+badge_commit_c2s
+sys_id (RsysId"’
+badge_commit_s2c
+code (Rcode7
+reward_list (2.ZeroProto.p_key_valueR
+rewardList1
+
+badge_info (2.ZeroProto.p_badgeR	badgeInfo"E
+badge_update_s2c1
+
+badge_info (2.ZeroProto.p_badgeR	badgeInfo"@
+badge_show_type_c2s
+type (Rtype
+sys_id (RsysId"a
+badge_show_type_s2c
+result (Rresult2
+badge (2.ZeroProto.p_show_type_badgeRbadge"J
+badge_show_list_c2s3
+	show_list (2.ZeroProto.p_key_valueRshowList"c
+badge_show_list_s2c
+result (Rresult4
+	show_list (2.ZeroProto.p_show_badgeRshowList

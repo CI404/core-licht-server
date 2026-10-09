@@ -1,0 +1,78 @@
+
+‹
+proto_post.proto	ZeroProtoproto_type.proto"T
+post_notify_room_list_s2c7
+	room_list (2.ZeroProto.p_building_roomRroomList"Ò
+post_notify_object_list_s2c=
+object_list (2.ZeroProto.p_building_objectR
+objectList:
+fur_list (2.ZeroProto.p_building_furnitureRfurList8
+mac_list (2.ZeroProto.p_building_machineRmacList"
+post_info_c2s"†
+post_info_s2c#
+gained_points (RgainedPoints
+	broom_num (RbroomNum
+refresh_num (R
+refreshNum#
+neighbor_list (RneighborList!
+cleaned_furs (RcleanedFurs#
+popular_child (RpopularChild.
+popular_child_times (RpopularChildTimes,
+popular_child_gain (RpopularChildGain+
+player	 (2.ZeroProto.p_friendRplayer!
+player_times
+ (RplayerTimes
+player_gain (R
+playerGain,
+last_neighbor_time (RlastNeighborTime(
+last_revert_time (RlastRevertTime" 
+post_visit_c2s
+id (Rid"è
+post_visit_s2c
+result (Rresult
+id (Rid?
+children_list (2.ZeroProto.p_post_childrenRchildrenList3
+	core_list (2.ZeroProto.p_key_valueRcoreList8
+	room_list (2.ZeroProto.p_post_room_snapRroomList";
+post_clean_c2s
+id (Rid
+fur_list (RfurList"w
+post_clean_s2c
+result (Rresult
+id (Rid=
+reward_list (2.ZeroProto.p_building_rewardR
+rewardList"r
+post_notify_visit_info_s2c
+	friend_id (RfriendId
+time (Rtime#
+visit_imagine (RvisitImagine"\
+post_notify_clean_info_s2c>
+cleaned_record (2.ZeroProto.p_post_cleanRcleanedRecord".
+post_draw_cleaned_reward_c2s
+id (Rid"–
+post_draw_cleaned_reward_s2c
+result (Rresult
+id (Rid
+end_time (RendTime3
+	item_list (2.ZeroProto.p_key_valueRitemList"1
+post_neighbor_list_c2s
+id_list (RidList"R
+post_neighbor_list_s2c8
+neighbor_list (2.ZeroProto.p_friendRneighborList"
+post_refresh_list_c2s">
+post_clean_room_c2s
+id (Rid
+room_id (RroomId"
+post_record_list_c2s"P
+post_record_list_s2c8
+record_list (2.ZeroProto.p_post_cleanR
+recordList",
+post_headshot_list_c2s
+list (Rlist"H
+post_headshot_list_s2c.
+list (2.ZeroProto.p_post_headshotRlist"-
+post_delete_records_s2c
+list (Rlist"
+post_revert_pool_c2s".
+post_revert_pool_s2c
+result (Rresult

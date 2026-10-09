@@ -1,0 +1,30 @@
+
+¥
+proto_mail.proto	ZeroProtoproto_type.proto"
+mail_base_c2s"=
+mail_base_s2c,
+mails (2.ZeroProto.p_mail_baseRmails"
+mail_read_c2s
+id (Rid"M
+mail_read_s2c<
+mail_content (2.ZeroProto.p_mail_contentRmailContent"-
+mail_extract_c2s
+mail_ids (RmailIds"-
+mail_extract_s2c
+mail_ids (RmailIds",
+mail_delete_c2s
+mail_ids (RmailIds",
+mail_delete_s2c
+mail_ids (RmailIds"7
+mail_favorite_c2s
+id (Rid
+type (Rtype"O
+mail_favorite_s2c
+id (Rid
+code (Rcode
+status (Rstatus"<
+mail_add_s2c,
+mails (2.ZeroProto.p_mail_baseRmails"
+mail_red_c2s""
+mail_red_s2c
+code (Rcode

@@ -1,0 +1,109 @@
+
+€
+proto_friend.proto	ZeroProtoproto_type.proto"
+friend_info_c2s"W
+friend_info_s2c
+is_inc (RisInc-
+friends (2.ZeroProto.p_friendRfriends"
+friend_apply_info_c2s"b
+friend_apply_info_s2c
+is_inc (RisInc2
+
+apply_list (2.ZeroProto.p_friendR	applyList"0
+friend_add_friend_c2s
+role_id (RroleId"0
+friend_add_friend_s2c
+role_id (RroleId"3
+friend_delete_friend_c2s
+role_id (RroleId"3
+friend_delete_friend_s2c
+role_id (RroleId"M
+friend_friend_reply_c2s
+is_agree (RisAgree
+role_id (RroleId"e
+friend_friend_reply_s2c
+result (Rresult
+is_agree (RisAgree
+role_id (RroleId"@
+friend_search_c2s
+role_id (RroleId
+name (	Rname"D
+friend_search_s2c/
+searches (2.ZeroProto.p_friendRsearches"9
+friend_mark_friends_read_c2s
+role_ids (RroleIds"@
+#friend_mark_friend_applies_read_c2s
+role_ids (RroleIds"
+friend_assist_info_c2s"M
+friend_assist_info_s2c3
+assists (2.ZeroProto.p_fight_assistRassists"B
+friend_set_assist_c2s
+grid (Rgrid
+sys_id (RsysId"m
+friend_set_assist_s2c
+result (Rresult<
+fight_assist (2.ZeroProto.p_fight_assistRfightAssist"7
+friend_friendliness_info_c2s
+role_id (RroleId"y
+friend_friendliness_info_s2c
+role_id (RroleId
+lvl (Rlvl
+in_val (RinVal
+out_val (RoutVal"
+friend_friendship_points_c2s"×
+friend_friendship_points_s2c9
+assist_times (2.ZeroProto.p_key_valueRassistTimes9
+friend_times (2.ZeroProto.p_key_valueRfriendTimesA
+record_list (2 .ZeroProto.p_child_assist_recordR
+recordList"R
+friend_assist_child_info_c2s
+role_id (RroleId
+child_id (RchildId"†
+friend_assist_child_info_s2c1
+children (2.ZeroProto.p_childrenRchildren3
+equips (2.ZeroProto.p_children_equipRequips"œ
+friend_gain_info_s2c
+num (Rnum#
+popular_child (RpopularChild.
+popular_child_times (RpopularChildTimes,
+popular_child_gain (RpopularChildGain+
+player (2.ZeroProto.p_friendRplayer!
+player_times (RplayerTimes
+player_gain (R
+playerGain">
+friend_note_c2s
+role_id (RroleId
+note (	Rnote"V
+friend_note_s2c
+result (Rresult
+role_id (RroleId
+note (	Rnote"O
+friend_batch_set_assists_c2s/
+kv_list (2.ZeroProto.p_key_valueRkvList"v
+friend_batch_set_assists_s2c
+result (Rresult>
+fight_assists (2.ZeroProto.p_fight_assistRfightAssists"-
+friend_gift_info_c2s
+act_id (RactId"­
+friend_gift_info_s2c
+act_id (RactId:
+	self_gift (2.ZeroProto.p_friend_self_giftRselfGiftB
+friend_gift_list (2.ZeroProto.p_friend_giftRfriendGiftList"L
+friend_gift_req_c2s
+act_id (RactId
+req_item_id (R	reqItemId")
+friend_gift_req_s2c
+code (Rcode"j
+friend_gift_give_c2s
+act_id (RactId
+	friend_id (RfriendId
+req_item_id (R	reqItemId"*
+friend_gift_give_s2c
+code (Rcode",
+friend_gift_get_c2s
+act_id (RactId")
+friend_gift_get_s2c
+code (Rcode"k
+friend_gift_update_s2c
+act_id (RactId:
+	self_gift (2.ZeroProto.p_friend_self_giftRselfGift

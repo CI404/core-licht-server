@@ -1,0 +1,18 @@
+
+•
+proto_favor.proto	ZeroProtoproto_type.proto"
+favor_info_c2s"Š
+favor_info_s2c8
+team_favors (2.ZeroProto.p_team_favorR
+teamFavors>
+couple_favors (2.ZeroProto.p_couple_favorRcoupleFavors"X
+favor_update_team_favors_s2c8
+team_favors (2.ZeroProto.p_team_favorR
+teamFavors"`
+favor_update_couple_favors_s2c>
+couple_favors (2.ZeroProto.p_couple_favorRcoupleFavors"7
+favor_get_team_favor_award_c2s
+sys_id (RsysId"O
+favor_get_team_favor_award_s2c
+result (Rresult
+sys_id (RsysId

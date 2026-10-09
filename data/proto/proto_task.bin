@@ -1,0 +1,66 @@
+
+–
+proto_task.proto	ZeroProtoproto_type.proto"
+task_info_c2s"d
+task_info_s2c
+	task_done (RtaskDone6
+
+task_doing (2.ZeroProto.p_task_doingR	taskDoing"*
+task_accept_c2s
+task_id (RtaskId"_
+task_accept_s2c
+code (Rcode8
+accept_task (2.ZeroProto.p_task_doingR
+acceptTask"*
+task_commit_c2s
+task_id (RtaskId"a
+task_commit_s2c
+code (Rcode
+task_id (RtaskId!
+task_visible (RtaskVisible"s
+task_track_info_s2c
+task_id (RtaskId
+state (Rstate-
+track (2.ZeroProto.p_task_trackRtrack",
+task_liveness_info_c2s
+type (Rtype"`
+task_liveness_info_s2c
+type (Rtype
+liveness (Rliveness
+reward (Rreward"*
+task_delete_s2c
+task_id (RtaskId"
+task_hero_stage_info_c2s"n
+task_hero_stage_info_s2c
+stage (Rstage
+
+start_time (R	startTime
+
+prev_total (R	prevTotal" 
+task_get_hero_stage_reward_c2s"W
+task_get_hero_stage_reward_s2c
+code (Rcode!
+reward_stage (RrewardStage"O
+task_reward_liveness_c2s
+type (Rtype
+liveness_id (R
+livenessId"c
+task_reward_liveness_s2c
+code (Rcode
+type (Rtype
+liveness_id (R
+livenessId"/
+task_association_c2s
+task_id (RtaskId")
+task_commit_all_c2s
+type (Rtype"Z
+task_commit_all_s2c
+code (Rcode
+type (Rtype
+	task_list (RtaskList"
+task_island_stage_info_c2s"2
+task_island_stage_info_s2c
+stage (Rstage""
+ task_get_island_stage_reward_c2s"6
+ task_get_island_stage_reward_s2c
+code (Rcode

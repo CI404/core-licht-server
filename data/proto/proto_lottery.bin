@@ -1,0 +1,24 @@
+
+ 
+proto_lottery.proto	ZeroProtoproto_type.proto"
+lottery_pool_c2s"J
+lottery_pool_s2c6
+	pool_list (2.ZeroProto.p_lottery_poolRpoolList"D
+lottery_draw_c2s
+pool_sys_id (R	poolSysId
+pos (Rpos"œ
+lottery_draw_s2c
+code (Rcode<
+reward_list (2.ZeroProto.p_lottery_rewardR
+rewardList6
+	pool_info (2.ZeroProto.p_lottery_poolRpoolInfo"4
+lottery_donate_c2s
+pool_sys_id (R	poolSysId"¤
+lottery_donate_s2c
+code (Rcode
+pool_sys_id (R	poolSysId!
+donate_times (RdonateTimes7
+reward_list (2.ZeroProto.p_key_valueR
+rewardList"J
+lottery_update_s2c4
+new_pool (2.ZeroProto.p_lottery_poolRnewPool

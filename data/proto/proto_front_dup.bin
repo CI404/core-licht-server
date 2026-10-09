@@ -1,0 +1,25 @@
+
+Þ
+proto_front_dup.proto	ZeroProtoproto_type.proto"Q
+front_dup_in_log_c2s
+map_id (RmapId"
+child_id_list (RchildIdList"“
+front_dup_fin_log_c2s
+map_id (RmapId
+result (Rresult
+dup_time (RdupTime
+goal (Rgoal
+cnt (Rcnt"
+child_id_list (RchildIdList6
+
+depolylist (2.ZeroProto.p_key_valueR
+depolylist.
+deaths (2.ZeroProto.p_key_valueRdeaths"¾
+front_dup_none_role_fight_c2s
+uid (	Ruid
+map_id (RmapId"
+child_id_list (RchildIdList
+result (Rresult
+
+start_time (R	startTime
+dup_time (RdupTime

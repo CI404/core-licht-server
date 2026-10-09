@@ -1,0 +1,22 @@
+
+£
+proto_crafting.proto	ZeroProto"1
+crafting_decompose_c2s
+id_list (RidList"I
+crafting_decompose_s2c
+result (Rresult
+id_list (RidList"R
+crafting_compose_machine_c2s
+mac_id (RmacId
+	cost_list (RcostList"j
+crafting_compose_machine_s2c
+result (Rresult
+mac_id (RmacId
+	cost_list (RcostList"T
+crafting_compose_furniture_c2s
+fur_id (RfurId
+	cost_list (RcostList"l
+crafting_compose_furniture_s2c
+result (Rresult
+fur_id (RfurId
+	cost_list (RcostList

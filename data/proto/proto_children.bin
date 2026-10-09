@@ -1,0 +1,193 @@
+
+º,
+proto_children.proto	ZeroProtoproto_type.proto"
+children_all_c2s"N
+children_all_s2c:
+children_list (2.ZeroProto.p_childrenRchildrenList"h
+!children_update_children_list_s2cC
+children_info_list (2.ZeroProto.p_childrenRchildrenInfoList"$
+children_awake_c2s
+id (Rid"d
+children_awake_s2c
+code (Rcode:
+children_info (2.ZeroProto.p_childrenRchildrenInfo"#
+children_sync_c2s
+id (Rid"œ
+children_sync_s2c
+code (Rcode:
+children_info (2.ZeroProto.p_childrenRchildrenInfo7
+reward_list (2.ZeroProto.p_item_gainR
+rewardList"e
+children_up_lvl_by_item_id_c2s
+id (Rid3
+	item_list (2.ZeroProto.p_key_valueRitemList"p
+children_up_lvl_by_item_id_s2c
+code (Rcode:
+children_info (2.ZeroProto.p_childrenRchildrenInfo"o
+children_set_assistant_c2s
+index (Rindex
+id (Rid
+type (Rtype
+skin_id (RskinId"o
+children_set_assistant_s2c
+index (Rindex
+id (Rid
+type (Rtype
+skin_id (RskinId"+
+children_up_skill_lvl_c2s
+id (Rid"k
+children_up_skill_lvl_s2c
+code (Rcode:
+children_info (2.ZeroProto.p_childrenRchildrenInfo"
+children_favor_info_c2s"Z
+children_favor_info_s2c?
+team_favor_list (2.ZeroProto.p_team_favorRteamFavorList"b
+children_update_team_favors_s2c?
+team_favor_list (2.ZeroProto.p_team_favorRteamFavorList"Y
+!children_get_team_favor_award_c2s
+sys_id (RsysId
+
+reward_uid (R	rewardUid"o
+!children_get_team_favor_award_s2c
+code (Rcode6
+
+team_favor (2.ZeroProto.p_team_favorR	teamFavor"L
+children_select_fight_skill_c2s
+id (Rid
+skill_id (RskillId"`
+children_select_fight_skill_s2c
+code (Rcode
+id (Rid
+skill_id (RskillId"/
+children_list_by_type_c2s
+type (Rtype"k
+children_list_by_type_s2c
+type (Rtype:
+children_list (2.ZeroProto.p_childrenRchildrenList".
+children_del_npc_ids_s2c
+list (Rlist"
+children_unlock_info_c2s"Ã
+children_unlock_info_s2c3
+	char_list (2.ZeroProto.p_key_valueRcharList5
+
+voice_list (2.ZeroProto.p_key_valueR	voiceList;
+remember_list (2.ZeroProto.p_key_valueRrememberList"Å
+children_update_unlock_s2c3
+	char_list (2.ZeroProto.p_key_valueRcharList5
+
+voice_list (2.ZeroProto.p_key_valueR	voiceList;
+remember_list (2.ZeroProto.p_key_valueRrememberList"0
+children_one_children_info_c2s
+id (Rid"\
+children_one_children_info_s2c:
+children_info (2.ZeroProto.p_childrenRchildrenInfo"T
+'children_one_children_info_by_sysid_c2s
+type (Rtype
+sys_id (RsysId"e
+'children_one_children_info_by_sysid_s2c:
+children_info (2.ZeroProto.p_childrenRchildrenInfo"@
+children_use_skin_c2s
+id (Rid
+skin_id (RskinId"T
+children_use_skin_s2c
+code (Rcode
+id (Rid
+skin_id (RskinId"‡
+children_gain_notice_s2c
+	gain_type (RgainTypeN
+reward_children_list (2.ZeroProto.p_children_rewardRrewardChildrenList"L
+children_favor_change_s2c/
+list (2.ZeroProto.p_children_favorRlist"
+children_assist_info_c2s"r
+children_assist_info_s2c
+mode (Rmode
+index (Rindex,
+list (2.ZeroProto.p_assist_infoRlist"5
+children_set_assistant_mode_c2s
+mode (Rmode"5
+children_set_assistant_mode_s2c
+mode (Rmode"O
+children_set_assistant_list_c2s,
+list (2.ZeroProto.p_assist_infoRlist"O
+children_add_favor_s2c5
+
+favor_list (2.ZeroProto.p_key_valueR	favorList"]
+children_update_power_s2c@
+children_list (2.ZeroProto.p_children_powerRchildrenList"p
+children_equip_auth_c2s
+opt_type (RoptType
+children_id (R
+childrenId
+equip_id (RequipId"i
+children_equip_auth_s2c
+code (Rcode:
+children_info (2.ZeroProto.p_childrenRchildrenInfo"(
+children_check_new_c2s
+id (Rid"<
+children_check_new_s2c
+code (Rcode
+id (Rid"+
+children_fetter_break_c2s
+id (Rid"k
+children_fetter_break_s2c
+code (Rcode:
+children_info (2.ZeroProto.p_childrenRchildrenInfo"E
+children_favor_award_c2s
+id (Rid
+favor_lv (RfavorLv"Y
+children_favor_award_s2c
+code (Rcode
+id (Rid
+favor_lv (RfavorLv"d
+children_favor_give_gifts_c2s
+id (Rid3
+	item_list (2.ZeroProto.p_key_valueRitemList"3
+children_favor_give_gifts_s2c
+code (Rcode"@
+children_unlock_c2s
+type (Rtype
+sys_id (RsysId"@
+children_unlock_s2c
+type (Rtype
+sys_id (RsysId"1
+children_fetter_break_point_c2s
+id (Rid"h
+children_fetter_break_point_s2c
+code (Rcode
+id (Rid!
+fetter_break (RfetterBreak"U
+children_favor_team_award_c2s
+team_id (RteamId
+	favor_lvl (RfavorLvl"i
+children_favor_team_award_s2c
+code (Rcode
+team_id (RteamId
+	favor_lvl (RfavorLvl"
+children_team_change_list_c2s"X
+children_team_change_list_s2c7
+change_list (2.ZeroProto.p_key_valueR
+changeList"S
+children_team_change_s2c7
+change_list (2.ZeroProto.p_key_valueR
+changeList"
+children_group_list_c2s"U
+children_group_list_s2c:
+
+group_list (2.ZeroProto.p_children_groupR	groupList"3
+children_group_star_up_c2s
+sys_id (RsysId"l
+children_group_star_up_s2c
+code (Rcode:
+
+group_info (2.ZeroProto.p_children_groupR	groupInfo"
+children_unlock_skin_s2c
+id (Rid
+sys_id (RsysId
+skin_id (RskinId3
+	item_list (2.ZeroProto.p_key_valueRitemList"
+children_num_c2s"$
+children_num_s2c
+num (Rnum"
+children_bag_skin_list_c2s"9
+children_bag_skin_list_s2c
+	skin_list (RskinList

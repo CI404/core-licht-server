@@ -1,0 +1,35 @@
+
+Ò
+proto_trade.proto	ZeroProtoproto_type.proto"
+trade_info_c2s"é
+trade_info_s2c!
+change_times (RchangeTimes5
+
+count_list (2.ZeroProto.p_key_valueR	countList<
+all_count_list (2.ZeroProto.p_key_valueRallCountList?
+finished_counts (2.ZeroProto.p_key_valueRfinishedCounts"
+trade_order_list_c2s"R
+trade_order_list_s2c:
+
+order_list (2.ZeroProto.p_building_orderR	orderList"+
+trade_start_order_c2s
+type (Rtype"v
+trade_start_order_s2c
+result (Rresult
+type (Rtype1
+order (2.ZeroProto.p_building_orderRorder"E
+trade_change_order_c2s
+id (Rid
+	item_list (RitemList"†
+trade_change_order_s2c
+result (Rresult!
+change_times (RchangeTimes1
+order (2.ZeroProto.p_building_orderRorder")
+trade_draw_c2s
+id_list (RidList"A
+trade_draw_s2c
+result (Rresult
+id_list (RidList"S
+trade_notify_list_s2c:
+
+order_list (2.ZeroProto.p_building_orderR	orderList

@@ -1,0 +1,1 @@
+{"list":[{"id":1,"name":"單機服","ip":"10.0.2.2:9001","cp":["10.0.2.2:9001"],"state":1,"status":1,"sort":1,"is_new":0,"is_hot":0,"tag":"","zone":"TW","region":"TW","login_ip":"10.0.2.2:9001","login_url":"http://10.0.2.2:8080/","time":"","open_time":0,"recommend":1,"flag":0,"area":"TW","type":1}],"tips":""}

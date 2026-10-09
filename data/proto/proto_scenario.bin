@@ -1,0 +1,33 @@
+
+ó
+proto_scenario.proto	ZeroProtoproto_type.proto"
+scenario_status_c2s"å
+scenario_status_s2c
+	script_id (RscriptId
+	timepoint (R	timepoint7
+cur_sublist (2.ZeroProto.p_key_valueR
+curSublist=
+chosen_sublist (2.ZeroProto.p_key_valueRchosenSublist
+	next_list (RnextList"g
+scenario_enter_c2s
+	script_id (RscriptId
+choice (Rchoice
+	timepoint (R	timepoint"Q
+scenario_complete_c2s
+	script_id (RscriptId
+	quit_flag (RquitFlag"4
+scenario_complete_s2c
+	script_id (RscriptId"
+scenario_happened_c2s"C
+scenario_happened_s2c*
+list (2.ZeroProto.p_key_valueRlist"
+scenario_skip_all_c2s"
+scenario_happened_cg_c2s"3
+scenario_happened_cg_s2c
+cg_list (RcgList"+
+scenario_play_cg_c2s
+cg_id (RcgId"X
+scenario_play_cg_s2c
+code (Rcode
+cg_id (RcgId
+cg_list (RcgList

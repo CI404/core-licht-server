@@ -1,0 +1,22 @@
+
+ù
+proto_subplots.proto	ZeroProtoproto_type.proto"
+subplots_info_c2s"C
+subplots_info_s2c.
+list (2.ZeroProto.p_subplots_taskRlist"r
+subplots_finish_c2s
+task_id (RtaskId!
+select_index (RselectIndex
+use_chicken (R
+useChicken"ù
+subplots_finish_s2c
+code (Rcode!
+select_index (RselectIndex
+use_chicken (R
+useChicken.
+task (2.ZeroProto.p_subplots_taskRtask"2
+subplots_get_reward_c2s
+task_id (RtaskId"F
+subplots_get_reward_s2c
+code (Rcode
+task_id (RtaskId

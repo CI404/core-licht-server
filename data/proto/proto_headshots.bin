@@ -1,0 +1,33 @@
+
+°
+proto_headshots.proto	ZeroProto"
+headshots_info_c2s"i
+headshots_info_s2c
+entry (Rentry
+head (Rhead
+id (Rid
+frame_id (RframeId"&
+headshots_change_c2s
+id (Rid"&
+headshots_change_s2c
+id (Rid",
+headshots_change_frame_c2s
+id (Rid",
+headshots_change_frame_s2c
+id (Rid"9
+headshots_click_c2s
+type (Rtype
+id (Rid"9
+headshots_click_s2c
+type (Rtype
+id (Rid"
+headshots_detail_c2s"Š
+headshots_detail_s2c
+list (Rlist
+
+frame_list (R	frameList
+gain_ids (RgainIds$
+gain_frame_ids (RgainFrameIds"D
+headshots_update_red_s2c
+entry (Rentry
+head (Rhead

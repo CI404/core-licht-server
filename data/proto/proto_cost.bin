@@ -1,0 +1,98 @@
+
+Ž
+proto_cost.proto	ZeroProtoproto_type.proto"e
+cost_update_hero_c2s
+team_id (RteamId4
+	hero_list (2.ZeroProto.p_hero_indexRheroList"ê
+cost_update_team_c2s
+
+team_index (R	teamIndex
+team_id (RteamId
+event_id (ReventId;
+children_list (2.ZeroProto.p_key_valueRchildrenListB
+fetter_child_list (2.ZeroProto.p_key_valueRfetterChildList"o
+cost_update_team_s2c
+result (Rresult?
+children_team (2.ZeroProto.p_children_teamRchildrenTeam"m
+cost_update_name_c2s
+
+team_index (R	teamIndex
+event_id (ReventId
+	team_name (	RteamName"…
+cost_update_name_s2c
+result (Rresult
+
+team_index (R	teamIndex
+event_id (ReventId
+	team_name (	RteamName"1
+cost_event_teams_c2s
+event_id (ReventId"|
+cost_event_teams_s2c#
+default_index (RdefaultIndex?
+children_team (2.ZeroProto.p_children_teamRchildrenTeam"R
+cost_default_c2s
+event_id (ReventId#
+default_index (RdefaultIndex"j
+cost_default_s2c
+result (Rresult
+event_id (ReventId#
+default_index (RdefaultIndex"k
+cost_set_assistant_c2s
+event_id (ReventId
+	player_id (RplayerId
+child_id (RchildId"Œ
+cost_set_assistant_s2c
+result (Rresult
+event_id (ReventId?
+friend_assist (2.ZeroProto.p_friend_assistRfriendAssist"'
+cost_guide_c2s
+dup_id (RdupId"Ø
+cost_guide_s2c
+result (Rresult?
+children_team (2.ZeroProto.p_children_teamRchildrenTeam1
+
+spell_list (2.ZeroProto.p_spellR	spellList:
+children_list (2.ZeroProto.p_childrenRchildrenList"…
+cost_set_assistant2_c2s
+child_id (RchildId
+event_id (ReventId
+team_id (RteamId
+	player_id (RplayerId"¦
+cost_set_assistant2_s2c
+result (Rresult
+event_id (ReventId
+team_id (RteamId?
+friend_assist (2.ZeroProto.p_friend_assistRfriendAssist"§
+cost_update_challenge_c2s
+
+team_index (R	teamIndex
+dup_id (RdupId
+team_id (RteamId;
+children_list (2.ZeroProto.p_key_valueRchildrenList"6
+cost_cancel_assistant_c2s
+event_id (ReventId"N
+cost_cancel_assistant_s2c
+result (Rresult
+event_id (ReventId"P
+cost_cancel_assistant2_c2s
+event_id (ReventId
+team_id (RteamId"h
+cost_cancel_assistant2_s2c
+result (Rresult
+event_id (ReventId
+team_id (RteamId"/
+cost_pvp_guide_c2s
+group_id (RgroupId"÷
+cost_pvp_guide_s2c
+result (Rresult
+group_id (RgroupId?
+children_team (2.ZeroProto.p_children_teamRchildrenTeam1
+
+spell_list (2.ZeroProto.p_spellR	spellList:
+children_list (2.ZeroProto.p_childrenRchildrenList"t
+cost_fetter_child_c2s
+team_id (RteamIdB
+fetter_child_list (2.ZeroProto.p_key_valueRfetterChildList"p
+cost_fetter_child_s2c
+result (Rresult?
+children_team (2.ZeroProto.p_children_teamRchildrenTeam

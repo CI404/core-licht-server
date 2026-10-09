@@ -1,0 +1,53 @@
+
+‡
+
+proto_item.proto	ZeroProtoproto_type.proto"
+item_info_c2s"6
+item_info_s2c%
+info (2.ZeroProto.p_itemRinfo"8
+item_update_s2c%
+info (2.ZeroProto.p_itemRinfo"*
+item_delete_s2c
+id_list (RidList"9
+item_use_c2s
+item_id (RitemId
+num (Rnum";
+item_use_s2c
+code (Rcode
+item_id (RitemId"W
+item_sell_c2s
+location (Rlocation*
+list (2.ZeroProto.p_key_valueRlist"#
+item_sell_s2c
+code (Rcode";
+item_gain_s2c*
+list (2.ZeroProto.p_item_gainRlist"‚
+item_compose_c2s
+type (Rtype
+sys_id (RsysId
+num (Rnum1
+alternative_material (RalternativeMaterial"–
+item_compose_s2c
+code (Rcode
+type (Rtype
+sys_id (RsysId
+num (Rnum1
+alternative_material (RalternativeMaterial"K
+item_up_children_c2s
+item_id (RitemId
+children (Rchildren"_
+item_up_children_s2c
+code (Rcode
+item_id (RitemId
+children (Rchildren"^
+item_choice_gift_c2s
+item_id (RitemId
+	reward_id (RrewardId
+num (Rnum"r
+item_choice_gift_s2c
+code (Rcode
+item_id (RitemId
+	reward_id (RrewardId
+num (Rnum"T
+item_dup_thing_gain_s2c9
+	item_list (2.ZeroProto.p_dup_reward_itemRitemList

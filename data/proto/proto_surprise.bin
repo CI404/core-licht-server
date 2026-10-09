@@ -1,0 +1,50 @@
+
+å	
+proto_surprise.proto	ZeroProtoproto_type.proto"
+surprise_info_c2s"­
+surprise_info_s2c-
+dups (2.ZeroProto.p_surprise_dupRdups1
+surprise (2.ZeroProto.p_surpriseRsurprise
+	cache_cnt (RcacheCnt
+left_cnt (RleftCnt"
+surprise_open_c2s"F
+surprise_open_s2c1
+surprise (2.ZeroProto.p_surpriseRsurprise"
+surprise_close_s2c"à
+surprise_dup_win_s2c
+dup_id (RdupId
+	cost_time (RcostTime
+	best_time (RbestTime
+grade (Rgrade
+score (Rscore,
+items (2.ZeroProto.p_item_gainRitems
+
+child_list (R	childList"ð
+surprise_dup_lost_s2c
+type (Rtype
+dup_id (RdupId
+	cost_time (RcostTime
+grade (Rgrade
+left_hp (RleftHp 
+left_hp_rate (R
+leftHpRate
+revive_time (R
+reviveTime
+
+child_list (R	childList"H
+surprise_enter_dup_c2s
+dup_id (RdupId
+team_id (RteamId"
+surprise_tasks_c2s"B
+surprise_tasks_s2c,
+tasks (2.ZeroProto.p_key_valueRtasks"-
+surprise_tasks_finish_s2c
+ids (Rids".
+surprise_get_task_reward_c2s
+id (Rid"F
+surprise_get_task_reward_s2c
+result (Rresult
+id (Rid"W
+surprise_update_cache_cnt_s2c
+	cache_cnt (RcacheCnt
+left_cnt (RleftCnt

@@ -1,0 +1,91 @@
+
+ 
+proto_equip.proto	ZeroProtoproto_type.proto"
+equip_info_c2s"A
+equip_info_s2c/
+info (2.ZeroProto.p_children_equipRinfo"C
+equip_update_s2c/
+info (2.ZeroProto.p_children_equipRinfo"+
+equip_delete_s2c
+id_list (RidList"T
+equip_dress_c2s
+id (Rid
+children_id (R
+childrenId
+pos (Rpos"5
+equip_dress_s2c
+code (Rcode
+id (Rid"#
+equip_undress_c2s
+id (Rid"7
+equip_undress_s2c
+code (Rcode
+id (Rid"I
+equip_compose_choice_attrs_c2s
+id (Rid
+id_list (RidList"”
+equip_compose_choice_attrs_s2c
+code (Rcode
+id (Rid
+is_login (RisLogin3
+info (2.ZeroProto.p_equip_choice_attrsRinfo"2
+equip_compose_c2s
+
+attr_order (R	attrOrder"'
+equip_compose_s2c
+code (Rcode"B
+equip_reset_choice_attrs_c2s
+id (Rid
+star (Rstar"¦
+equip_reset_choice_attrs_s2c
+code (Rcode
+id (Rid
+star (Rstar
+is_login (RisLogin3
+info (2.ZeroProto.p_equip_choice_attrsRinfo"0
+equip_reset_c2s
+
+attr_order (R	attrOrder"%
+equip_reset_s2c
+code (Rcode",
+equip_resolve_c2s
+id_list (RidList"'
+equip_resolve_s2c
+code (Rcode"4
+equip_lock_c2s
+id (Rid
+lock (Rlock"H
+equip_lock_s2c
+code (Rcode
+id (Rid
+lock (Rlock"|
+equip_strong_c2s
+id (Rid
+
+equip_list (R	equipList9
+stuff_amount (2.ZeroProto.p_key_valueRstuffAmount"&
+equip_strong_s2c
+code (Rcode""
+equip_purify_c2s
+id (Rid"&
+equip_purify_s2c
+code (Rcode"9
+equip_reset_affix_c2s
+id (Rid
+pos (Rpos"+
+equip_reset_affix_s2c
+code (Rcode"3
+equip_see_c2s
+id (Rid
+flag (Rflag"G
+equip_see_s2c
+code (Rcode
+id (Rid
+flag (Rflag"9
+equip_replace_c2s
+a_id (RaId
+b_id (RbId"M
+equip_replace_s2c
+code (Rcode
+a_id (RaId
+b_id (RbId
