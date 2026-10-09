@@ -17,6 +17,17 @@
 
 ## 快速開始（三步）
 
+### 步驟 0：放入執行環境（讓它變「免安裝」）
+
+從 [Releases](https://github.com/CI404/core-licht-server/releases) 下載兩個附件並解壓到專案根目錄：
+
+| 附件 | 解壓後位置 |
+|---|---|
+| `runtime-python.zip`（12.8 MB） | `python\python.exe` |
+| `runtime-node.zip`（33.4 MB） | `node\node.exe` |
+
+> 沒有這兩個資料夾也能跑，但你得自己安裝 Python（含 `protobuf`）與 Node.js。
+
 ### 步驟 1：告訴伺服器「用哪個 IP」
 
 雙擊 `scripts\2-顯示本機IP.bat`，它會列出你電腦的區網 IP。
@@ -81,8 +92,8 @@ licht-offline-server\
 │   ├── decoded\                365 個遊戲配置表（數值唯一來源）
 │   └── proto\                  64 個協定描述 + msgmap + playerattrs
 │
-├── python\                     內嵌 Python 3.12.14 + protobuf 7.36.2
-├── node\                       內嵌 Node.js v24.21.0
+├── python\                    內嵌 Python 3.12.14 + protobuf 7.36.2（來自 Release 附件）
+├── node\                      內嵌 Node.js v24.21.0（來自 Release 附件）
 ├── output\                     UrlList 產出位置
 ├── runtime\                    日誌（mock-server.log / cdn-requests.log / tcp-capture.jsonl）
 └── docs\
@@ -98,7 +109,7 @@ licht-offline-server\
 | 項目 | 說明 |
 |---|---|
 | 作業系統 | Windows 10 / 11（x64） |
-| Python / Node | **不需要安裝** —— 已內嵌在 `python\` 與 `node\` |
+| Python / Node | **不需要安裝** —— 從 [Releases](https://github.com/CI404/core-licht-server/releases) 下載附件解壓即可（12.8 + 33.4 MB） |
 | 遊戲本體 | 自備原廠 APK + OBB（`com.tw99.no23.an`） |
 | OBB 解包資源 | CDN 需要 `obb_main` / `obb_patch` 路徑（見下方） |
 

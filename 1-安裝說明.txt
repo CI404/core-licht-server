@@ -5,10 +5,19 @@
 
 這個資料夾已經「自帶執行環境」，你不需要安裝 Python 或 Node.js。
 
+（如果你是從 GitHub 下載的，請先到 Releases 頁面下載兩個附件，
+  解壓到本資料夾，就會出現 python\ 與 node\ 兩個子資料夾。）
+
 
 --------------------------------------------------------------------------------
   三步驟開始
 --------------------------------------------------------------------------------
+
+【步驟 0】放入執行環境（從 GitHub 下載才需要）
+    到 https://github.com/CI404/core-licht-server/releases
+    下載並解壓到本資料夾：
+        runtime-python.zip  →  解壓出 python\python.exe
+        runtime-node.zip    →  解壓出 node\node.exe
 
 【步驟 1】設定要用哪個 IP
     雙擊   scripts\2-顯示本機IP.bat
