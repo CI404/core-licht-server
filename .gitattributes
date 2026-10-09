@@ -1,0 +1,93 @@
+# ==============================================================================
+#  核心：利希特 — 離線伺服器  .gitattributes
+#
+#  目的：強制指定每個檔案在【倉庫裡】與【檢出後】的行尾，避免跨平台壞掉。
+#  最重要的規則：Windows 批次檔（.bat）必須是 CRLF，
+#               否則在 cmd.exe 下會出現「'xxx' is not recognized」之類的鬼打牆。
+# ==============================================================================
+
+# ---- 全域預設：進倉庫時正規化成 LF ----
+* text=auto
+
+# ---- Windows 批次檔：檢出時必須 CRLF ----
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+
+# ---- PowerShell：同樣給 CRLF（Windows 工具鏈用）----
+*.ps1   text eol=crlf
+*.psm1  text eol=crlf
+
+# ---- 程式碼與文件：LF（跨平台一致）----
+*.py    text eol=lf
+*.js    text eol=lf
+*.json  text eol=lf
+*.md    text eol=lf
+*.txt   text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+.gitignore       text eol=lf
+.gitattributes   text eol=lf
+
+# ==============================================================================
+#  二進位檔案：不做任何行尾轉換、不做 diff
+# ==============================================================================
+
+# ---- 遊戲資源 / 打包檔 ----
+*.obb   binary
+*.ab    binary
+*.bin   binary
+*.dat   binary
+*.pak   binary
+*.zip   binary
+*.7z    binary
+*.rar   binary
+*.xapk  binary
+*.apk   binary
+
+# ---- 影像 / 音訊 / 影片 ----
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.bmp   binary
+*.ico   binary
+*.tga   binary
+*.psd   binary
+*.mp3   binary
+*.ogg   binary
+*.wav   binary
+*.mp4   binary
+*.webm  binary
+
+# ---- 字型 ----
+*.ttf   binary
+*.otf   binary
+*.woff  binary
+*.woff2 binary
+
+# ---- 執行檔 / 函式庫 ----
+*.exe   binary
+*.dll   binary
+*.so    binary
+*.dylib binary
+*.pyd   binary
+*.lib   binary
+*.exp   binary
+
+# ---- 資料庫 / 快取 ----
+*.db    binary
+*.sqlite binary
+*.pyc   binary
+*.pyo   binary
+
+# ==============================================================================
+#  語言統計（讓 GitHub 不要把 data/ 的 JSON 當成主要語言）
+# ==============================================================================
+data/decoded/*.json   linguist-generated=true
+data/proto/*.bin      linguist-generated=true
+cdn/cdnroot/**        linguist-generated=true
+
+# 文件類不列入語言比例
+*.md    linguist-documentation
+docs/** linguist-documentation
