@@ -1,0 +1,88 @@
+
+ı
+proto_spell.proto	ZeroProtoproto_type.proto"
+spell_have_c2s"C
+spell_have_s2c1
+
+spell_list (2.ZeroProto.p_spellR	spellList"4
+spell_research_ins_task_c2s
+ins_id (RinsId"^
+spell_research_ins_task_s2c?
+selected_list (2.ZeroProto.p_research_taskRselectedList"K
+spell_accept_spell_task_c2s
+ins_id (RinsId
+sys_id (RsysId"µ
+spell_accept_spell_task_s2c
+result (Rresult=
+	institute (2.ZeroProto.p_research_instituteR	institute?
+selected_list (2.ZeroProto.p_research_taskRselectedList"M
+spell_complete_spell_task_c2s
+ins_id (RinsId
+sys_id (RsysId"e
+spell_complete_spell_task_s2c
+result (Rresult
+ins_id (RinsId
+sys_id (RsysId"0
+spell_spec_research_c2s
+ins_id (RinsId"^
+spell_spec_research_s2c
+result (Rresult
+ins_id (RinsId
+times (Rtimes"2
+spell_secret_research_c2s
+ins_id (RinsId"J
+spell_secret_research_s2c
+result (Rresult
+ins_id (RinsId"5
+spell_refresh_spell_task_c2s
+ins_id (RinsId"u
+spell_refresh_spell_task_s2c
+result (Rresult=
+	institute (2.ZeroProto.p_research_instituteR	institute"I
+spell_skin_switch_c2s
+spell_id (RspellId
+sys_id (RsysId"Y
+spell_skin_switch_s2c
+result (Rresult(
+spell (2.ZeroProto.p_spellRspell"+
+spell_activate_c2s
+sys_id (RsysId"V
+spell_activate_s2c
+result (Rresult(
+spell (2.ZeroProto.p_spellRspell"Å
+spell_load_c2s
+
+team_index (R	teamIndex
+event_id (ReventId5
+
+spell_list (2.ZeroProto.p_key_valueR	spellList"ô
+spell_load_s2c
+result (Rresult
+
+team_index (R	teamIndex
+event_id (ReventId5
+
+spell_list (2.ZeroProto.p_key_valueR	spellList"D
+spell_upgrade_c2s
+spell_id (RspellId
+tolvl (Rtolvl"U
+spell_upgrade_s2c
+result (Rresult(
+spell (2.ZeroProto.p_spellRspell"3
+spell_star_upgrade_c2s
+spell_id (RspellId"Z
+spell_star_upgrade_s2c
+result (Rresult(
+spell (2.ZeroProto.p_spellRspell"^
+spell_alter_gift_c2s
+spell_id (RspellId
+star (Rstar
+gift_id (RgiftId"X
+spell_alter_gift_s2c
+result (Rresult(
+spell (2.ZeroProto.p_spellRspell"4
+spell_research_ins_info_c2s
+ins_id (RinsId"\
+spell_research_ins_info_s2c=
+	institute (2.ZeroProto.p_research_instituteR	institute"
+spell_ins_init_c2s

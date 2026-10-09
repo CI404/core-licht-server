@@ -1,0 +1,144 @@
+
+À#
+proto_building.proto	ZeroProtoproto_type.proto"2
+building_info_c2s
+
+is_request (R	isRequest"‚
+building_info_s2c4
+center (2.ZeroProto.p_building_centerRcenter7
+	room_list (2.ZeroProto.p_building_roomRroomList"4
+building_objects_info_c2s
+room_id (RroomId"f
+building_objects_info_s2c
+room_id (RroomId0
+list (2.ZeroProto.p_building_objectRlist"1
+building_unlock_core_c2s
+sys_id (RsysId"b
+building_unlock_core_s2c
+result (Rresult.
+core (2.ZeroProto.p_building_coreRcore"+
+building_upgrade_core_c2s
+id (Rid"c
+building_upgrade_core_s2c
+result (Rresult.
+core (2.ZeroProto.p_building_coreRcore"j
+building_place_c2s
+room_id (RroomId;
+pos_list (2 .ZeroProto.p_building_object_posRposList"º
+building_place_s2c
+result (Rresult
+room_id (RroomId=
+object_list (2.ZeroProto.p_building_objectR
+objectList:
+fur_list (2.ZeroProto.p_building_furnitureRfurList8
+mac_list (2.ZeroProto.p_building_machineRmacList>
+	snap_list (2!.ZeroProto.p_building_object_snapRsnapList"1
+building_unlock_room_c2s
+sys_id (RsysId"b
+building_unlock_room_s2c
+result (Rresult.
+room (2.ZeroProto.p_building_roomRroom"E
+building_enter_scene_c2s
+type (Rtype
+sys_id (RsysId"]
+building_enter_scene_s2c
+result (Rresult
+type (Rtype
+sys_id (RsysId"'
+building_use_pill_c2s
+id (Rid"b
+building_use_pill_s2c
+result (Rresult1
+info (2.ZeroProto.p_building_machineRinfo"3
+building_draw_output_c2s
+id_list (RidList"d
+building_draw_output_s2c
+result (Rresult0
+list (2.ZeroProto.p_building_outputRlist"5
+#building_notify_object_pos_list_c2s
+id (Rid"b
+#building_notify_object_pos_list_s2c;
+pos_list (2 .ZeroProto.p_building_object_posRposList"5
+building_notify_object_list_c2s
+list (Rlist"S
+building_notify_object_list_s2c0
+list (2.ZeroProto.p_building_objectRlist"6
+ building_notify_machine_list_c2s
+list (Rlist"U
+ building_notify_machine_list_s2c1
+list (2.ZeroProto.p_building_machineRlist"8
+"building_notify_furniture_list_c2s
+list (Rlist"Y
+"building_notify_furniture_list_s2c3
+list (2.ZeroProto.p_building_furnitureRlist" 
+building_spare_object_info_c2s"W
+building_spare_object_info_s2c5
+list (2!.ZeroProto.p_building_object_snapRlist"P
+building_gaining_objects_s2c0
+list (2.ZeroProto.p_building_objectRlist"1
+building_confirm_object_c2s
+list (Rlist"I
+building_confirm_object_s2c
+result (Rresult
+list (Rlist"W
+building_notify_center_info_s2c4
+center (2.ZeroProto.p_building_centerRcenter"4
+building_upgrade_room_c2s
+room_id (RroomId"c
+building_upgrade_room_s2c
+result (Rresult.
+room (2.ZeroProto.p_building_roomRroom"6
+building_draw_atoms_reward_c2s
+index (Rindex"¤
+building_draw_atoms_reward_s2c
+result (Rresult
+index (Rindex
+atoms_index (R
+atomsIndex3
+	item_list (2.ZeroProto.p_key_valueRitemList"S
+building_notify_fur_dust_s2c3
+list (2.ZeroProto.p_building_fur_atomsRlist"E
+building_clean_furs_c2s*
+list (2.ZeroProto.p_key_valueRlist"p
+building_clean_furs_s2c
+result (Rresult=
+reward_list (2.ZeroProto.p_building_rewardR
+rewardList"
+building_core_list_c2s"Q
+building_core_list_s2c7
+	core_list (2.ZeroProto.p_building_coreRcoreList"S
+building_notify_room_s2c7
+	room_list (2.ZeroProto.p_building_roomRroomList"W
+building_notify_room_atoms_s2c5
+
+atoms_list (2.ZeroProto.p_key_valueR	atomsList"E
+building_clean_room_c2s*
+list (2.ZeroProto.p_key_valueRlist"o
+building_reset_room_c2s
+room_id (RroomId;
+pos_list (2 .ZeroProto.p_building_object_posRposList"
+building_status_list_c2s"S
+building_status_list_s2c7
+status_list (2.ZeroProto.p_key_valueR
+statusList"
+building_guide_rush_c2s"L
+building_change_room_name_c2s
+room_id (RroomId
+name (	Rname"d
+building_change_room_name_s2c
+result (Rresult
+room_id (RroomId
+name (	Rname"
+building_notify_bonus_c2s"L
+building_notify_bonus_s2c/
+list (2.ZeroProto.p_building_bonusRlist"4
+building_draw_bonus_c2s
+bonus_id (RbonusId"L
+building_draw_bonus_s2c
+result (Rresult
+bonus_id (RbonusId"5
+building_share_bonus_c2s
+bonus_id (RbonusId"M
+building_share_bonus_s2c
+result (Rresult
+bonus_id (RbonusId

@@ -1,0 +1,143 @@
+
+⁄
+proto_fight.proto	ZeroProtoproto_type.proto"’
+fight_sync_hp_s2c
+mapid (Rmapid
+line (Rline
+	object_id (RobjectId
+hp (Rhp
+hp_max (RhpMax
+es (Res
+es_max (ResMax
+type (Rtype
+from_id	 (RfromId"Å
+fight_sync_mp_s2c
+mapid (Rmapid
+line (Rline
+	object_id (RobjectId
+mp (Rmp
+mp_max (RmpMax"ﬂ
+fight_use_skill_c2s
+mapid (Rmapid
+line (Rline
+	skill_uid (RskillUid
+skill_id (RskillId3
+attacker (2.ZeroProto.p_fighter_idRattacker1
+target (2.ZeroProto.p_skill_targetRtarget"∑
+fight_use_skill_s2c
+result (Rresult3
+attacker (2.ZeroProto.p_fighter_idRattacker
+	skill_uid (RskillUid
+skill_id (RskillId
+	skill_lvl (RskillLvl"Ü
+fight_broadcast_use_skill_s2c
+mapid (Rmapid
+line (Rline
+	skill_uid (RskillUid
+skill_id (RskillId
+	skill_lvl (RskillLvl3
+attacker (2.ZeroProto.p_fighter_idRattacker1
+target (2.ZeroProto.p_skill_targetRtarget"Ø
+fight_skill_hit_c2s
+mapid (Rmapid
+line (Rline3
+attacker (2.ZeroProto.p_fighter_idRattacker3
+defender (2.ZeroProto.p_fighter_idRdefender
+	skill_uid (RskillUid
+skill_id (RskillId
+hit_seq (RhitSeq 
+hit_back_dis (R
+hitBackDis7
+hit_back_pos	 (2.ZeroProto.p_positionR
+hitBackPos"
+hit_effect_id
+ (RhitEffectId
+hit_pos (RhitPos
+	hit_sound (	RhitSound"–
+fight_skill_hit_s2c
+mapid (Rmapid
+line (Rline3
+attacker (2.ZeroProto.p_fighter_idRattacker3
+defender (2.ZeroProto.p_fighter_idRdefender
+	skill_uid (RskillUid
+skill_id (RskillId 
+hit_back_dis (R
+hitBackDis7
+hit_back_pos (2.ZeroProto.p_positionR
+hitBackPos"
+hit_effect_id	 (RhitEffectId
+hit_pos
+ (RhitPos
+	hit_sound (	RhitSound
+	hit_state (RhitState
+	hit_value (RhitValue"^
+fight_break_skill_c2s
+mapid (Rmapid
+line (Rline
+	skill_uid (RskillUid"^
+fight_break_skill_s2c
+mapid (Rmapid
+line (Rline
+	skill_uid (RskillUid"‰
+fight_trigger_buff_c2s
+mapid (Rmapid
+line (Rline3
+attacker (2.ZeroProto.p_fighter_idRattacker3
+defender (2.ZeroProto.p_fighter_idRdefender
+	skill_uid (RskillUid
+buff_seq (RbuffSeq"\
+fight_skill_end_c2s
+mapid (Rmapid
+line (Rline
+	skill_uid (RskillUid">
+fight_role_die_s2c
+mapid (Rmapid
+line (Rline"]
+fight_revive_c2s
+mapid (Rmapid
+line (Rline
+revive_type (R
+reviveType"K
+fight_revive_s2c
+result (Rresult
+revive_type (R
+reviveType"ù
+fight_ground_destroy_c2s
+mapid (Rmapid
+line (Rline3
+attacker (2.ZeroProto.p_fighter_idRattacker"
+ground_obj_id (RgroundObjId"u
+fight_ground_destroy_s2c
+code (Rcode
+mapid (Rmapid
+line (Rline
+	object_id (RobjectId"®
+fight_summon_object_c2s
+mapid (Rmapid
+line (Rline
+	skill_uid (RskillUid
+	summon_id (RsummonId)
+site (2.ZeroProto.p_positionRsite"t
+fight_summon_object_s2c
+code (Rcode
+mapid (Rmapid
+line (Rline
+	object_id (RobjectId"◊
+fight_mount_object_skill_s2c
+mapid (Rmapid
+line (Rline
+	object_id (RobjectId
+	skill_uid (RskillUid
+skill_id (RskillId
+	skill_lvl (RskillLvl
+	target_id (RtargetId"ù
+fight_update_skill_cds_s2c
+mapid (Rmapid
+line (Rline
+	object_id (RobjectId8
+	skill_cds (2.ZeroProto.p_fight_skill_cdRskillCds"
+fight_update_skill_card_s2c
+mapid (Rmapid
+line (Rline6
+
+skill_card (2.ZeroProto.p_skill_cardR	skillCard

@@ -1,0 +1,109 @@
+
+å
+proto_pvp.proto	ZeroProtoproto_type.proto"
+pvp_info_c2s"Â
+pvp_info_s2c
+	season_id (RseasonId
+pvp_id (RpvpId
+lvl (Rlvl
+points (Rpoints
+server_rank (R
+serverRank,
+season_server_rank (RseasonServerRank.
+history_server_rank (RhistoryServerRank 
+ever_max_lvl (R
+everMaxLvl
+max_lvl	 (RmaxLvl
+max_star
+ (RmaxStar
+	early_lvl (RearlyLvl
+star (Rstar
+acc_star (RaccStar
+rank_reward (R
+rankReward#
+weekly_reward (RweeklyReward
+type (Rtype
+	acc_times (RaccTimes
+fight_times (R
+fightTimes=
+children_times (2.ZeroProto.p_key_valueRchildrenTimes*
+pool (2.ZeroProto.p_key_valueRpool8
+history_list (2.ZeroProto.p_pvp_rankRhistoryList
+is_shown (RisShown"+
+pvp_weekly_reward_c2s
+star (Rstar"h
+pvp_weekly_reward_s2c
+result (Rresult
+star (Rstar#
+weekly_reward (RweeklyReward"'
+pvp_rank_reward_c2s
+lvl (Rlvl"`
+pvp_rank_reward_s2c
+result (Rresult
+lvl (Rlvl
+rank_reward (R
+rankReward"
+pvp_sync_phase_c2s"E
+pvp_sync_phase_s2c
+phase (Rphase
+end_time (RendTime"G
+pvp_select_c2s
+phase (Rphase
+children_id (R
+childrenId"R
+pvp_self_select_c2s;
+children_list (2.ZeroProto.p_key_valueRchildrenList"
+pvp_confirm_prepare_c2s"
+pvp_pool_c2s"Í
+pvp_pool_s2c:
+six_star_list (2.ZeroProto.p_key_valueRsixStarList5
+
+other_list (2.ZeroProto.p_key_valueR	otherList3
+	self_list (2.ZeroProto.p_key_valueRselfList2
+	attr_list (2.ZeroProto.p_pvp_attrRattrList"B
+pvp_change_hero_c2s
+hero_id (RheroId
+form (Rform"·
+pvp_dup_end_s2c
+dup_id (RdupId
+result (Rresult
+star (Rstar
+gain_points (R
+gainPoints3
+	gain_list (2.ZeroProto.p_key_valueRgainList5
+	team_list (2.ZeroProto.p_nf_pvp_teamRteamList"T
+pvp_set_self_pool_c2s;
+children_list (2.ZeroProto.p_key_valueRchildrenList"l
+pvp_set_self_pool_s2c
+result (Rresult;
+children_list (2.ZeroProto.p_key_valueRchildrenList"-
+pvp_ban_c2s
+sys_id_list (R	sysIdList"@
+pvp_ban_s2c
+result (Rresult
+ban_list (RbanList"=
+pvp_npc_list_s2c)
+list (2.ZeroProto.p_childrenRlist"
+pvp_recommend_c2s"O
+pvp_recommend_s2c:
+
+recommends (2.ZeroProto.p_pvp_recommendR
+recommends"
+pvp_show_calc_c2s"+
+pvp_show_calc_s2c
+result (Rresult"R
+pvp_notify_children_attr_s2c2
+	attr_list (2.ZeroProto.p_pvp_attrRattrList"ç
+pvp_match_show_s2c
+	season_id (RseasonId
+pvp_id (RpvpId
+rank (Rrank
+star (Rstar
+	child_lvl (RchildLvl"N
+pvp_report_c2s
+id (Rid
+options (Roptions
+text (	Rtext"8
+pvp_report_s2c
+result (Rresult
+id (Rid

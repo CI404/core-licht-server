@@ -1,0 +1,23 @@
+
+Å
+proto_pass_dup_present.proto	ZeroProtoproto_type.proto"e
+"pass_dup_present_activity_info_s2c?
+activity_list (2.ZeroProto.p_activity_infoRactivityList"k
+(pass_dup_present_update_button_state_s2c?
+activity_list (2.ZeroProto.p_activity_infoRactivityList"B
+pass_dup_present_get_reward_c2s
+activity_id (R
+activityId"X
+pass_dup_present_get_reward_s2c
+activity_id (R
+activityId
+state (Rstate"l
+)pass_dup_present_close_func_interface_s2c?
+activity_list (2.ZeroProto.p_activity_infoRactivityList"H
+%pass_dup_present_get_button_state_c2s
+activity_id (R
+activityId"^
+%pass_dup_present_get_button_state_s2c
+activity_id (R
+activityId
+state (Rstate

@@ -1,0 +1,47 @@
+
+®
+proto_skill.proto	ZeroProtoproto_type.proto"
+skill_info_c2s"<
+skill_info_s2c*
+skills (2.ZeroProto.p_skillRskills"N
+skill_equip_c2s
+id (Rid
+seq (Rseq
+skill_id (RskillId"f
+skill_equip_s2c
+result (Rresult
+id (Rid
+seq (Rseq
+skill_id (RskillId">
+skill_upgrade_c2s
+id (Rid
+skill_id (RskillId"s
+skill_upgrade_s2c
+result (Rresult
+id (Rid
+skill_id (RskillId
+	skill_lvl (RskillLvl"<
+skill_reset_c2s
+id (Rid
+skill_id (RskillId"T
+skill_reset_s2c
+result (Rresult
+id (Rid
+skill_id (RskillId""
+skill_detach_c2s
+id (Rid"E
+skill_detach_s2c
+result (Rresult
+skill_id (RskillId"A
+skill_research_c2s
+skill_id (RskillId
+ids (Rids"l
+skill_research_s2c
+result (Rresult
+skill_id (RskillId#
+research_rate (RresearchRate"T
+skill_update_use_count_s2c
+skill_id (RskillId
+	use_count (RuseCount"9
+skill_add_s2c(
+skill (2.ZeroProto.p_skillRskill

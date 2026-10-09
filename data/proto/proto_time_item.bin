@@ -1,0 +1,18 @@
+
+¢
+proto_time_item.proto	ZeroProtoproto_type.proto"
+time_item_info_c2s"@
+time_item_info_s2c*
+info (2.ZeroProto.p_time_itemRinfo"B
+time_item_update_s2c*
+info (2.ZeroProto.p_time_itemRinfo"/
+time_item_delete_c2s
+id_list (RidList"/
+time_item_delete_s2c
+id_list (RidList"5
+time_item_use_c2s
+id (Rid
+num (Rnum"7
+time_item_use_s2c
+code (Rcode
+id (Rid

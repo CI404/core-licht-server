@@ -1,0 +1,69 @@
+
+õ
+proto_recruit.proto	ZeroProtoproto_type.proto"
+recruit_pool_c2s"J
+recruit_pool_s2c6
+	pool_list (2.ZeroProto.p_recruit_poolRpoolList"Ž
+recruit_draw_c2s
+pool_sys_id (R	poolSysId
+
+draw_times (R	drawTimes 
+fixed_sys_id (R
+fixedSysId
+is_bonus (RisBonus"í
+recruit_draw_s2c
+code (Rcode
+pool_sys_id (R	poolSysId
+
+draw_times (R	drawTimesN
+reward_children_list (2.ZeroProto.p_children_rewardRrewardChildrenList6
+	pool_info (2.ZeroProto.p_recruit_poolRpoolInfo"V
+recruit_update_pool_list_s2c6
+	pool_list (2.ZeroProto.p_recruit_poolRpoolList"X
+ recruit_exchange_draw_reward_c2s
+pool_sys_id (R	poolSysId
+index (Rindex"·
+ recruit_exchange_draw_reward_s2c
+code (Rcode
+pool_sys_id (R	poolSysId
+index (Rindex
+
+draw_times (R	drawTimesN
+reward_children_list (2.ZeroProto.p_children_rewardRrewardChildrenList6
+	pool_info (2.ZeroProto.p_recruit_poolRpoolInfo"
+add_money_num (RaddMoneyNum"1
+recruit_close_pool_list_s2c
+list (Rlist"Ò
+recruit_bottom_draw_notice_s2c
+pool_sys_id (R	poolSysId
+
+draw_times (R	drawTimes!
+bottom_index (RbottomIndexN
+reward_children_list (2.ZeroProto.p_children_rewardRrewardChildrenList"?
+recruit_bottom_draw_submit_c2s
+
+index_list (R	indexList"S
+recruit_bottom_draw_submit_s2c
+code (Rcode
+
+index_list (R	indexList"M
+recruit_record_list_c2s
+group_id (RgroupId
+page_id (RpageId"¡
+recruit_record_list_s2c
+pages (Rpages
+group_id (RgroupId
+page_id (RpageId<
+record_list (2.ZeroProto.p_recruit_recordR
+recordList"2
+recruit_desc_c2s
+pool_sys_id (R	poolSysId"F
+recruit_desc_s2c
+pool_sys_id (R	poolSysId
+desc (	Rdesc"2
+recruit_rate_c2s
+pool_sys_id (R	poolSysId"²
+recruit_rate_s2c
+pool_sys_id (R	poolSysId;
+sys_up_list (2.ZeroProto.p_sys_recruit_upR	sysUpListA
+sys_rate_list (2.ZeroProto.p_sys_recruit_rateRsysRateList

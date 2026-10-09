@@ -1,0 +1,40 @@
+
+ú
+proto_shop.proto	ZeroProtoproto_type.proto";
+shop_shop_page_info_c2s 
+page_id_list (R
+pageIdList"E
+shop_shop_page_info_s2c*
+list (2.ZeroProto.p_shop_pageRlist"/
+shop_shop_item_one_c2s
+sys_id (RsysId"M
+shop_shop_item_one_s2c3
+	item_info (2.ZeroProto.p_shop_itemRitemInfo"7
+shop_buy_c2s
+sys_id (RsysId
+num (Rnum"K
+shop_buy_s2c
+code (Rcode
+sys_id (RsysId
+num (Rnum"
+shop_month_card_all_c2s"F
+shop_month_card_all_s2c+
+list (2.ZeroProto.p_month_cardRlist"N
+shop_update_month_card_list_s2c+
+list (2.ZeroProto.p_month_cardRlist"N
+ shop_month_card_daily_reward_s2c*
+month_card_sysids (RmonthCardSysids"G
+shop_update_page_info_s2c*
+list (2.ZeroProto.p_shop_pageRlist")
+shop_close_page_s2c
+list (Rlist"<
+shop_exchange_c2s
+sys_id (RsysId
+num (Rnum"P
+shop_exchange_s2c
+code (Rcode
+sys_id (RsysId
+num (Rnum"8
+shop_recharge_buy_s2c
+recharge_id (R
+rechargeId

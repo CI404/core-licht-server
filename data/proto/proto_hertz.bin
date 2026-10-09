@@ -1,0 +1,53 @@
+
+õ	
+proto_hertz.proto	ZeroProtoproto_type.proto"'
+hertz_info_c2s
+act_id (RactId"Ø
+hertz_info_s2c
+act_id (RactId
+	act_money (RactMoney!
+history_star (RhistoryStar
+hook (Rhook
+
+likes_list (R	likesList<
+reward_state (2.ZeroProto.p_hertz_rewardRrewardState"Y
+hertz_get_reward_c2s
+act_id (RactId
+type (Rtype
+number (Rnumber"m
+hertz_get_reward_s2c
+code (Rcode
+act_id (RactId
+type (Rtype
+number (Rnumber",
+hertz_rank_info_c2s
+act_id (RactId"œ
+hertz_rank_info_s2c
+act_id (RactId
+rank_per (RrankPer
+star (Rstar
+time (Rtime+
+list (2.ZeroProto.p_hertz_rankRlist"8
+hertz_likes_c2s
+act_id (RactId
+id (Rid"L
+hertz_likes_s2c
+code (Rcode
+act_id (RactId
+id (Rid".
+hertz_hook_reward_c2s
+act_id (RactId"B
+hertz_hook_reward_s2c
+code (Rcode
+act_id (RactId"I
+hertz_update_act_money_s2c
+act_id (RactId
+value (Rvalue"5
+hertz_dup_pass_time_info_c2s
+dup_id (RdupId"©
+hertz_dup_pass_time_info_s2c
+dup_id (RdupId
+	self_time (RselfTime
+
+top10_time (R	top10Time6
+top10_lineup (2.ZeroProto.p_lineupRtop10Lineup

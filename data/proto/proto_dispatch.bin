@@ -1,0 +1,33 @@
+
+»
+proto_dispatch.proto	ZeroProtoproto_type.proto"
+dispatch_info_c2s"Z
+dispatch_info_s2c
+visible (Rvisible+
+doing (2.ZeroProto.p_dispatchRdoing"Z
+dispatch_start_c2s
+dispatch_id (R
+dispatchId#
+children_list (RchildrenList"S
+dispatch_start_s2c
+code (Rcode)
+info (2.ZeroProto.p_dispatchRinfo"4
+dispatch_stop_c2s
+dispatch_id (R
+dispatchId"R
+dispatch_stop_s2c
+code (Rcode)
+info (2.ZeroProto.p_dispatchRinfo"6
+dispatch_finish_c2s
+dispatch_id (R
+dispatchId"k
+dispatch_finish_s2c
+code (Rcode
+is_del (RisDel)
+info (2.ZeroProto.p_dispatchRinfo".
+dispatch_add_visible_s2c
+list (Rlist"@
+dispatch_update_s2c)
+info (2.ZeroProto.p_dispatchRinfo"C
+dispatch_children_s2c*
+info (2.ZeroProto.p_key_valueRinfo

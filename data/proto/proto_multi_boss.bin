@@ -1,0 +1,45 @@
+
+˝
+proto_multi_boss.proto	ZeroProtoproto_type.proto"
+multi_boss_info_c2s"ê
+multi_boss_info_s2c
+code (Rcode
+times (Rtimes
+
+enhance_ts (R	enhanceTs0
+list (2.ZeroProto.p_multi_boss_infoRlist"1
+multi_boss_rank_info_c2s
+sys_id (RsysId"∆
+multi_boss_rank_info_s2c
+code (Rcode
+id (Rid
+rank_per (RrankPer
+damage (Rdamage!
+total_damage (RtotalDamage0
+list (2.ZeroProto.p_multi_boss_rankRlist"1
+multi_boss_dup_entry_c2s
+sys_id (RsysId".
+multi_boss_dup_entry_s2c
+code (Rcode"ﬂ
+multi_boss_dup_end_s2c
+result (Rresult
+dup_id (RdupId
+	pass_time (RpassTime
+damage (Rdamage
+grade (Rgrade,
+items (2.ZeroProto.p_item_gainRitems
+
+child_list (R	childList"6
+multi_boss_team_recommend_c2s
+sys_id (RsysId"w
+multi_boss_team_recommend_s2c
+code (Rcode
+sys_id (RsysId+
+list (2.ZeroProto.p_value_listRlist"3
+multi_boss_update_times_s2c
+times (Rtimes"
+multi_boss_best_rank_c2s"Y
+multi_boss_best_rank_s2c
+code (Rcode
+sys_id (RsysId
+rank (Rrank

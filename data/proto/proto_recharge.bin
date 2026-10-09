@@ -1,0 +1,27 @@
+
+—
+proto_recharge.proto	ZeroProtoproto_type.proto"
+recharge_first_info_c2s"1
+recharge_first_info_s2c
+status (Rstatus"
+recharge_first_reward_c2s"_
+recharge_first_reward_s2c.
+reward (2.ZeroProto.p_key_valueRreward
+code (Rcode"
+recharge_times_list_c2s"P
+recharge_times_list_s2c5
+
+times_list (2.ZeroProto.p_key_valueR	timesList"
+recharge_times_update_c2s"R
+recharge_times_update_s2c5
+
+times_list (2.ZeroProto.p_key_valueR	timesList"8
+recharge_coin_buy_c2s
+recharge_id (R
+rechargeId"L
+recharge_coin_buy_s2c
+code (Rcode
+recharge_id (R
+rechargeId"
+recharge_new_sync_c2s"
+recharge_new_sync_s2c

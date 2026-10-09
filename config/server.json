@@ -1,0 +1,32 @@
+{
+  "_說明": "這是本專案唯一需要手動修改的檔案。改完存檔，重新啟動伺服器即可生效。",
+
+  "host": "10.0.2.2",
+  "_host說明": "回給遊戲客戶端的『伺服器位址』。模擬器(MuMu/雷電)填 10.0.2.2；真機填你電腦的區網 IP(例如 192.168.1.100)。用 scripts\\2-顯示本機IP.bat 可查詢。",
+
+  "login_port": 9001,
+  "_login_port說明": "登入服(HTTP) + 遊戲服(TCP) 共用這個埠。若被佔用可改成 9002 等。",
+
+  "cdn_port": 8080,
+  "_cdn_port說明": "CDN 資源伺服器埠號。若被佔用可改。",
+
+  "decoded": "data/decoded",
+  "_decoded說明": "遊戲配置表(365 個 DataTable_*.rows.json)。玩家所有數值都從這裡推導。",
+
+  "proto": "data/proto",
+  "_proto說明": "協定描述檔(64 個 .bin + msgmap.json + playerattrs.json)。",
+
+  "cdn_root": "cdn/cdnroot",
+  "_cdn_root說明": "CDN 覆蓋目錄。內含 serv_list.txt(伺服器清單) 與公告檔，優先權最高。",
+
+  "obb_main": "obb/main/assets",
+  "_obb_main說明": "【必改】原廠 main OBB 解包後的 assets 目錄。CDN 會從這裡讀遊戲資源。可填相對路徑（相對於本專案根目錄）或絕對路徑。預設 obb/main/assets = 把 OBB 解包內容放進本專案的 obb 資料夾。",
+
+  "obb_patch": "obb/patch/assets",
+  "_obb_patch說明": "【必改】原廠 patch OBB 解包後的 assets 目錄。",
+
+  "log": "runtime/mock-server.log",
+  "capture": "runtime/tcp-capture.jsonl",
+  "cdn_log": "runtime/cdn-requests.log",
+  "_log說明": "執行期輸出。相對路徑 = 相對於本專案根目錄。"
+}

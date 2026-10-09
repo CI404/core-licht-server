@@ -1,0 +1,32 @@
+
+¡
+proto_wafer.proto	ZeroProtoproto_type.proto"
+wafer_info_c2s"8
+wafer_info_s2c&
+info (2.ZeroProto.p_waferRinfo":
+wafer_update_s2c&
+info (2.ZeroProto.p_waferRinfo"+
+wafer_delete_s2c
+id_list (RidList"N
+wafer_dress_c2s
+id (Rid
+equip_id (RequipId
+pos (Rpos"5
+wafer_dress_s2c
+code (Rcode
+id (Rid"#
+wafer_undress_c2s
+id (Rid"7
+wafer_undress_s2c
+code (Rcode
+id (Rid"E
+wafer_compose_c2s
+same_id (RsameId
+id_list (RidList"7
+wafer_compose_s2c
+code (Rcode
+id (Rid",
+wafer_resolve_c2s
+id_list (RidList"'
+wafer_resolve_s2c
+code (Rcode

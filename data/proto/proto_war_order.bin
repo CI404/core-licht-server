@@ -1,0 +1,31 @@
+
+Î
+proto_war_order.proto	ZeroProtoproto_type.proto"
+war_order_info_c2s"I
+war_order_info_s2c3
+	war_order (2.ZeroProto.p_war_orderRwarOrder":
+war_order_draw_c2s
+type (Rtype
+lvl (Rlvl"‡
+war_order_draw_s2c
+result (Rresult
+type (Rtype
+lvl (Rlvl3
+	war_order (2.ZeroProto.p_war_orderRwarOrder"
+war_order_draw_all_c2s"e
+war_order_draw_all_s2c
+result (Rresult3
+	war_order (2.ZeroProto.p_war_orderRwarOrder"-
+war_order_upgrade_c2s
+grade (Rgrade"d
+war_order_upgrade_s2c
+result (Rresult3
+	war_order (2.ZeroProto.p_war_orderRwarOrder")
+war_order_buy_exp_c2s
+num (Rnum"d
+war_order_buy_exp_s2c
+result (Rresult3
+	war_order (2.ZeroProto.p_war_orderRwarOrder"
+war_order_new_flag_c2s"0
+war_order_new_flag_s2c
+result (Rresult

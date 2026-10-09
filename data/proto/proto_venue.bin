@@ -1,0 +1,17 @@
+
+¬
+proto_venue.proto	ZeroProtoproto_type.proto"+
+venue_info_c2s
+venue_id (RvenueId"^
+venue_info_s2c
+venue_id (RvenueId1
+obj_info (2.ZeroProto.p_venue_objRobjInfo"F
+venue_action_c2s
+obj_id (RobjId
+	action_id (RactionId"Z
+venue_action_s2c
+code (Rcode
+obj_id (RobjId
+	action_id (RactionId"I
+venue_update_obj_s2c1
+obj_info (2.ZeroProto.p_venue_objRobjInfo

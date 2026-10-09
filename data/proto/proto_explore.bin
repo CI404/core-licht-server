@@ -1,0 +1,126 @@
+
+¥
+proto_explore.proto	ZeroProtoproto_type.proto"
+explore_info_c2s"J
+explore_info_s2c6
+	info_list (2.ZeroProto.p_explore_infoRinfoList"}
+explore_enter_c2s
+sys_id (RsysId4
+	hero_list (2.ZeroProto.p_hero_indexRheroList
+	child_ids (RchildIds"‡
+explore_enter_s2c
+sys_id (RsysId4
+	hero_list (2.ZeroProto.p_hero_indexRheroList
+grid (Rgrid
+sight_grids (R
+sightGrids
+
+fade_grids (R	fadeGrids
+
+free_areas (R	freeAreasI
+replace_events (2".ZeroProto.p_explore_replace_eventRreplaceEvents
+team_id (RteamId
+
+danger_val	 (R	dangerVal!
+efficacy_val
+ (RefficacyVal
+chips (Rchips;
+danger_limits (2.ZeroProto.p_key_valueRdangerLimits9
+event_counts (2.ZeroProto.p_key_valueReventCounts"+
+explore_childs_c2s
+sys_id (RsysId"•
+explore_childs_s2c
+sys_id (RsysId4
+	hero_list (2.ZeroProto.p_hero_indexRheroList2
+childs (2.ZeroProto.p_explore_childRchilds"*
+explore_items_c2s
+sys_id (RsysId"[
+explore_items_s2c
+sys_id (RsysId/
+items (2.ZeroProto.p_explore_itemRitems"*
+explore_leave_c2s
+sys_id (RsysId"*
+explore_leave_s2c
+sys_id (RsysId"*
+explore_reset_c2s
+sys_id (RsysId"*
+explore_reset_s2c
+sys_id (RsysId"?
+explore_move_c2s
+sys_id (RsysId
+grids (Rgrids"b
+explore_get_event_data_c2s
+sys_id (RsysId
+grid (Rgrid
+event_id (ReventId"±
+explore_hire_event_data_s2c
+sys_id (RsysId
+grid (Rgrid
+event_id (ReventId
+jobs (Rjobs8
+childs (2 .ZeroProto.p_explore_event_childRchilds"š
+explore_gain_event_data_s2c
+sys_id (RsysId
+grid (Rgrid
+event_id (ReventId5
+gains (2.ZeroProto.p_explore_event_itemRgains"z
+explore_trigger_event_c2s
+sys_id (RsysId
+grid (Rgrid
+event_id (ReventId
+ext_ids (RextIds"’
+explore_trigger_event_s2c
+result (Rresult
+sys_id (RsysId
+grid (Rgrid
+event_id (ReventId
+ext_ids (RextIds"½
+explore_dup_end_s2c
+result (Rresult
+dup_id (RdupId
+star (Rstar
+grid (Rgrid
+event_id (ReventId
+team_id (RteamId
+	pass_time (RpassTime"‚
+explore_add_replace_events_s2c
+sys_id (RsysIdI
+replace_events (2".ZeroProto.p_explore_replace_eventRreplaceEvents"R
+explore_add_fade_grids_s2c
+sys_id (RsysId
+
+fade_grids (R	fadeGrids"b
+explore_update_values_s2c
+sys_id (RsysId.
+values (2.ZeroProto.p_key_valueRvalues"J
+explore_add_sight_grids_c2s
+sys_id (RsysId
+grids (Rgrids"K
+explore_add_free_area_s2c
+sys_id (RsysId
+area_id (RareaId"b
+explore_update_items_s2c
+sys_id (RsysId/
+items (2.ZeroProto.p_explore_itemRitems"F
+explore_transfer_grid_s2c
+sys_id (RsysId
+grid (Rgrid"v
+ explore_update_danger_limits_s2c
+sys_id (RsysId;
+danger_limits (2.ZeroProto.p_key_valueRdangerLimits"g
+explore_dec_children_times_s2c
+sys_id (RsysId.
+childs (2.ZeroProto.p_key_valueRchilds"–
+explore_trophy_event_data_s2c
+sys_id (RsysId
+grid (Rgrid
+event_id (ReventId/
+items (2.ZeroProto.p_explore_itemRitems"I
+explore_new_event_c2s
+sys_id (RsysId
+event_id (ReventId"K
+explore_save_team_c2s
+sys_id (RsysId
+	child_ids (RchildIds"/
+explore_save_team_s2c
+result (Rresult

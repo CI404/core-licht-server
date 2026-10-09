@@ -1,0 +1,88 @@
+
+Œ
+proto_common_activity.proto	ZeroProtoproto_type.proto"D
+%common_activity_get_activity_info_c2s
+	gift_list (RgiftList"a
+%common_activity_get_activity_info_s2c8
+	gift_list (2.ZeroProto.p_key_value_tinyRgiftList"a
+%common_activity_update_gift_state_s2c8
+	gift_list (2.ZeroProto.p_key_value_tinyRgiftList"'
+%common_activity_get_activity_list_c2s"
+%common_activity_get_activity_list_s2cA
+activity_list (2.ZeroProto.p_common_activityRactivityList#
+invested_list (RinvestedList"j
+%common_activity_open_new_activity_s2cA
+activity_info (2.ZeroProto.p_common_activityRactivityInfo"=
+"common_activity_get_reward_req_c2s
+gift_id (RgiftId"^
+"common_activity_get_reward_req_s2c8
+	gift_info (2.ZeroProto.p_key_value_tinyRgiftInfo"a
+"common_activity_close_activity_s2c;
+activity_list (2.ZeroProto.p_key_valueRactivityList"@
+'common_activity_purchase_invest_req_c2s
+act_id (RactId"@
+'common_activity_purchase_invest_req_s2c
+act_id (RactId"i
+$common_activity_update_red_point_s2cA
+red_point_info (2.ZeroProto.p_key_value_tinyRredPointInfo"8
+common_activity_answer_info_c2s
+act_id (RactId"Â
+common_activity_answer_info_s2c
+act_id (RactId
+progress (Rprogress'
+progress_reward (RprogressRewardC
+question_list (2.ZeroProto.p_activity_questionRquestionList"z
+#common_activity_answer_question_c2s
+act_id (RactId
+question_id (R
+questionId
+	answer_id (RanswerId"Ë
+#common_activity_answer_question_s2c
+act_id (RactId
+question_id (R
+questionId
+	answer_id (RanswerId7
+reward_list (2.ZeroProto.p_key_valueR
+rewardList
+result (Rresult"V
+!common_activity_answer_reward_c2s
+act_id (RactId
+progress (Rprogress"j
+!common_activity_answer_reward_s2c
+code (Rcode
+act_id (RactId
+progress (Rprogress"
+common_activity_task_list_c2s"X
+common_activity_task_list_s2c7
+	task_list (2.ZeroProto.p_activity_taskRtaskList"Z
+common_activity_task_update_s2c7
+	task_list (2.ZeroProto.p_activity_taskRtaskList"8
+common_activity_task_commit_c2s
+sys_id (RsysId"a
+common_activity_task_commit_s2c>
+new_task_info (2.ZeroProto.p_activity_taskRnewTaskInfo"8
+common_activity_puzzle_info_c2s
+act_id (RactId"Ÿ
+common_activity_puzzle_info_s2c
+act_id (RactId7
+puzzle_list (2.ZeroProto.p_key_valueR
+puzzleList,
+active_puzzle_list (RactivePuzzleList"L
+!common_activity_puzzle_active_c2s
+act_id (RactId
+pos (Rpos"`
+!common_activity_puzzle_active_s2c
+code (Rcode
+act_id (RactId
+pos (Rpos"s
+!common_activity_puzzle_update_s2c
+act_id (RactId7
+puzzle_info (2.ZeroProto.p_key_valueR
+puzzleInfo"o
+#common_activity_puzzle_exchange_c2s
+act_id (RactId
+type (Rtype
+
+item_index (R	itemIndex"9
+#common_activity_puzzle_exchange_s2c
+code (Rcode

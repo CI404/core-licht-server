@@ -1,0 +1,65 @@
+
+´
+proto_login.proto	ZeroProtoproto_type.proto"i
+login_heart_c2s
+index (Rindex
+client_time (R
+clientTime
+server_time (R
+serverTime"c
+login_heart_s2c
+index (Rindex
+server_time (R
+serverTime
+run_time (RrunTime"ã
+login_auth_c2s
+uid (	Ruid
+uname (	Runame
+p_key (	RpKey
+time (Rtime
+bind (Rbind
+token (	Rtoken
+	login_sid (RloginSid9
+client_info (2.ZeroProto.p_client_infoR
+clientInfo"­
+login_auth_s2c
+code (Rcode
+	time_zone (RtimeZone
+serv_id (RservId
+	open_time (RopenTime4
+	role_list (2.ZeroProto.p_login_infoRroleList"=
+login_create_role_c2s
+name (	Rname
+sex (Rsex"a
+login_create_role_s2c
+code (Rcode4
+	role_info (2.ZeroProto.p_login_infoRroleInfo"'
+login_select_role_c2s
+id (Rid";
+login_select_role_s2c
+code (Rcode
+id (Rid"¾
+login_repeat_c2s
+id (Rid
+p_key (	RpKey
+time (Rtime
+token (	Rtoken!
+game_version (	RgameVersion
+	login_sid (RloginSid
+	proto_num (RprotoNum"&
+login_repeat_s2c
+code (Rcode"8
+login_reject_s2c
+code (Rcode
+msg (	Rmsg"A
+login_random_name_c2s
+sex (Rsex
+amount (Ramount"=
+login_random_name_s2c
+sex (Rsex
+list (	Rlist"
+login_bind_c2s"$
+login_bind_s2c
+code (Rcode"7
+login_sync_proto_num_s2c
+	proto_num (RprotoNum

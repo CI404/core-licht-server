@@ -1,0 +1,28 @@
+
+é
+proto_squad_pvp.proto	ZeroProtoproto_type.proto"
+squad_pvp_info_c2s"C
+squad_pvp_info_s2c
+	season_id (RseasonId
+lvl (Rlvl"
+squad_pvp_notify_phase_c2s"Ê
+squad_pvp_notify_phase_s2c
+phase (Rphase#
+children_list (RchildrenList
+	buff_list (RbuffList
+end_time (RendTime9
+
+pvp_result (2.ZeroProto.p_nf_pvp_resultR	pvpResult"3
+squad_pvp_select_children_c2s
+list (Rlist"G
+squad_pvp_select_children_s2c
+code (Rcode
+list (Rlist"/
+squad_pvp_select_buff_c2s
+list (Rlist"C
+squad_pvp_select_buff_s2c
+code (Rcode
+list (Rlist" 
+squad_pvp_notify_team_info_c2s"W
+squad_pvp_notify_team_info_s2c5
+mem_list (2.ZeroProto.p_nf_match_teamRmemList

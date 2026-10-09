@@ -1,0 +1,26 @@
+
+¨
+proto_credit.proto	ZeroProtoproto_type.proto"
+credit_info_c2s"é
+credit_info_s2c
+end_time (RendTime
+
+credit_lvl (R	creditLvl#
+credit_amount (RcreditAmount5
+
+shop_items (2.ZeroProto.p_key_valueR	shopItems@
+need_repay_items (2.ZeroProto.p_key_valueRneedRepayItems"9
+credit_buy_c2s
+sys_id (RsysId
+num (Rnum"v
+credit_buy_s2c
+result (Rresult
+sys_id (RsysId
+num (Rnum#
+credit_amount (RcreditAmount"B
+credit_repay_c2s.
+repays (2.ZeroProto.p_key_valueRrepays"
+credit_repay_s2c
+result (Rresult.
+repays (2.ZeroProto.p_key_valueRrepays#
+credit_amount (RcreditAmount

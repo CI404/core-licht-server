@@ -1,0 +1,1 @@
+#config,game_version:X202308261705,os_version:15,dlcVersion:0

@@ -1,0 +1,28 @@
+
+ò
+proto_sign.proto	ZeroProtoproto_type.proto"
+sign_daily_c2s"ê
+sign_daily_s2c
+	sign_time (RsignTime5
+	sign_list (2.ZeroProto.p_sign_recordRsignList*
+month_card_sysids (RmonthCardSysids"
+sign_info_c2s"L
+sign_info_s2c;
+sign_records (2.ZeroProto.p_sign_recordRsignRecords"^
+sign_in_c2s
+sign_id (RsignId
+
+sign_index (R	signIndex
+item_id (RitemId"ê
+sign_in_s2c
+
+sign_index (R	signIndex
+	sign_time (RsignTime
+item_id (RitemId,
+sign (2.ZeroProto.p_sign_recordRsign"
+sign_total_c2s"L
+sign_total_s2c
+	sign_time (RsignTime
+
+sign_total (R	signTotal"
+sign_check_s2c

@@ -1,0 +1,116 @@
+
+à
+proto_role.proto	ZeroProtoproto_type.proto"'
+role_gm_command_c2s
+cmd (	Rcmd"r
+role_info_s2c/
+kv_list (2.ZeroProto.p_key_valueRkvList0
+ks_list (2.ZeroProto.p_key_stringRksList"7
+role_notice_s2c
+type (Rtype
+msg (	Rmsg">
+role_resource_s2c)
+k_v (2.ZeroProto.p_key_value_2RkV"
+role_personal_info_c2s"D
+role_personal_info_s2c*
+info (2.ZeroProto.p_role_infoRinfo"6
+role_set_signature_c2s
+	signature (	R	signature"6
+role_set_signature_s2c
+	signature (	R	signature".
+role_other_info_c2s
+role_id (RroleId"A
+role_other_info_s2c*
+info (2.ZeroProto.p_role_infoRinfo"2
+role_exchange_bind_money_c2s
+cost (Rcost"F
+role_exchange_bind_money_s2c
+code (Rcode
+cost (Rcost"
+role_noob_stage_info_c2s"0
+role_noob_stage_info_s2c
+stage (Rstage"/
+role_set_noob_stage_c2s
+stage (Rstage"C
+role_set_noob_stage_s2c
+code (Rcode
+stage (Rstage"E
+role_log_client_error_c2s
+error (	Rerror
+time (Rtime"/
+role_log_client_error_s2c
+code (Rcode"
+role_questionnaire_info_c2s"M
+role_questionnaire_info_s2c.
+list (2.ZeroProto.p_questionnaireRlist"P
+role_questionnaire_open_c2s
+ques_id (RquesId
+version (Rversion"N
+role_questionnaire_open_s2c
+ques_id (RquesId
+status (Rstatus"­
+role_questionnaire_commit_c2s
+ques_id (RquesId
+version (Rversion
+	cost_time (RcostTime<
+answers (2".ZeroProto.p_questionnaire_answersRanswers"P
+role_questionnaire_commit_s2c
+ques_id (RquesId
+status (Rstatus"f
+role_click_c2s6
+
+times_list (2.ZeroProto.p_click_infoR	timesList
+	timestamp (R	timestamp"B
+role_click_s2c
+	timestamp (R	timestamp
+code (Rcode"
+role_announcement_notice_s2c"!
+role_gift_c2s
+key (	Rkey"#
+role_gift_s2c
+code (Rcode"=
+role_recharge_simulation_c2s
+
+product_id (R	productId"r
+$role_questionnaire_status_update_s2c2
+queses (2.ZeroProto.p_questionnaireRqueses
+status (Rstatus"Y
+role_tw_log_s2c
+event_id (	ReventId+
+args (2.ZeroProto.p_key_stringRargs"2
+role_push_update_token_c2s
+token (	Rtoken"
+role_daily_refresh_s2c")
+role_set_background_c2s
+id (Rid"N
+role_share_c2s
+
+share_type (R	shareType
+
+share_plat (R	sharePlat"D
+role_temp_c2s3
+kvlist (2.ZeroProto.p_key_value_nameRkvlist"D
+role_temp_s2c3
+kvlist (2.ZeroProto.p_key_value_nameRkvlist"*
+role_set_birth_c2s
+birth (Rbirth"B
+role_set_birth_s2c
+result (Rresult
+birth (Rbirth"
+role_background_info_c2s".
+role_background_info_s2c
+list (Rlist",
+role_unlock_background_s2c
+id (Rid"'
+role_change_sex_c2s
+sex (Rsex";
+role_change_sex_s2c
+code (Rcode
+sex (Rsex"6
+role_modify_role_name_c2s
+new_name (	RnewName"Œ
+role_modify_role_name_s2c
+result (Rresult
+name (	Rname
+name_num (RnameNum(
+last_modify_time (RlastModifyTime

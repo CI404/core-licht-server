@@ -1,0 +1,86 @@
+
+∑
+proto_war_fight.proto	ZeroProtoproto_type.proto"
+war_fight_info_c2s"ê
+war_fight_info_s2c
+code (Rcode
+	season_id (RseasonId
+star_num (RstarNum'
+milestone_state (RmilestoneState#
+develop_level (RdevelopLevel
+	match_num (RmatchNum 
+match_num_ts (R
+matchNumTs*
+unread_report_num (RunreadReportNum 
+atk_star_num	 (R
+atkStarNum
+	atk_count
+ (RatkCount6
+unread_yesterday_report (RunreadYesterdayReport"
+war_fight_upgrade_develop_c2s"I
+war_fight_upgrade_develop_s2c
+code (Rcode
+level (Rlevel"
+war_fight_draw_child_c2s"B
+war_fight_draw_child_s2c
+code (Rcode
+list (Rlist"3
+war_fight_choose_child_c2s
+sys_id (RsysId"G
+war_fight_choose_child_s2c
+code (Rcode
+sys_id (RsysId"3
+war_fight_unlock_child_c2s
+sys_id (RsysId"G
+war_fight_unlock_child_s2c
+code (Rcode
+sys_id (RsysId"
+war_fight_formation_c2s"ä
+war_fight_formation_s2c
+code (Rcode
+map_id (RmapIdD
+	info_list (2'.ZeroProto.p_war_fight_simple_formationRinfoList"}
+war_fight_update_formation_c2s
+map_id (RmapIdD
+	info_list (2'.ZeroProto.p_war_fight_simple_formationRinfoList"4
+war_fight_update_formation_s2c
+code (Rcode";
+"war_fight_get_milestone_reward_c2s
+sys_id (RsysId"N
+"war_fight_get_milestone_reward_s2c
+code (Rcode
+state (Rstate"%
+#war_fight_refresh_children_list_c2s"9
+#war_fight_refresh_children_list_s2c
+code (Rcode"
+war_fight_match_c2s")
+war_fight_match_s2c
+code (Rcode"0
+war_fight_match_result_s2c
+code (Rcode"œ
+war_fight_fight_result_s2c
+dup_id (RdupId
+result (Rresult
+star (Rstar
+nickname (	Rnickname
+
+child_list (R	childList3
+	item_list (2.ZeroProto.p_key_valueRitemList"
+war_fight_report_c2s"Ü
+war_fight_report_s2c
+code (Rcode 
+atk_star_num (R
+atkStarNum
+	atk_count (RatkCount 
+def_star_num (R
+defStarNum
+	def_count (RdefCount)
+gain_def_star_num (RgainDefStarNum1
+list (2.ZeroProto.p_war_fight_reportRlist" 
+war_fight_yesterday_report_c2s"4
+war_fight_yesterday_report_s2c
+code (Rcode"Ñ
+war_fight_settle_info_s2c
+star_num (RstarNum'
+milestone_state (RmilestoneState#
+develop_level (RdevelopLevel
