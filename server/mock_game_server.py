@@ -521,6 +521,9 @@ def _handle_31_1(conn, msg):
     m.center.end_time = 0
 
     # ---- room_list ----
+    # ★ 2026-10-10 補上 object_list：先前沒填 → 房間裡空無一物。
+    #   來源 DataTable_room.object_list（格式 [[物件id, 等級, [x,y,z]], ...]）
+    defs = PD.room_default_objects()
     rid = 1
     for sys_id, lvl, row in PD.maxed_rooms():
         r = m.room_list.add()
@@ -534,12 +537,64 @@ def _handle_31_1(conn, msg):
         r.used_space = 0
         r.name = str(row.get("name") or "")
         r.upgrade_time = 0
+        # 該房型的預設物件（object_list 是 repeated uint64，填物件 id）
+        _lvl, items = defs.get(sys_id, (lvl, []))
+        for obj_id, _olvl, _pos in items:
+            r.object_list.append(obj_id)
         rid += 1
 
     _send_msg(conn, 31, 1, m)
     log(f"  -> 已回覆空島基建：center(highest_atoms={atoms}) + "
-        f"{len(m.room_list)} 個房間（各房型最高等級）"
+        f"{len(m.room_list)} 個房間（各房型最高等級 + 預設物件）"
         f" ← 修復「點空島卡 90%」")
+
+
+def _handle_31_15(conn, msg):
+    """building_spare_object_info_c2s → building_spare_object_info_s2c（備用物件／機器背包）。
+
+    ★ 2026-10-10 修正「點空島子項目卡 85%」的真正根因。
+
+    症狀（logcat）：
+        [ERROR] BuildRoomView _sCB running error(?:-1: attempt to index a nil value
+          ?: in field 'GetMachineBagList'
+          ?: in method 'UpdateEditRed'
+          ?: in method 'CleanObjectStatus'
+          ?: in method 'EnterEditMode'
+          ?: in method 'InitMainView'
+          ?: in method 'HandleAfterOpenView'
+
+    崩潰點 `BuildModel.lua:5996-6050` GetMachineBagList：
+        for _, obj in pairs(BuildModel.allObjectBagInfo) do
+            cfg = DataBase.GetSysroom_objectByKey(obj.sys_id)
+            if cfg.type == ObjectType.Machine then ...    -- cfg 是 nil → 崩潰
+        end
+
+    `allObjectBagInfo` 由本訊息（31_15）填充。
+    伺服器原本沒有 handler → 通用回應器 `_fill_required` 造出「一個假元素」：
+        list=[{id=1, sys_id=1001, lvl=1, status=1, get_time=1, default_speed=1}]
+    而 **`sys_id=1001` 是 DataTable_children 的角色 id，不是 room_object**！
+    → `GetSysroom_objectByKey(1001)` 查不到 → `nil.type` → 崩潰。
+
+    正解：推 `DataTable_room_object` 裡 type=1（Machine）的真實 id。
+    """
+    m = _new_s2c(31, 15)
+    meta = PD.room_object_meta()
+    oid = 1
+    for sys_id in PD.room_object_ids(PD.OBJECT_TYPE_MACHINE):
+        snap = m.list.add()
+        snap.id = oid
+        snap.sys_id = sys_id
+        snap.lvl = 1
+        snap.status = 0                 # 0 = 在背包中（未放置）
+        snap.get_time = 0
+        snap.default_speed = 1
+        oid += 1
+    _send_msg(conn, 31, 15, m)
+    names = [str(meta.get(s, {}).get("name") or "") for s in
+             PD.room_object_ids(PD.OBJECT_TYPE_MACHINE)[:3]]
+    log(f"  -> 已回覆備用物件（機器背包）：{len(m.list)} 個真實機器 "
+        f"sys_id={PD.room_object_ids(PD.OBJECT_TYPE_MACHINE)[:3]}… "
+        f"（{names}）← 修復「卡 85%」的關鍵：不可再送 sys_id=1001 假資料")
 
 
 def _handle_11_46(conn, msg):
@@ -1210,6 +1265,8 @@ def _dispatch(conn, raw):
             _handle_26_1(conn, msg)
         elif key == "31_1":                        # building_info → 空島基建
             _handle_31_1(conn, msg)
+        elif key == "31_15":                       # building_spare_object_info → 機器背包
+            _handle_31_15(conn, msg)
         elif key == "35_1":                        # hero_info_c2s → 英雄清單
             _handle_35_1(conn, msg)
         elif key == "2_5":

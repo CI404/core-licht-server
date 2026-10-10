@@ -341,6 +341,85 @@ def max_atoms():
     return best
 
 
+# 空島物件型別（BuildDefine.ObjectType）：1 = Machine（機器）、2 = Furniture（家具）
+OBJECT_TYPE_MACHINE = 1
+OBJECT_TYPE_FURNITURE = 2
+
+
+@functools.lru_cache(maxsize=1)
+def room_object_ids(obj_type=None):
+    """`DataTable_room_object` 的 id 清單（可依 type 過濾）。
+
+    ★ 2026-10-10：為什麼需要這個（修「點空島子項目卡 85%」）
+      logcat 崩潰堆疊：
+          BuildRoomView.InitMainView → EnterEditMode → CleanObjectStatus
+            → UpdateEditRed → GetMachineBagList
+          ?:-1: attempt to index a nil value
+      `BuildModel.lua:5996-6050` GetMachineBagList：
+          for _, obj in pairs(BuildModel.allObjectBagInfo) do
+              cfg = DataBase.GetSysroom_objectByKey(obj.sys_id)
+              if cfg.type == ObjectType.Machine then ...   -- cfg 是 nil → 崩潰
+          end
+      `allObjectBagInfo` 由 `31_15 building_spare_object_info_s2c` 填充。
+      伺服器原本沒有 31_15 handler → 通用回應器用 `_fill_required` 造出
+      「一個假元素」，其 sys_id 被填成 `1001`（那是 DataTable_children 的角色 id）
+      → `GetSysroom_objectByKey(1001)` 查不到 → nil.type → 崩潰。
+
+      正解：推 `DataTable_room_object` 裡真實存在的 id（機器 = type 1）。
+    """
+    out = []
+    for r in table("room_object"):
+        try:
+            oid = int(r.get("id"))
+        except Exception:
+            continue
+        if obj_type is not None and int(r.get("type", 0) or 0) != obj_type:
+            continue
+        out.append(oid)
+    return sorted(out)
+
+
+@functools.lru_cache(maxsize=1)
+def room_object_meta():
+    """room_object id -> 該列資料（給組 p_building_object_snap 用）。"""
+    out = {}
+    for r in table("room_object"):
+        try:
+            out[int(r.get("id"))] = r
+        except Exception:
+            continue
+    return out
+
+
+@functools.lru_cache(maxsize=1)
+def room_default_objects():
+    """房型 sys_id -> 該房型預設物件清單 [(obj_id, lvl, pos), ...]。
+
+    來源 `DataTable_room.object_list`，格式 `[[物件id, 等級, [x,y,z]], ...]`。
+    給 `31_1 building_info_s2c` 的 `room_list[].object_list` 用。
+
+    ★ 2026-10-10：先前 `_handle_31_1` 沒填這個欄位 → 房間裡空無一物。
+    """
+    out = {}
+    for r in table("room"):
+        try:
+            rid = int(r.get("id"))
+        except Exception:
+            continue
+        items = []
+        for it in (r.get("object_list") or []):
+            if isinstance(it, list) and len(it) >= 2:
+                try:
+                    items.append((int(it[0]), int(it[1]), it[2] if len(it) > 2 else [0, 0, 0]))
+                except Exception:
+                    continue
+        # 同一房型取「物件最多」的那個等級
+        prev = out.get(rid)
+        if prev is None or len(items) > len(prev[1]):
+            out[rid] = (int(r.get("lvl", 1)), items)
+    return out
+
+
 def build_maxed_child(cid, p_children_cls):
     """建立「滿級、滿星、全皮膚」的 p_children 訊息。"""
     star = star_by_child().get(cid, 5)
