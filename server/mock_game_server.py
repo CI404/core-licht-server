@@ -330,7 +330,12 @@ def _handle_2_1(conn, msg):
         _push_player_state(conn)
         _push_children(conn)
         _push_noob_stage(conn)
-        log(f"  -> 已依 {name} 推送完整玩家狀態（等級／資源／113 角色／教程完成）")
+        # ★ 修正：`#all_func` 的語意是「解鎖全部功能」，必須一併重推
+        #   24_1 open_func_all_s2c，否則客戶端的 FunOpenControl 不會重新
+        #   評估按鈕開放狀態（先前只推 2_4/2_2/11_1/2_9，漏了這一條）。
+        _push_open_func(conn)
+        log(f"  -> 已依 {name} 推送完整狀態"
+            f"（等級／資源／113 角色／教程完成／功能全開）")
     elif name == "add_children_all" or name == "add_children":
         _push_children(conn)
     else:
@@ -505,19 +510,28 @@ def _handle_children_all(conn, s_id, m_id):
     log(f"  -> 已回覆 {len(m.children_list)} 個角色（滿級全解鎖）")
 
 
-def _handle_24_1(conn, msg):
-    """open_func_all_c2s → open_func_all_s2c（已開放功能清單）。
+def _push_open_func(conn):
+    """主動推送 **24_1 open_func_all_s2c**（已開放功能清單）。
 
     客戶端 `x.Module.FunOpen.Control.FunOpenControl` 依這份清單決定
-    主界面／各頁按鈕是「可點」還是「暫未連線」。回空清單 → 全部變灰。
-    功能 id 取自 `DataTable_open_func`（85 個），滿級全解鎖帳號＝全部開放。
+    主界面／各頁按鈕是「可點」還是「暫未連線」。功能 id 取自
+    `DataTable_open_func`（85 個，id 範圍 1~99），滿級全解鎖帳號＝全部開放。
+
+    ★ 2026-10-10 修正：GM 指令 `#all_func`（解鎖全部功能）原本只推
+    2_4 / 2_2 / 11_1 / 2_9，**沒有重推 24_1** → 客戶端不會重新評估
+    功能開放狀態。現在由 `_handle_2_1` 的解鎖分支一併呼叫本函式。
     """
     ids = PD.unlocked_func_ids()
     m = _new_s2c(24, 1)
     for i in ids:
         m.list.append(i)
     _send_msg(conn, 24, 1, m)
-    log(f"  -> 已回覆功能開放清單：{len(ids)} 個（來源 DataTable_open_func）")
+    log(f"  -> 已推送功能開放清單：{len(ids)} 個（來源 DataTable_open_func）")
+
+
+def _handle_24_1(conn, msg):
+    """open_func_all_c2s → open_func_all_s2c（已開放功能清單）。"""
+    _push_open_func(conn)
 
 
 def _handle_3_1(conn, msg):
@@ -1048,12 +1062,26 @@ def _generic_reply(conn, s_id, m_id, cname, msg):
     m = _new_s2c(s_id, m_id)
     if m is None:
         return False
+    # ★★★ 順序極重要：必須先 _fill_required、後設 code ★★★
+    #
+    # 症狀：login_repeat_s2c（1_4）回 code=1 → 客戶端印
+    #       [LoginControl] 登入出錯 ... #QR系统邏輯錯誤#n → 連線立即關閉。
+    #
+    # 根因：_fill_required 對「非 *_id 的整數 required 欄位」一律填保守值 1，
+    #       而 `code` 正好符合這個條件 → 被填成 1（= 失敗）。
+    #       原本的程式碼先設 m.code = 0、才呼叫 _fill_required(m)，
+    #       所以 0 被覆寫成 1。
+    #
+    # 對策：把 _fill_required 提到前面，最後才明確覆寫 code = 0（成功）。
+    try:
+        _fill_required(m)
+    except Exception:
+        pass
     try:
         if m.DESCRIPTOR.fields_by_name.get("code") is not None:
             m.code = 0
     except Exception:
         pass
-    _fill_required(m)
     try:
         _send_msg(conn, s_id, m_id, m)
     except Exception as e:
