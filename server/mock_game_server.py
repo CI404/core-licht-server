@@ -549,6 +549,94 @@ def _handle_31_1(conn, msg):
         f" ← 修復「點空島卡 90%」")
 
 
+def _handle_31_5(conn, msg):
+    """building_place_c2s → building_place_s2c（放置物件到房間）。
+
+    ★ 2026-10-10 修正「放置物品時右上角系統邏輯錯誤」。
+
+    症狀（logcat）：
+        LuaException: ?:-1: attempt to index a nil value
+          ?: in field 'RefreshData'              （x.Module.Build.MachinePanelMaker.lua:532）
+          ?: in method 'UpdateMachineInfoView'
+          ?: in method 'OpenMachineInfoView'
+          ?: in method 'SetOperateObjectInfo'
+          ?: in method 'CheckCanPlace'           （拖曳放置時觸發）
+          ?: in method 'Drag'
+
+    根因（抓包解碼 tcp-capture.jsonl）：
+        31_5 原本沒有 handler → 通用回應器造出四個清單，每個元素的 sys_id 都被
+        `_fill_required` 填成 **1001**（DataTable_children 的角色 id，不是
+        room_object）→ 客戶端 `GetSysroom_objectByKey(1001)` 回 nil →
+        `nil.sub_type` / `nil.type` → 崩潰。
+        （與 31_15 的 bug 同源，見 §3.4b）
+
+    正解：**依客戶端請求回報**。請求格式：
+        building_place_c2s { room_id, pos_list[{ id, face, pos_x, pos_y, pos_z }] }
+    其中 `pos_list[].id` 是 **31_15 機器背包裡的機器 id**（1-based，與
+    room_object_ids(Machine) 的順序一致）。
+    """
+    room_id = 0
+    try:
+        room_id = int(msg.room_id)
+    except Exception:
+        pass
+
+    # id -> sys_id（與 _handle_31_15 推播的順序一致）
+    machine_ids = PD.room_object_ids(PD.OBJECT_TYPE_MACHINE)
+    meta = PD.room_object_meta()
+
+    result = _new_s2c(31, 5)
+    result.result = 0                       # 0 = 成功（明確覆寫填充器的 1）
+    result.room_id = room_id
+
+    placed = 0
+    for p in msg.pos_list:
+        try:
+            mid = int(p.id)
+        except Exception:
+            continue
+        idx = mid - 1
+        if idx < 0 or idx >= len(machine_ids):
+            continue
+        sys_id = machine_ids[idx]
+        oid = mid
+
+        # p_building_object（房間內物件）
+        o = result.object_list.add()
+        o.id = oid
+        o.room_id = room_id
+        o.sys_id = sys_id
+        o.lvl = 1
+        o.status = 0
+        o.is_valid = 1
+        o.get_time = 0
+        o.face = int(getattr(p, "face", 0) or 0)
+        o.pos_x = int(getattr(p, "pos_x", 0) or 0)
+        o.pos_y = int(getattr(p, "pos_y", 0) or 0)
+        o.pos_z = int(getattr(p, "pos_z", 0) or 0)
+
+        # p_building_machine（機器額外資訊）
+        mac = result.mac_list.add()
+        mac.id = oid
+        mac.sys_id = sys_id
+        mac.used_elec = 0
+        mac.output = 0
+        mac.output_max = 40
+        mac.output_speed = 1
+        mac.default_speed = 1
+        mac.cost_power = 0
+        mac.start_time = 0
+
+        placed += 1
+
+    _send_msg(conn, 31, 5, result)
+    names = [str(meta.get(machine_ids[int(p.id) - 1], {}).get("name") or "")
+             for p in msg.pos_list
+             if 1 <= int(getattr(p, "id", 0) or 0) <= len(machine_ids)]
+    log(f"  -> 已回覆放置物件：room_id={room_id} 放置 {placed} 台"
+        f"（{names}）result=0 ← 修正原本填充器把 sys_id 填成 1001 導致崩潰")
+
+
 def _handle_31_15(conn, msg):
     """building_spare_object_info_c2s → building_spare_object_info_s2c（備用物件／機器背包）。
 
@@ -1265,6 +1353,8 @@ def _dispatch(conn, raw):
             _handle_26_1(conn, msg)
         elif key == "31_1":                        # building_info → 空島基建
             _handle_31_1(conn, msg)
+        elif key == "31_5":                        # building_place → 放置物件
+            _handle_31_5(conn, msg)
         elif key == "31_15":                       # building_spare_object_info → 機器背包
             _handle_31_15(conn, msg)
         elif key == "35_1":                        # hero_info_c2s → 英雄清單

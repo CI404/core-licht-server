@@ -98,9 +98,17 @@ licht-offline-server\
 ├── runtime\                    日誌（mock-server.log / cdn-requests.log / tcp-capture.jsonl）
 └── docs\
     ├── 交接文件-2026-10-10-第二輪.md   ★ 接手前必讀（環境、六個致命坑、診斷流程）
+    ├── 適格體圖鑑-編號對照.md          ★ 適格體編號機制 + 重建圖鑑指南
+    ├── 適格體圖鑑-資料.json             61 個編號的機讀對照表
     ├── 安裝指南.md
     ├── 新設備部署.md
     └── 已完成修復清單.md        ★ 本專案修過哪些 bug、證據在哪
+```
+
+輔助工具：
+
+```
+server\tools\enum_atlas.py    適格體編號對照匯出（掃描立繪資源 → 對應 children_skin）
 ```
 
 ---

@@ -1,0 +1,1176 @@
+{
+  "generated_by": "tools/enum_atlas.py",
+  "note": "head_new 對應 card_pic_<head_new>.png；skin_pic 對應 card_<skin_pic>.png",
+  "scanned_dirs": [
+    "E:\\核心：利希特\\核心live2d"
+  ],
+  "entries": [
+    {
+      "head_new": 10101,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_10101.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_10101.png"
+      ],
+      "card": [],
+      "skin_id": 101,
+      "name": "瞳",
+      "painter": "Grandia元",
+      "model": 201001111,
+      "spine_id": 10000000,
+      "match": true
+    },
+    {
+      "head_new": 10103,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_10103.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_10103.png"
+      ],
+      "card": [],
+      "skin_id": 103,
+      "name": "瞳",
+      "painter": "Grandia元",
+      "model": 201001113,
+      "spine_id": 10000002,
+      "match": true
+    },
+    {
+      "head_new": 100104,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_100104.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_100104.png"
+      ],
+      "card": [],
+      "skin_id": 1406100104,
+      "name": "厄莉希",
+      "painter": "兔扎特",
+      "model": 2010032,
+      "spine_id": 100104,
+      "match": true
+    },
+    {
+      "head_new": 100201,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_100201.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_100201.png"
+      ],
+      "card": [],
+      "skin_id": 1410020001,
+      "name": "牙人",
+      "painter": "ansix",
+      "model": 3050021,
+      "spine_id": 100201,
+      "match": true
+    },
+    {
+      "head_new": 100302,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_100302.png",
+        "E:\\核心：利希特\\核心live2d\\v02007_02\\card_pic_100302.png"
+      ],
+      "card": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_100302.png",
+        "E:\\核心：利希特\\核心live2d\\v02007_02\\card_100302.png"
+      ],
+      "skin_id": 1410030002,
+      "name": "冰見優奈",
+      "painter": "敬請期待",
+      "model": 3020071,
+      "spine_id": 100302,
+      "match": true
+    },
+    {
+      "head_new": 100401,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_100401.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_100401.png"
+      ],
+      "card": [],
+      "skin_id": 1410040001,
+      "name": "哈提",
+      "painter": "半秋",
+      "model": 4060041,
+      "spine_id": 100401,
+      "match": true
+    },
+    {
+      "head_new": 100501,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\e04001\\card_pic_100501.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_100501.png"
+      ],
+      "card": [],
+      "skin_id": 1410050001,
+      "name": "希羅拉",
+      "painter": "敬請期待",
+      "model": 2040011,
+      "spine_id": 100501,
+      "match": true
+    },
+    {
+      "head_new": 100701,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_100701.png",
+        "E:\\核心：利希特\\核心live2d\\v05010_01\\card_pic_100701.png"
+      ],
+      "card": [],
+      "skin_id": 1410070001,
+      "name": "杪夏",
+      "painter": "阿尼鴨Any-a",
+      "model": 3050101,
+      "spine_id": 100701,
+      "match": true
+    },
+    {
+      "head_new": 200101,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_200101.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_200101.png"
+      ],
+      "card": [],
+      "skin_id": 1420010001,
+      "name": "雷鳴",
+      "painter": "唐璜",
+      "model": 2010021,
+      "spine_id": 200101,
+      "match": true
+    },
+    {
+      "head_new": 200301,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_200301.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_200301.png"
+      ],
+      "card": [],
+      "skin_id": 1420030001,
+      "name": "狂蓮",
+      "painter": "蒼星冰磚",
+      "model": 2040031,
+      "spine_id": 200301,
+      "match": true
+    },
+    {
+      "head_new": 200401,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_200401.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_200401.png"
+      ],
+      "card": [],
+      "skin_id": 1420040001,
+      "name": "火野沙羅",
+      "painter": "敬請期待",
+      "model": 3020061,
+      "spine_id": 200401,
+      "match": true
+    },
+    {
+      "head_new": 200501,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_200501.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_200501.png"
+      ],
+      "card": [],
+      "skin_id": 1420050001,
+      "name": "黑星",
+      "painter": "敬請期待",
+      "model": 3020041,
+      "spine_id": 200501,
+      "match": true
+    },
+    {
+      "head_new": 200601,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_200601.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_200601.png"
+      ],
+      "card": [],
+      "skin_id": 1420060001,
+      "name": "千鈞",
+      "painter": "MomocolX",
+      "model": 3020011,
+      "spine_id": 200601,
+      "match": true
+    },
+    {
+      "head_new": 200701,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\a04006\\card_pic_200701.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_200701.png"
+      ],
+      "card": [],
+      "skin_id": 1420070001,
+      "name": "芙朵拉",
+      "painter": "雨時狸追",
+      "model": 1040061,
+      "spine_id": 200701,
+      "match": true
+    },
+    {
+      "head_new": 200801,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\f06006\\card_pic_200801.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_200801.png"
+      ],
+      "card": [],
+      "skin_id": 1420080001,
+      "name": "獒嗷",
+      "painter": "半秋",
+      "model": 4060061,
+      "spine_id": 200801,
+      "match": true
+    },
+    {
+      "head_new": 201002,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\A04005_01\\card_pic_201002.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_201002.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_201002.png"
+      ],
+      "card": [
+        "E:\\核心：利希特\\核心live2d\\A04005_01\\card_201002.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_201002.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_201002.png"
+      ],
+      "skin_id": 1420100002,
+      "name": "幽靈",
+      "painter": "敬請期待",
+      "model": 1040051,
+      "spine_id": 201002,
+      "match": true
+    },
+    {
+      "head_new": 201101,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_201101.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_201101.png"
+      ],
+      "card": [],
+      "skin_id": 1420110001,
+      "name": "俄佩涅",
+      "painter": "敬請期待",
+      "model": 2030031,
+      "spine_id": 201101,
+      "match": true
+    },
+    {
+      "head_new": 201302,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\a04010_01\\card_pic_201302.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_201302.png"
+      ],
+      "card": [
+        "E:\\核心：利希特\\核心live2d\\a04010_01\\card_201302.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_201302.png"
+      ],
+      "skin_id": 1420130002,
+      "name": "妮瑟琳",
+      "painter": "井良井影",
+      "model": 1040101,
+      "spine_id": 201302,
+      "match": true
+    },
+    {
+      "head_new": 201601,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_201601.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_201601.png"
+      ],
+      "card": [],
+      "skin_id": 1420160001,
+      "name": "路普特",
+      "painter": "蒼星冰磚",
+      "model": 2030041,
+      "spine_id": 201601,
+      "match": true
+    },
+    {
+      "head_new": 201701,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_201701.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_201701.png"
+      ],
+      "card": [],
+      "skin_id": 1420170001,
+      "name": "丹瑪絲",
+      "painter": "臨冬雨",
+      "model": 3050081,
+      "spine_id": 201701,
+      "match": true
+    },
+    {
+      "head_new": 300101,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_300101.png",
+        "E:\\核心：利希特\\核心live2d\\v05003_01\\card_pic_300101.png"
+      ],
+      "card": [],
+      "skin_id": 1430010001,
+      "name": "黑鴉",
+      "painter": "YINGZI影子",
+      "model": 3050031,
+      "spine_id": 300101,
+      "match": true
+    },
+    {
+      "head_new": 300301,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_300301.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_300301.png"
+      ],
+      "card": [],
+      "skin_id": 1430030001,
+      "name": "普瓦·頌",
+      "painter": "黑色布丁_醬",
+      "model": 1020011,
+      "spine_id": 300301,
+      "match": true
+    },
+    {
+      "head_new": 300401,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\e04002\\card_pic_300401.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_300401.png"
+      ],
+      "card": [],
+      "skin_id": 1430040001,
+      "name": "無息",
+      "painter": "敬請期待",
+      "model": 2040021,
+      "spine_id": 300401,
+      "match": true
+    },
+    {
+      "head_new": 300501,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\a04004_01\\card_pic_300501.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_300501.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_300501.png"
+      ],
+      "card": [],
+      "skin_id": 1430050001,
+      "name": "林檎",
+      "painter": "薩摩ssssssamo",
+      "model": 1040041,
+      "spine_id": 300501,
+      "match": true
+    },
+    {
+      "head_new": 300601,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\a05001\\card_pic_300601.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_300601.png"
+      ],
+      "card": [],
+      "skin_id": 1430060001,
+      "name": "拉曼",
+      "painter": "黑色布丁_醬",
+      "model": 1050011,
+      "spine_id": 300601,
+      "match": true
+    },
+    {
+      "head_new": 300702,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_300702.png",
+        "E:\\核心：利希特\\核心live2d\\v02005_j2\\card_pic_300702.png"
+      ],
+      "card": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_300702.png",
+        "E:\\核心：利希特\\核心live2d\\v02005_j2\\card_300702.png"
+      ],
+      "skin_id": 1430070002,
+      "name": "莉貝露·弗里緹",
+      "painter": "塊二",
+      "model": 3020051,
+      "spine_id": 300702,
+      "match": true
+    },
+    {
+      "head_new": 300804,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_300804.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_300804.png"
+      ],
+      "card": [],
+      "skin_id": 1406300804,
+      "name": "阿德涅",
+      "painter": "敬請期待",
+      "model": 2030012,
+      "spine_id": 300804,
+      "match": true
+    },
+    {
+      "head_new": 301001,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\a03005\\card_pic_301001.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_301001.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_301001.png"
+      ],
+      "card": [],
+      "skin_id": 1430100001,
+      "name": "黛雅·蒙德",
+      "painter": "敬請期待",
+      "model": 1030051,
+      "spine_id": 301001,
+      "match": true
+    },
+    {
+      "head_new": 301301,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_301301.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_301301.png"
+      ],
+      "card": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_301301.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_301301.png"
+      ],
+      "skin_id": 1430130001,
+      "name": "阿露露",
+      "painter": "井良井影",
+      "model": 1010051,
+      "spine_id": 301301,
+      "match": true
+    },
+    {
+      "head_new": 400201,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_400201.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_400201.png"
+      ],
+      "card": [],
+      "skin_id": 1440020001,
+      "name": "波紋",
+      "painter": "敬請期待",
+      "model": 3040011,
+      "spine_id": 400201,
+      "match": true
+    },
+    {
+      "head_new": 400301,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\f06002\\card_pic_400301.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_400301.png"
+      ],
+      "card": [],
+      "skin_id": 1440030001,
+      "name": "帕納",
+      "painter": "敬請期待",
+      "model": 4060021,
+      "spine_id": 400301,
+      "match": true
+    },
+    {
+      "head_new": 400401,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_400401.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_400401.png"
+      ],
+      "card": [],
+      "skin_id": 1440040001,
+      "name": "稻妻",
+      "painter": "敬請期待",
+      "model": 4060071,
+      "spine_id": 400401,
+      "match": true
+    },
+    {
+      "head_new": 400501,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_400501.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_400501.png"
+      ],
+      "card": [],
+      "skin_id": 1440050001,
+      "name": "月藻",
+      "painter": "半秋",
+      "model": 4060081,
+      "spine_id": 400501,
+      "match": true
+    },
+    {
+      "head_new": 400601,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_400601.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_400601.png"
+      ],
+      "card": [],
+      "skin_id": 1440060001,
+      "name": "叁",
+      "painter": "日光",
+      "model": 3050091,
+      "spine_id": 400601,
+      "match": true
+    },
+    {
+      "head_new": 400701,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_400701.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_400701.png"
+      ],
+      "card": [],
+      "skin_id": 1440070001,
+      "name": "芬妮克",
+      "painter": "半秋",
+      "model": 4060101,
+      "spine_id": 400701,
+      "match": true
+    },
+    {
+      "head_new": 400802,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_400802.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_400802.png"
+      ],
+      "card": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_400802.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_400802.png"
+      ],
+      "skin_id": 1440080002,
+      "name": "赫茲",
+      "painter": "索珀裡之夢",
+      "model": 4060131,
+      "spine_id": 400802,
+      "match": true
+    },
+    {
+      "head_new": 400901,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_400901.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_400901.png"
+      ],
+      "card": [],
+      "skin_id": 1440090001,
+      "name": "赤蓮",
+      "painter": "敬請期待",
+      "model": 4060111,
+      "spine_id": 400901,
+      "match": true
+    },
+    {
+      "head_new": 500101,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_500101.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_500101.png"
+      ],
+      "card": [],
+      "skin_id": 1450010001,
+      "name": "黑椋",
+      "painter": "lllroha",
+      "model": 1040031,
+      "spine_id": 500101,
+      "match": true
+    },
+    {
+      "head_new": 500301,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_500301.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_500301.png"
+      ],
+      "card": [],
+      "skin_id": 1450030001,
+      "name": "鶴來",
+      "painter": "眠",
+      "model": 1040021,
+      "spine_id": 500301,
+      "match": true
+    },
+    {
+      "head_new": 500402,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_500402.png",
+        "E:\\核心：利希特\\核心live2d\\v02003_02\\card_pic_500402.png"
+      ],
+      "card": [],
+      "skin_id": 1450040002,
+      "name": "蘇娜·西格爾",
+      "painter": "雨時狸追",
+      "model": 3020031,
+      "spine_id": 500402,
+      "match": true
+    },
+    {
+      "head_new": 500502,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\e03002_01\\card_pic_500502.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_500502.png"
+      ],
+      "card": [
+        "E:\\核心：利希特\\核心live2d\\e03002_01\\card_500502.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_500502.png"
+      ],
+      "skin_id": 1450050002,
+      "name": "風間衛",
+      "painter": "shenshenaa",
+      "model": 2030021,
+      "spine_id": 500502,
+      "match": true
+    },
+    {
+      "head_new": 500601,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_500601.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_500601.png"
+      ],
+      "card": [],
+      "skin_id": 1450060001,
+      "name": "布尼卡",
+      "painter": "helic",
+      "model": 1030091,
+      "spine_id": 500601,
+      "match": true
+    },
+    {
+      "head_new": 500801,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_500801.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_500801.png"
+      ],
+      "card": [],
+      "skin_id": 1450080001,
+      "name": "羽扇豆",
+      "painter": "敬請期待",
+      "model": 3020091,
+      "spine_id": 500801,
+      "match": true
+    },
+    {
+      "head_new": 600101,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_600101.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_600101.png"
+      ],
+      "card": [],
+      "skin_id": 1460010001,
+      "name": "絲璐爾",
+      "painter": "半秋",
+      "model": 4060031,
+      "spine_id": 600101,
+      "match": true
+    },
+    {
+      "head_new": 600204,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_600204.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_600204.png"
+      ],
+      "card": [],
+      "skin_id": 1406600204,
+      "name": "微光",
+      "painter": "GZ1605",
+      "model": 3040022,
+      "spine_id": 600204,
+      "match": true
+    },
+    {
+      "head_new": 600401,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_600401.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_600401.png"
+      ],
+      "card": [],
+      "skin_id": 1460040001,
+      "name": "艾爾·彼蘇",
+      "painter": "瓜皮cyyyyy",
+      "model": 3020021,
+      "spine_id": 600401,
+      "match": true
+    },
+    {
+      "head_new": 600501,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_600501.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_600501.png"
+      ],
+      "card": [],
+      "skin_id": 1460050001,
+      "name": "烏梅",
+      "painter": "敬請期待",
+      "model": 4060011,
+      "spine_id": 600501,
+      "match": true
+    },
+    {
+      "head_new": 600601,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_600601.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_600601.png"
+      ],
+      "card": [],
+      "skin_id": 1460060001,
+      "name": "舒拉密茲",
+      "painter": "wujin",
+      "model": 2010051,
+      "spine_id": 600601,
+      "match": true
+    },
+    {
+      "head_new": 600701,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_600701.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_600701.png"
+      ],
+      "card": [],
+      "skin_id": 1460070001,
+      "name": "白椋",
+      "painter": "lllroha",
+      "model": 3020081,
+      "spine_id": 600701,
+      "match": true
+    },
+    {
+      "head_new": 600901,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\02005_01\\card_pic_600901.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_600901.png"
+      ],
+      "card": [
+        "E:\\核心：利希特\\核心live2d\\02005_01\\card_600901.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_600901.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_600901.png"
+      ],
+      "skin_id": 1460090001,
+      "name": "慈夏正",
+      "painter": "反樸還淳淳",
+      "model": 1020051,
+      "spine_id": 600901,
+      "match": true
+    },
+    {
+      "head_new": 601001,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_601001.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_601001.png"
+      ],
+      "card": [],
+      "skin_id": 1460100001,
+      "name": "黛黛",
+      "painter": "瓜皮cyyyyy",
+      "model": 4060141,
+      "spine_id": 601001,
+      "match": true
+    },
+    {
+      "head_new": 700101,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_700101.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_700101.png"
+      ],
+      "card": [],
+      "skin_id": 80004,
+      "name": "德拉普爾",
+      "painter": "哈嘍啊",
+      "model": 2010061,
+      "spine_id": 700101,
+      "match": true
+    },
+    {
+      "head_new": 700201,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\e01004_01\\card_pic_700201.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_700201.png"
+      ],
+      "card": [],
+      "skin_id": 1470020001,
+      "name": "狩獵者",
+      "painter": "黑色布丁_醬",
+      "model": 2010041,
+      "spine_id": 700201,
+      "match": true
+    },
+    {
+      "head_new": 700301,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\e04007\\card_pic_700301.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_700301.png"
+      ],
+      "card": [],
+      "skin_id": 1470030001,
+      "name": "柯拜申",
+      "painter": "等我下個氣場",
+      "model": 2040071,
+      "spine_id": 700301,
+      "match": true
+    },
+    {
+      "head_new": 700401,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\e01007\\card_pic_700401.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_700401.png"
+      ],
+      "card": [],
+      "skin_id": 1470040001,
+      "name": "莫蒂",
+      "painter": "Rolling",
+      "model": 2010071,
+      "spine_id": 700401,
+      "match": true
+    },
+    {
+      "head_new": 800101,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_800101.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_800101.png"
+      ],
+      "card": [],
+      "skin_id": 1480010001,
+      "name": "千儀",
+      "painter": "MomocolX",
+      "model": 1010021,
+      "spine_id": 800101,
+      "match": true
+    },
+    {
+      "head_new": 800201,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\a03003\\card_pic_800201.png",
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_800201.png"
+      ],
+      "card": [],
+      "skin_id": 1480020001,
+      "name": "格利特尼·阿多諾",
+      "painter": "蒼星冰磚",
+      "model": 1030031,
+      "spine_id": 800201,
+      "match": true
+    },
+    {
+      "head_new": 800301,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_800301.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_800301.png"
+      ],
+      "card": [],
+      "skin_id": 1480030001,
+      "name": "塔斯克",
+      "painter": "wujin",
+      "model": 2040041,
+      "spine_id": 800301,
+      "match": true
+    },
+    {
+      "head_new": 800401,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_800401.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_800401.png"
+      ],
+      "card": [],
+      "skin_id": 1480040001,
+      "name": "佐拉·斯賓塞",
+      "painter": "等我下個氣場",
+      "model": 1010031,
+      "spine_id": 800401,
+      "match": true
+    },
+    {
+      "head_new": 800501,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_800501.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_800501.png"
+      ],
+      "card": [],
+      "skin_id": 1480050001,
+      "name": "沙梨",
+      "painter": "瓜皮cyyyyy",
+      "model": 4060091,
+      "spine_id": 800501,
+      "match": true
+    },
+    {
+      "head_new": 800601,
+      "card_pic": [
+        "E:\\核心：利希特\\核心live2d\\Sprite\\card_pic_800601.png",
+        "E:\\核心：利希特\\核心live2d\\Texture2D\\card_pic_800601.png"
+      ],
+      "card": [],
+      "skin_id": 1480060001,
+      "name": "諾查",
+      "painter": "YINGZI影子",
+      "model": 3050071,
+      "spine_id": 800601,
+      "match": true
+    }
+  ],
+  "skin_pic_entries": [],
+  "live2d_models": [
+    {
+      "model": "02005_01",
+      "dir": "E:\\核心：利希特\\核心live2d\\02005_01",
+      "config": "E:\\核心：利希特\\核心live2d\\02005_01\\02005_01.config.json",
+      "skeleton": "TextAsset/spine_a02005_01.skel",
+      "textures": [
+        "Texture2D/spine_a02005_01.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    },
+    {
+      "model": "A04005_01",
+      "dir": "E:\\核心：利希特\\核心live2d\\A04005_01",
+      "config": "E:\\核心：利希特\\核心live2d\\A04005_01\\0400501bg1.config.json",
+      "skeleton": "TextAsset/A04005_01_bg1.skel",
+      "textures": [
+        "Texture2D/A04005_01_bg1.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    },
+    {
+      "model": "a03003",
+      "dir": "E:\\核心：利希特\\核心live2d\\a03003",
+      "config": "E:\\核心：利希特\\核心live2d\\a03003\\a03003j1.config.json",
+      "skeleton": "TextAsset/spine_a03003_j1_01.skel",
+      "textures": [
+        "Texture2D/spine_a03003_j1_01.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    },
+    {
+      "model": "a03005",
+      "dir": "E:\\核心：利希特\\核心live2d\\a03005",
+      "config": "E:\\核心：利希特\\核心live2d\\a03005\\a03005.config.json",
+      "skeleton": "TextAsset/spine_a03005_01.skel",
+      "textures": [
+        "Texture2D/spine_a03005_01.png"
+      ],
+      "motions": [
+        "idle",
+        "tap"
+      ]
+    },
+    {
+      "model": "a04004_01",
+      "dir": "E:\\核心：利希特\\核心live2d\\a04004_01",
+      "config": "E:\\核心：利希特\\核心live2d\\a04004_01\\0400401.config.json",
+      "skeleton": "TextAsset/spine_a04004_01.skel",
+      "textures": [
+        "Texture2D/spine_a04004_01.png",
+        "Texture2D/spine_a04004_012.png"
+      ],
+      "motions": [
+        "idle",
+        "tap"
+      ]
+    },
+    {
+      "model": "a04006",
+      "dir": "E:\\核心：利希特\\核心live2d\\a04006",
+      "config": "E:\\核心：利希特\\核心live2d\\a04006\\0400601.config.json",
+      "skeleton": "TextAsset/spine_a04006_01.skel",
+      "textures": [
+        "Texture2D/spine_a04006_01.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    },
+    {
+      "model": "a04010_01",
+      "dir": "E:\\核心：利希特\\核心live2d\\a04010_01",
+      "config": "E:\\核心：利希特\\核心live2d\\a04010_01\\04010.config.json",
+      "skeleton": "TextAsset/spine_a04010_01.skel",
+      "textures": [
+        "Texture2D/spine_a04010_01.png",
+        "Texture2D/spine_a04010_012.png"
+      ],
+      "motions": [
+        "idle",
+        "tap"
+      ]
+    },
+    {
+      "model": "a05001",
+      "dir": "E:\\核心：利希特\\核心live2d\\a05001",
+      "config": "E:\\核心：利希特\\核心live2d\\a05001\\05001.config.json",
+      "skeleton": "TextAsset/spine_a05001_01.skel",
+      "textures": [
+        "Texture2D/spine_a05001_01.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    },
+    {
+      "model": "e01004_01",
+      "dir": "E:\\核心：利希特\\核心live2d\\e01004_01",
+      "config": "E:\\核心：利希特\\核心live2d\\e01004_01\\01004bg2.config.json",
+      "skeleton": "TextAsset/e01004_01_bg2.skel",
+      "textures": [
+        "Texture2D/e01004_01_bg2.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    },
+    {
+      "model": "e01007",
+      "dir": "E:\\核心：利希特\\核心live2d\\e01007",
+      "config": "E:\\核心：利希特\\核心live2d\\e01007\\01007bg2.config.json",
+      "skeleton": "TextAsset/spine_e01007_01_bg2.skel",
+      "textures": [
+        "Texture2D/spine_e01007_01_bg2.png"
+      ],
+      "motions": [
+        "idle",
+        "tap"
+      ]
+    },
+    {
+      "model": "e03002_01",
+      "dir": "E:\\核心：利希特\\核心live2d\\e03002_01",
+      "config": "E:\\核心：利希特\\核心live2d\\e03002_01\\03002.config.json",
+      "skeleton": "TextAsset/spine_e03002_j1_01.skel",
+      "textures": [
+        "Texture2D/spine_e03002_j1_01.png",
+        "Texture2D/spine_e03002_j1_012.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    },
+    {
+      "model": "e04001",
+      "dir": "E:\\核心：利希特\\核心live2d\\e04001",
+      "config": "E:\\核心：利希特\\核心live2d\\e04001\\04001.config.json",
+      "skeleton": "TextAsset/spine_e04001_01.skel",
+      "textures": [
+        "Texture2D/spine_e04001_01.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    },
+    {
+      "model": "e04002",
+      "dir": "E:\\核心：利希特\\核心live2d\\e04002",
+      "config": "E:\\核心：利希特\\核心live2d\\e04002\\04002.config.json",
+      "skeleton": "TextAsset/spine_e04002_01.skel",
+      "textures": [
+        "Texture2D/spine_e04002_01.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    },
+    {
+      "model": "e04007",
+      "dir": "E:\\核心：利希特\\核心live2d\\e04007",
+      "config": "E:\\核心：利希特\\核心live2d\\e04007\\04007.config.json",
+      "skeleton": "TextAsset/spine_e04007_01.skel",
+      "textures": [
+        "Texture2D/spine_e04007_01.png"
+      ],
+      "motions": [
+        "idle",
+        "tap"
+      ]
+    },
+    {
+      "model": "f06002",
+      "dir": "E:\\核心：利希特\\核心live2d\\f06002",
+      "config": "E:\\核心：利希特\\核心live2d\\f06002\\06002.config.json",
+      "skeleton": "TextAsset/spine_f06002_01.skel",
+      "textures": [
+        "Texture2D/spine_f06002_01.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    },
+    {
+      "model": "f06006",
+      "dir": "E:\\核心：利希特\\核心live2d\\f06006",
+      "config": "E:\\核心：利希特\\核心live2d\\f06006\\06006.config.json",
+      "skeleton": "TextAsset/spine_f06006_01.skel",
+      "textures": [
+        "Texture2D/spine_f06006_01.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    },
+    {
+      "model": "n00003",
+      "dir": "E:\\核心：利希特\\核心live2d\\n00003",
+      "config": "E:\\核心：利希特\\核心live2d\\n00003\\n00003.config.json",
+      "skeleton": "TextAsset/n00003.skel",
+      "textures": [
+        "Texture2D/n00003.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    },
+    {
+      "model": "v02003_02",
+      "dir": "E:\\核心：利希特\\核心live2d\\v02003_02",
+      "config": "E:\\核心：利希特\\核心live2d\\v02003_02\\0200302bg2.config.json",
+      "skeleton": "TextAsset/v02003_02_bg2.skel",
+      "textures": [
+        "Texture2D/v02003_02_bg2.png"
+      ],
+      "motions": []
+    },
+    {
+      "model": "v02003_f01",
+      "dir": "E:\\核心：利希特\\核心live2d\\v02003_f01",
+      "config": "E:\\核心：利希特\\核心live2d\\v02003_f01\\02003bg1.config.json",
+      "skeleton": "TextAsset/spine_v02003_f01_bg1.skel",
+      "textures": [
+        "Texture2D/spine_v02003_f01_bg1.png"
+      ],
+      "motions": []
+    },
+    {
+      "model": "v02005_j2",
+      "dir": "E:\\核心：利希特\\核心live2d\\v02005_j2",
+      "config": "E:\\核心：利希特\\核心live2d\\v02005_j2\\02005.config.json",
+      "skeleton": "TextAsset/spine_v02005_j2_01_body.skel",
+      "textures": [
+        "Texture2D/spine_v02005_j2_01_body.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    },
+    {
+      "model": "v02007_02",
+      "dir": "E:\\核心：利希特\\核心live2d\\v02007_02",
+      "config": "E:\\核心：利希特\\核心live2d\\v02007_02\\02007bg1.config.json",
+      "skeleton": "TextAsset/spine_v02007_02_bg1.skel",
+      "textures": [
+        "Texture2D/spine_v02007_02_bg1.png",
+        "Texture2D/spine_v02007_02_bg12.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    },
+    {
+      "model": "v05003_01",
+      "dir": "E:\\核心：利希特\\核心live2d\\v05003_01",
+      "config": "E:\\核心：利希特\\核心live2d\\v05003_01\\05003.config.json",
+      "skeleton": "TextAsset/v05003_01.skel",
+      "textures": [
+        "Texture2D/v05003_01.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    },
+    {
+      "model": "v05010_01",
+      "dir": "E:\\核心：利希特\\核心live2d\\v05010_01",
+      "config": "E:\\核心：利希特\\核心live2d\\v05010_01\\05010.config.json",
+      "skeleton": "TextAsset/spine_v05010_01.skel",
+      "textures": [
+        "Texture2D/spine_v05010_01.png"
+      ],
+      "motions": [
+        "idle"
+      ]
+    }
+  ]
+}
