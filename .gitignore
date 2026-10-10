@@ -30,11 +30,6 @@ config/server.local.json
 # ---- OBB 解包資源（3.2 GB，使用者自備）----
 obb/
 
-# ---- 瞳專項素材包（遊戲版權素材，僅留本機，不進公開倉庫）----
-#   素材由 licht-offline 提取，版權屬原開發／發行方
-#   倉庫只保留 assets\README.md 說明與清單
-瞳/assets/
-!瞳/assets/README.md
 
 # ---- 內嵌執行環境（走 GitHub Release 附件，不進版控）----
 #   若你想讓倉庫「解壓即用」，把下面兩行註解掉即可（倉庫會變成約 163 MB）
@@ -57,9 +52,9 @@ node/
 
 # ---- Release 打包暫存 ----
 .release/
-# ---- 瞳桌宠：原始素材（立繪已內嵌 exe，這裡不重複提交）----
-瞳/桌宠/assets/
-!瞳/桌宠/assets/README.md
-瞳/桌宠/build/桌宠.log
-瞳/桌宠/build/_test*.png
-瞳/桌宠/build/compile.log
+
+# ---- 瞳專項已獨立到 E 盤（不再放在本倉庫）----
+#   位置：E:\核心：利希特\瞳\
+#   內容：資料檔案（C）、資源素材（A）、桌宠專案（exe 原始碼）
+#   本倉庫不再收錄，避免兩份副本不同步。
+瞳/
