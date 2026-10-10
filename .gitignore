@@ -57,3 +57,9 @@ node/
 
 # ---- Release 打包暫存 ----
 .release/
+# ---- 瞳桌宠：原始素材（立繪已內嵌 exe，這裡不重複提交）----
+瞳/桌宠/assets/
+!瞳/桌宠/assets/README.md
+瞳/桌宠/build/桌宠.log
+瞳/桌宠/build/_test*.png
+瞳/桌宠/build/compile.log
