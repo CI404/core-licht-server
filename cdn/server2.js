@@ -11,15 +11,19 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');          // 專案根目錄
 const CFG_FILE = path.join(ROOT, 'config', 'server.json');
+// 本機覆寫檔（已列入 .gitignore）：放你自己電腦的路徑，不會被提交。
+// 只需寫要覆寫的欄位，例如 { "obb_main": "D:/my-obb/main/assets" }
+const LOCAL_FILE = path.join(ROOT, 'config', 'server.local.json');
 
-function loadConfig() {
+function readJson(p) {
   try {
-    return JSON.parse(fs.readFileSync(CFG_FILE, 'utf8'));
+    return JSON.parse(fs.readFileSync(p, 'utf8'));
   } catch (e) {
     return {};
   }
 }
-const CFG = loadConfig();
+
+const CFG = Object.assign({}, readJson(CFG_FILE), readJson(LOCAL_FILE));
 
 function cfg(key, defaultVal) {
   const env = process.env['LICHT_' + key.toUpperCase()];

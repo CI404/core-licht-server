@@ -127,6 +127,22 @@ CDN 伺服器會從**已解包的原廠 OBB 資源**讀取檔案（約 3.2 GB）
 解開（obb 就是 zip）到本專案的 `obb\main\assets` 與 `obb\patch\assets`，
 或在設定檔裡改成你自己的路徑（支援相對與絕對路徑）。
 
+### 💡 不想把自己的路徑寫進 repo？用本機覆寫檔
+
+在 `config\` 下建一個 **`server.local.json`**（已列入 `.gitignore`，不會被提交），
+只寫要覆寫的欄位即可：
+
+```json
+{
+  "obb_main": "D:/my-obb/main/assets",
+  "obb_patch": "D:/my-obb/patch/assets"
+}
+```
+
+優先順序：**環境變數 `LICHT_*` > `server.local.json` > `server.json` > 內建預設**
+
+> 這個機制是給「fork 後想保留自己路徑」或「不想讓 `git status` 一直顯示設定檔被改」的人用的。
+
 ---
 
 ## 目前狀態

@@ -47,7 +47,15 @@ def _load_json(path):
 
 
 _CFG_FILE = os.path.join(ROOT, "config", "server.json")
+
+# 本機覆寫檔：給「不想把自己電腦的路徑寫進公開 repo」的人用。
+# 已列入 .gitignore，不會被提交。
+# 用法：在 config\ 下建一個 server.local.json，只寫要覆寫的欄位，例如
+#     { "obb_main": "D:/my-obb/main/assets", "obb_patch": "D:/my-obb/patch/assets" }
+_LOCAL_FILE = os.path.join(ROOT, "config", "server.local.json")
+
 _CFG = _load_json(_CFG_FILE)
+_CFG.update(_load_json(_LOCAL_FILE))
 
 
 def cfg(key, default=None):
