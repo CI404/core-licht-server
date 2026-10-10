@@ -29,8 +29,10 @@ import json
 import os
 import sys
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-SERVER_DIR = os.path.dirname(HERE)
+HERE = os.path.dirname(os.path.abspath(__file__))          # atlas/tools
+ATLAS_DIR = os.path.dirname(HERE)                          # atlas
+PROJ_DIR = os.path.dirname(ATLAS_DIR)                      # 專案根
+SERVER_DIR = os.path.join(PROJ_DIR, "server")               # server（player_data 在此）
 sys.path.insert(0, SERVER_DIR)
 
 import player_data as PD  # noqa: E402
