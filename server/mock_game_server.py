@@ -479,6 +479,69 @@ def _handle_2_9(conn, msg):
     _push_noob_stage(conn)
 
 
+def _handle_31_1(conn, msg):
+    """building_info_c2s → building_info_s2c（空島基建資訊）。
+
+    ★ 2026-10-10 修正「點空島卡 90%」。
+
+    症狀（logcat 完整堆疊）：
+        [ERROR] call private._onUnderLoadingView error:
+                ?:-1: attempt to index a boolean value
+          ?: in field 'CheckCanUpgradByCondList'
+          ?: in field 'CheckCanUnlockRoom'
+          ?: in field 'CheckRoomStausEffect'
+          ?: in field 'LoadRoom'
+          ?: in field 'LoadLandAndRoom'
+
+    根因鏈：
+      1. 客戶端 `BuildTool.lua:3206-3215`（cond_type == 1 分支）：
+             L10_2 = BuildModel.GetRoomInfoBySysId(L8_2)
+             L11_2 = L10_2.info            ← 對 false 做索引 → 崩潰
+      2. `GetRoomInfoBySysId` 查的是 `BuildModel.roomModel`
+      3. `roomModel` 由 `31_1 building_info_s2c` 的 **room_list** 填充
+      4. 伺服器原本沒有 `_handle_31_1`，走通用回應器
+         → `room_list` 是空的（只填了 required 的 center，59 bytes）
+         → 查不到任何房間 → 回 false → 崩潰 → 進度條卡 90%
+
+    修法：明確回報 room_list，每個房型取 `DataTable_room` 的**最高等級**，
+    這樣所有 `cond_list`（類型 1 = 要求某房型等級 ≥ N）都自然滿足。
+    """
+    m = _new_s2c(31, 1)
+
+    # ---- center（REQUIRED）----
+    atoms = PD.max_atoms()
+    m.center.highest_atoms = atoms
+    m.center.atoms_index = atoms
+    m.center.pills_num = 0
+    m.center.power = 0
+    m.center.clean_times = 0
+    m.center.next_time = 0
+    m.center.power_speed = 0        # 注意：proto 型別是 int64（TYPE_INT64），不是 float
+    m.center.next_gain_pill_time = 0
+    m.center.end_time = 0
+
+    # ---- room_list ----
+    rid = 1
+    for sys_id, lvl, row in PD.maxed_rooms():
+        r = m.room_list.add()
+        r.id = rid
+        r.attach_room_id = sys_id       # 客戶端以 sys_id 關聯配置表
+        r.sys_id = sys_id
+        r.lvl = lvl
+        r.atoms = 0
+        r.used_elec = 0
+        r.max_elec = int(row.get("atoms_max", 0) or 0) or 1000
+        r.used_space = 0
+        r.name = str(row.get("name") or "")
+        r.upgrade_time = 0
+        rid += 1
+
+    _send_msg(conn, 31, 1, m)
+    log(f"  -> 已回覆空島基建：center(highest_atoms={atoms}) + "
+        f"{len(m.room_list)} 個房間（各房型最高等級）"
+        f" ← 修復「點空島卡 90%」")
+
+
 def _handle_11_46(conn, msg):
     """children_bag_skin_list_c2s → 全部皮膚解鎖。
 
@@ -1145,6 +1208,8 @@ def _dispatch(conn, raw):
             _handle_26_4(conn, msg)
         elif key == "26_1":                        # scenario_status → 劇情狀態
             _handle_26_1(conn, msg)
+        elif key == "31_1":                        # building_info → 空島基建
+            _handle_31_1(conn, msg)
         elif key == "35_1":                        # hero_info_c2s → 英雄清單
             _handle_35_1(conn, msg)
         elif key == "2_5":

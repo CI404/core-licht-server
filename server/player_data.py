@@ -279,6 +279,68 @@ def child_level(cid):
     return star_max_lvl().get(star_by_child().get(cid, 5), 1)
 
 
+# ======================================================================
+# 空島（基建）房間 — DataTable_room
+# ======================================================================
+# 為什麼需要（2026-10-10 修正「點空島卡 90%」）：
+#   客戶端 x.Module.Build.BuildTool.lua:3206-3215 `CheckCanUpgradByCondList`
+#   在 cond_type == 1 的分支：
+#       L10_2 = BuildModel.GetRoomInfoBySysId(sys_id)
+#       L11_2 = L10_2.info          ← 若 GetRoomInfoBySysId 回 false → 崩潰
+#   而 GetRoomInfoBySysId 是查 BuildModel.roomModel，該表由 `31_1
+#   building_info_s2c` 的 room_list 填充。伺服器原本走通用回應器，
+#   room_list 是空的 → 查不到 → `attempt to index a boolean value`
+#   → 整個 LoadLandAndRoom 中斷 → 進度條卡 90%。
+#
+# 房型（實測）：7 種，每種 lvl 1~15
+#   10001 中樞房間(type1) / 10002 工作室A / 10003 宅邸A /
+#   10004 工作室B / 10005 宅邸B / 10006 工作室C / 10007 宅邸C
+@functools.lru_cache(maxsize=1)
+def room_tiers():
+    """房型 id -> 該房型所有等級的資料列（已排序）。"""
+    out = {}
+    for r in table("room"):
+        try:
+            rid = int(r.get("id"))
+        except Exception:
+            continue
+        out.setdefault(rid, []).append(r)
+    for rid in out:
+        out[rid].sort(key=lambda x: int(x.get("lvl", 0)))
+    return out
+
+
+@functools.lru_cache(maxsize=1)
+def maxed_rooms():
+    """回傳每個房型的「最高等級」資料，供 `31_1 building_info_s2c` 使用。
+
+    為什麼取最高等級：滿級時所有 `cond_list`（類型 1 = 要求某房型 ≥ N）
+    都自然滿足，客戶端不會走進「條件不足」的錯誤分支。
+
+    回傳 [(sys_id, lvl, row), ...]，依 sys_id 排序。
+    """
+    out = []
+    for rid in sorted(room_tiers()):
+        rows = room_tiers()[rid]
+        if not rows:
+            continue
+        top = rows[-1]
+        out.append((rid, int(top.get("lvl", 1)), top))
+    return out
+
+
+@functools.lru_cache(maxsize=1)
+def max_atoms():
+    """中樞房間的 atoms 上限（給 p_building_center.highest_atoms / atoms_index）。"""
+    best = 0
+    for r in table("room"):
+        try:
+            best = max(best, int(r.get("atoms_max", 0) or 0))
+        except Exception:
+            pass
+    return best
+
+
 def build_maxed_child(cid, p_children_cls):
     """建立「滿級、滿星、全皮膚」的 p_children 訊息。"""
     star = star_by_child().get(cid, 5)
