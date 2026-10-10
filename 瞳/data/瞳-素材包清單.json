@@ -1,0 +1,784 @@
+{
+  "subject": "瞳（Hitomi）",
+  "pack_root": "E:\\核心：利希特\\瞳\\assets",
+  "groups": {
+    "01_formal_立绘": {
+      "count": 13,
+      "files": [
+        {
+          "file": "01_formal_立绘\\_parts\\e01001_f01_bg1\\e01001_f01_bg1.png",
+          "bytes": 378569,
+          "ext": ".png",
+          "size": "1024x1024"
+        },
+        {
+          "file": "01_formal_立绘\\_parts\\e01001_f01_bg2\\e01001_f01_bg2.png",
+          "bytes": 526026,
+          "ext": ".png",
+          "size": "1024x1024"
+        },
+        {
+          "file": "01_formal_立绘\\_parts\\e01001_f01_bg22\\e01001_f01_bg22.png",
+          "bytes": 546135,
+          "ext": ".png",
+          "size": "1024x1024"
+        },
+        {
+          "file": "01_formal_立绘\\_parts\\e01001_f01_body\\e01001_f01_body.png",
+          "bytes": 636754,
+          "ext": ".png",
+          "size": "1024x1024"
+        },
+        {
+          "file": "01_formal_立绘\\_parts\\spine_e01001_01_bg1\\spine_e01001_01_bg1.png",
+          "bytes": 89194,
+          "ext": ".png",
+          "size": "1024x1024"
+        },
+        {
+          "file": "01_formal_立绘\\_parts\\spine_e01001_01_bg2\\spine_e01001_01_bg2.png",
+          "bytes": 306194,
+          "ext": ".png",
+          "size": "1024x1024"
+        },
+        {
+          "file": "01_formal_立绘\\_parts\\spine_e01001_01_bg22\\spine_e01001_01_bg22.png",
+          "bytes": 93675,
+          "ext": ".png",
+          "size": "1024x1024"
+        },
+        {
+          "file": "01_formal_立绘\\_parts\\spine_e01001_01_body\\spine_e01001_01_body.png",
+          "bytes": 489008,
+          "ext": ".png",
+          "size": "1024x1024"
+        },
+        {
+          "file": "01_formal_立绘\\_parts\\spine_e01001_03_bg1\\spine_e01001_03_bg1.png",
+          "bytes": 159498,
+          "ext": ".png",
+          "size": "512x1024"
+        },
+        {
+          "file": "01_formal_立绘\\_parts\\spine_e01001_03_bg2\\spine_e01001_03_bg2.png",
+          "bytes": 820890,
+          "ext": ".png",
+          "size": "1024x1024"
+        },
+        {
+          "file": "01_formal_立绘\\_parts\\spine_e01001_03_bg22\\spine_e01001_03_bg22.png",
+          "bytes": 167942,
+          "ext": ".png",
+          "size": "512x1024"
+        },
+        {
+          "file": "01_formal_立绘\\_parts\\spine_e01001_03_body\\spine_e01001_03_body.png",
+          "bytes": 514623,
+          "ext": ".png",
+          "size": "1024x1024"
+        },
+        {
+          "file": "01_formal_立绘\\_parts\\spine_e01001_j0_00\\spine_e01001_j0_00.png",
+          "bytes": 592160,
+          "ext": ".png",
+          "size": "1024x1024"
+        }
+      ]
+    },
+    "02_formal_Spine": {
+      "count": 35,
+      "files": [
+        {
+          "file": "02_formal_Spine\\s_e01001_j0_00\\spine_e01001_j0_00.atlas",
+          "bytes": 6087,
+          "ext": ".atlas"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j0_00\\spine_e01001_j0_00.skel",
+          "bytes": 85466,
+          "ext": ".skel"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j0_00\\_-7432861199015648910.config.json",
+          "bytes": 23,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j0_00\\_-8125542496638321221.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j0_00\\_-9150374855536817238.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j1_00\\spine_e01001_01_bg1.atlas",
+          "bytes": 1167,
+          "ext": ".atlas"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j1_00\\spine_e01001_01_bg1.skel",
+          "bytes": 2879,
+          "ext": ".skel"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j1_00\\spine_e01001_01_bg2.atlas",
+          "bytes": 3061,
+          "ext": ".atlas"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j1_00\\spine_e01001_01_bg2.skel",
+          "bytes": 7837,
+          "ext": ".skel"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j1_00\\spine_e01001_01_body.atlas",
+          "bytes": 6009,
+          "ext": ".atlas"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j1_00\\spine_e01001_01_body.skel",
+          "bytes": 80750,
+          "ext": ".skel"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j1_00\\_-3905599612379406082.config.json",
+          "bytes": 23,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j1_00\\_-4308555352773988190.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j1_00\\_-6994343713093773716.config.json",
+          "bytes": 23,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j1_00\\_-8152625288079301489.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j1_00\\_3646684943087719727.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j1_00\\_4026264451724883108.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j1_00\\_5890966028028127991.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j1_00\\_7797421060213763179.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j1_00\\_8883421064418392818.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j3_00\\spine_e01001_03_bg1.atlas",
+          "bytes": 1803,
+          "ext": ".atlas"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j3_00\\spine_e01001_03_bg1.skel",
+          "bytes": 9761,
+          "ext": ".skel"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j3_00\\spine_e01001_03_bg2.atlas",
+          "bytes": 3170,
+          "ext": ".atlas"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j3_00\\spine_e01001_03_bg2.skel",
+          "bytes": 25263,
+          "ext": ".skel"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j3_00\\spine_e01001_03_body.atlas",
+          "bytes": 7099,
+          "ext": ".atlas"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j3_00\\spine_e01001_03_body.skel",
+          "bytes": 181161,
+          "ext": ".skel"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j3_00\\_-170260760518737072.config.json",
+          "bytes": 23,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j3_00\\_-3776085459679718152.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j3_00\\_-6662091982035813896.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j3_00\\_-8578451457710810188.config.json",
+          "bytes": 23,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j3_00\\_1351956611901153545.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j3_00\\_1813881073204661111.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j3_00\\_1815162982685504130.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j3_00\\_5656626121416962815.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "02_formal_Spine\\s_e01001_j3_00\\_6425025892294899857.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        }
+      ]
+    },
+    "03_alt_立绘": {
+      "count": 0,
+      "files": []
+    },
+    "04_alt_Spine": {
+      "count": 15,
+      "files": [
+        {
+          "file": "04_alt_Spine\\s_e01001_f01\\e01001_f01_bg1.atlas",
+          "bytes": 2114,
+          "ext": ".atlas"
+        },
+        {
+          "file": "04_alt_Spine\\s_e01001_f01\\e01001_f01_bg1.skel",
+          "bytes": 12271,
+          "ext": ".skel"
+        },
+        {
+          "file": "04_alt_Spine\\s_e01001_f01\\e01001_f01_bg2.atlas",
+          "bytes": 5068,
+          "ext": ".atlas"
+        },
+        {
+          "file": "04_alt_Spine\\s_e01001_f01\\e01001_f01_bg2.skel",
+          "bytes": 75656,
+          "ext": ".skel"
+        },
+        {
+          "file": "04_alt_Spine\\s_e01001_f01\\e01001_f01_body.atlas",
+          "bytes": 8958,
+          "ext": ".atlas"
+        },
+        {
+          "file": "04_alt_Spine\\s_e01001_f01\\e01001_f01_body.skel",
+          "bytes": 146854,
+          "ext": ".skel"
+        },
+        {
+          "file": "04_alt_Spine\\s_e01001_f01\\_-4217649499394525850.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "04_alt_Spine\\s_e01001_f01\\_-4633546859719949542.config.json",
+          "bytes": 23,
+          "ext": ".json"
+        },
+        {
+          "file": "04_alt_Spine\\s_e01001_f01\\_-4957559772364718175.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "04_alt_Spine\\s_e01001_f01\\_-6063791543237714888.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "04_alt_Spine\\s_e01001_f01\\_105066038161667847.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "04_alt_Spine\\s_e01001_f01\\_1742498925132683674.config.json",
+          "bytes": 23,
+          "ext": ".json"
+        },
+        {
+          "file": "04_alt_Spine\\s_e01001_f01\\_616008751517592148.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "04_alt_Spine\\s_e01001_f01\\_8590060031775140594.config.json",
+          "bytes": 24,
+          "ext": ".json"
+        },
+        {
+          "file": "04_alt_Spine\\s_e01001_f01\\_8872148886037259698.config.json",
+          "bytes": 23,
+          "ext": ".json"
+        }
+      ]
+    },
+    "05_旧影_Spine": {
+      "count": 0,
+      "files": []
+    },
+    "06_其他": {
+      "count": 0,
+      "files": []
+    },
+    "_清单": {
+      "count": 0,
+      "files": []
+    }
+  },
+  "poses": [
+    {
+      "spine_id": 10000000,
+      "path": "s_e01001_j0_00",
+      "para": [
+        0,
+        -1000,
+        0,
+        0.7
+      ],
+      "scenario_para": [
+        0,
+        -1030,
+        0,
+        0.7
+      ],
+      "click": [
+        "normal",
+        "angry",
+        "happy",
+        "animation"
+      ],
+      "users": [
+        [
+          "瞳",
+          101
+        ],
+        [
+          "瞳",
+          201
+        ],
+        [
+          "瞳",
+          204
+        ],
+        [
+          "瞳",
+          301
+        ],
+        [
+          "瞳",
+          401
+        ],
+        [
+          "瞳",
+          501
+        ],
+        [
+          "瞳",
+          601
+        ],
+        [
+          "瞳",
+          701
+        ],
+        [
+          "瞳",
+          9101
+        ],
+        [
+          "瞳",
+          9201
+        ],
+        [
+          "瞳",
+          9301
+        ],
+        [
+          "瞳",
+          9401
+        ],
+        [
+          "瞳",
+          9501
+        ],
+        [
+          "瞳",
+          9601
+        ],
+        [
+          "瞳",
+          9701
+        ],
+        [
+          "瞳",
+          1000001
+        ]
+      ],
+      "skin_count": 16
+    },
+    {
+      "spine_id": 10000001,
+      "path": "s_e01001_j1_00",
+      "para": [
+        -93,
+        -75,
+        0,
+        1.7
+      ],
+      "scenario_para": [
+        0,
+        -705,
+        0,
+        0.7
+      ],
+      "click": [
+        "normal",
+        "angry",
+        "happy",
+        "animation"
+      ],
+      "users": [
+        [
+          "瞳",
+          102
+        ],
+        [
+          "瞳",
+          202
+        ],
+        [
+          "瞳",
+          302
+        ],
+        [
+          "瞳",
+          402
+        ],
+        [
+          "瞳",
+          502
+        ],
+        [
+          "瞳",
+          602
+        ],
+        [
+          "瞳",
+          702
+        ],
+        [
+          "瞳",
+          1000002
+        ]
+      ],
+      "skin_count": 8
+    },
+    {
+      "spine_id": 10000002,
+      "path": "s_e01001_j3_00",
+      "para": [
+        0,
+        -850,
+        0,
+        1.2
+      ],
+      "scenario_para": [
+        80,
+        -850,
+        0,
+        1.2
+      ],
+      "click": [
+        "idle",
+        "idle1"
+      ],
+      "users": [
+        [
+          "瞳",
+          103
+        ],
+        [
+          "瞳",
+          203
+        ],
+        [
+          "瞳",
+          303
+        ],
+        [
+          "瞳",
+          403
+        ],
+        [
+          "瞳",
+          503
+        ],
+        [
+          "瞳",
+          603
+        ],
+        [
+          "瞳",
+          703
+        ],
+        [
+          "瞳",
+          1000003
+        ]
+      ],
+      "skin_count": 8
+    },
+    {
+      "spine_id": 10000010,
+      "path": "s_e01001_f01",
+      "para": [
+        -120,
+        -930,
+        0,
+        0.8
+      ],
+      "scenario_para": [
+        -120,
+        -1080,
+        0,
+        0.87
+      ],
+      "click": [
+        "normal",
+        "angry",
+        "idle",
+        "idle1"
+      ],
+      "users": [
+        [
+          "舊影",
+          1001
+        ],
+        [
+          "舊影",
+          1101
+        ],
+        [
+          "舊影",
+          1201
+        ],
+        [
+          "舊影",
+          1301
+        ],
+        [
+          "舊影",
+          1401
+        ],
+        [
+          "舊影",
+          1501
+        ],
+        [
+          "舊影",
+          1601
+        ]
+      ],
+      "skin_count": 7
+    }
+  ],
+  "forms": [
+    {
+      "id": 100000,
+      "job": 2,
+      "subjob": 203,
+      "skin_list": [
+        1000001,
+        1000002,
+        1000003,
+        1001
+      ],
+      "weight": 110
+    },
+    {
+      "id": 100001,
+      "job": 1,
+      "subjob": 101,
+      "skin_list": [
+        101,
+        102,
+        103,
+        1101
+      ],
+      "weight": 100
+    },
+    {
+      "id": 100002,
+      "job": 3,
+      "subjob": 301,
+      "skin_list": [
+        301,
+        302,
+        303,
+        1301
+      ],
+      "weight": 110
+    },
+    {
+      "id": 100003,
+      "job": 7,
+      "subjob": 701,
+      "skin_list": [
+        201,
+        202,
+        203,
+        1201
+      ],
+      "weight": 1
+    },
+    {
+      "id": 100004,
+      "job": 4,
+      "subjob": 401,
+      "skin_list": [
+        401,
+        402,
+        403,
+        1401
+      ],
+      "weight": 130
+    },
+    {
+      "id": 100005,
+      "job": 5,
+      "subjob": 502,
+      "skin_list": [
+        501,
+        502,
+        503,
+        1501
+      ],
+      "weight": 1
+    },
+    {
+      "id": 100006,
+      "job": 6,
+      "subjob": 601,
+      "skin_list": [
+        601,
+        602,
+        603,
+        1601
+      ],
+      "weight": 90
+    },
+    {
+      "id": 100007,
+      "job": 9,
+      "subjob": 902,
+      "skin_list": [
+        701,
+        702,
+        703,
+        1701
+      ],
+      "weight": 100
+    },
+    {
+      "id": 9100001,
+      "job": 1,
+      "subjob": 101,
+      "skin_list": [
+        9101
+      ],
+      "weight": 100
+    },
+    {
+      "id": 9100002,
+      "job": 3,
+      "subjob": 301,
+      "skin_list": [
+        9301
+      ],
+      "weight": 110
+    },
+    {
+      "id": 9100003,
+      "job": 7,
+      "subjob": 701,
+      "skin_list": [
+        9201
+      ],
+      "weight": 1
+    },
+    {
+      "id": 9100004,
+      "job": 4,
+      "subjob": 401,
+      "skin_list": [
+        9401
+      ],
+      "weight": 130
+    },
+    {
+      "id": 9100005,
+      "job": 5,
+      "subjob": 501,
+      "skin_list": [
+        9501
+      ],
+      "weight": 1
+    },
+    {
+      "id": 9100006,
+      "job": 6,
+      "subjob": 601,
+      "skin_list": [
+        9601
+      ],
+      "weight": 90
+    },
+    {
+      "id": 9100007,
+      "job": 2,
+      "subjob": 201,
+      "skin_list": [
+        91000071,
+        91000073,
+        91000072
+      ],
+      "weight": 100
+    }
+  ]
+}
