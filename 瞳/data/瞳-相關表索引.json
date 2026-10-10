@@ -1,0 +1,172 @@
+{
+  "generated_by": "瞳/tools/hitomi_assets.py (index part)",
+  "note": "列出所有提到「亞述桐」或瞳的編號段的配置表",
+  "keyword_assur": "亞述桐",
+  "code_scopes": {
+    "children_forms": "100000~100007 + 9100001~9100007",
+    "skins": "101~703 + 9101~9701 + 1000001~1000003"
+  },
+  "by_keyword": [
+    {
+      "table": "DataTable_activity_answer_question",
+      "hits": 1,
+      "rows": 52
+    },
+    {
+      "table": "DataTable_badge",
+      "hits": 1,
+      "rows": 69
+    },
+    {
+      "table": "DataTable_children",
+      "hits": 15,
+      "rows": 113
+    },
+    {
+      "table": "DataTable_children_doc",
+      "hits": 8,
+      "rows": 94
+    },
+    {
+      "table": "DataTable_children_doc_char",
+      "hits": 5,
+      "rows": 470
+    },
+    {
+      "table": "DataTable_children_skin",
+      "hits": 7,
+      "rows": 333
+    },
+    {
+      "table": "DataTable_guide",
+      "hits": 16,
+      "rows": 512
+    },
+    {
+      "table": "DataTable_item",
+      "hits": 2,
+      "rows": 1123
+    },
+    {
+      "table": "DataTable_loading_info",
+      "hits": 5,
+      "rows": 192
+    },
+    {
+      "table": "DataTable_scenario",
+      "hits": 3,
+      "rows": 762
+    },
+    {
+      "table": "DataTable_scenario_translation",
+      "hits": 58,
+      "rows": 8861
+    }
+  ],
+  "by_code": [
+    {
+      "table": "DataTable_char_relationship",
+      "hits": 1,
+      "sample_keys": [
+        "100000"
+      ],
+      "rows": 80
+    },
+    {
+      "table": "DataTable_children",
+      "hits": 15,
+      "sample_keys": [
+        "100000",
+        "100001",
+        "100002"
+      ],
+      "rows": 113
+    },
+    {
+      "table": "DataTable_children_doc",
+      "hits": 8,
+      "sample_keys": [
+        "100000",
+        "100001",
+        "100002"
+      ],
+      "rows": 94
+    },
+    {
+      "table": "DataTable_children_favor",
+      "hits": 8,
+      "sample_keys": [
+        "100000",
+        "100001",
+        "100002"
+      ],
+      "rows": 106
+    },
+    {
+      "table": "DataTable_gain",
+      "hits": 1,
+      "sample_keys": [
+        "100001"
+      ],
+      "rows": 392
+    },
+    {
+      "table": "DataTable_mail",
+      "hits": 5,
+      "sample_keys": [
+        "100000",
+        "100001",
+        "100002"
+      ],
+      "rows": 277
+    },
+    {
+      "table": "DataTable_minimap",
+      "hits": 7,
+      "sample_keys": [
+        "100001",
+        "100002",
+        "100003"
+      ],
+      "rows": 669
+    },
+    {
+      "table": "DataTable_model",
+      "hits": 3,
+      "sample_keys": [
+        "100005",
+        "100006",
+        "100007"
+      ],
+      "rows": 637
+    },
+    {
+      "table": "DataTable_recruit_pool",
+      "hits": 7,
+      "sample_keys": [
+        "100001",
+        "100002",
+        "100003"
+      ],
+      "rows": 76
+    },
+    {
+      "table": "DataTable_reward",
+      "hits": 1,
+      "sample_keys": [
+        "100000"
+      ],
+      "rows": 1731
+    },
+    {
+      "table": "DataTable_tower_skill",
+      "hits": 7,
+      "sample_keys": [
+        "100001",
+        "100002",
+        "100003"
+      ],
+      "rows": 61
+    }
+  ]
+}
