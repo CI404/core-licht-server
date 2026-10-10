@@ -97,6 +97,7 @@ licht-offline-server\
 ├── output\                     UrlList 產出位置
 ├── runtime\                    日誌（mock-server.log / cdn-requests.log / tcp-capture.jsonl）
 └── docs\
+    ├── 交接文件-2026-10-10-第二輪.md   ★ 接手前必讀（環境、六個致命坑、診斷流程）
     ├── 安裝指南.md
     ├── 新設備部署.md
     └── 已完成修復清單.md        ★ 本專案修過哪些 bug、證據在哪
