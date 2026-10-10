@@ -40,10 +40,25 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ROOT)
 import config as CFG  # noqa: E402
 
-SLOT_SIZE = 598  # OBB 內固定槽位大小（實測值，勿改）
+SLOT_SIZE = 598  # 固定槽位大小（實測值，勿改）
+
+# ★★★ 這個值極度重要，改錯會導致遊戲跳出 SDK 登入彈窗 ★★★
+#
+# 客戶端 x.Module.Login.Control.LoginControl.lua:185-194：
+#     if "tw_debug_888" == LoginModel.versionCustomContent.server then
+#         LoginModel.isDevTest = true
+#         LoginModel.isSdkEnabled = false                       -- 關閉 SDK
+#         UIClassHelper.UIClass.LoginView.OpenSubViewDev()      -- 開開發者登入界面
+#     else
+#         SdkLogin()                                            -- 跳出官方/FB/Google 登入彈窗
+#
+# 所以：
+#   tw_debug_888   → 開發者模式（離線遊玩要用這個）
+#   tw_release_*   → 啟用 SDK，會卡在登入彈窗
+DEFAULT_SERVER = "tw_debug_888"
 
 
-def build(host, port):
+def build(host, port, server=None):
     """組出 UrlList 物件。
 
     注意：`versionCustomContent` 內含 Lua 表 `{isRelease=true, ...}`，
@@ -51,6 +66,7 @@ def build(host, port):
     所以這裡用 f-string 直接組，並原樣保留大括號。
     """
     base = f"http://{host}:{port}"
+    srv = server or DEFAULT_SERVER
     return {
         "baseUrl": base + "/cdnconfig_{0}/",
         "configFileUrl": base + "/cdnconfig_{0}/android_tw/stable/release/config.txt",
@@ -58,23 +74,25 @@ def build(host, port):
         "updatePackageUrl": base + "/cdnconfig_{0}/android_tw/stable/release/{1}/updatePackage",
         "updateUrl": base + "/cdnconfig_{0}/android_tw/stable/release/{1}/res",
         "useBackup": base + "/|" + base + "/",
-        "versionCustomContent": "return {isRelease=true, server='tw_release_3001'}",
+        "versionCustomContent": "return {isRelease=true, server='" + srv + "'}",
     }
 
 
 def main():
     host = sys.argv[1] if len(sys.argv) > 1 else CFG.PUBLIC_HOST
     port = int(sys.argv[2]) if len(sys.argv) > 2 else CFG.CDN_PORT
+    server = sys.argv[3] if len(sys.argv) > 3 else DEFAULT_SERVER
 
     print("=" * 66)
     print("  UrlList_Android.txt 產生器")
     print("=" * 66)
     print(f"  對外主機 : {host}")
     print(f"  CDN 埠號 : {port}")
+    print(f"  server   : {server}   {'[開發者模式]' if server == DEFAULT_SERVER else '[注意：非 tw_debug_888，可能跳 SDK 登入]'}")
     print(f"  槽位大小 : {SLOT_SIZE} bytes（OBB 固定值）")
     print()
 
-    obj = build(host, port)
+    obj = build(host, port, server)
     body = json.dumps(obj, ensure_ascii=False, separators=(",", ":"))
     raw = body.encode("utf-8")
 

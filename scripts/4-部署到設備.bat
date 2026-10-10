@@ -14,11 +14,18 @@ echo ==================================================================
 echo.
 
 set "PKG=com.tw99.no23.an"
-rem ★ 2026-10-10 實測修正：UrlList 位於 patch OBB，不在 main OBB。
-rem   （main OBB 的 1528431122 是 assets/Zero/Lua/lua.ab）
-set "ENCODED=patch.138.com.tw99.no23.an.obb"
-set "DEVICE_OBB=/sdcard/Android/obb/%PKG%/%ENCODED%"
-set "DATA_OFF=1519062275"
+
+rem ★★ 2026-10-10 最終實測修正（重要）★★
+rem   遊戲實際讀取的 UrlList【不在 OBB】，而是在遊戲資料目錄：
+rem       /sdcard/Android/data/<pkg>/files/res/UrlList_Android.txt
+rem       /sdcard/Android/data/<pkg>/files/res/SHASD_local.txt
+rem   兩份都要寫。OBB 裡的那份只是來源，改了沒用。
+rem
+rem   （歷史記錄：main OBB 的 1528431122 是 lua.ab；
+rem     patch OBB 的 1519062275 有 UrlList，但遊戲不讀那份）
+set "RES_DIR=/sdcard/Android/data/%PKG%/files/res"
+set "DEVICE_URL=%RES_DIR%/UrlList_Android.txt"
+set "DEVICE_SHASD=%RES_DIR%/SHASD_local.txt"
 
 rem ---- 找 adb ----
 set "ADB="
@@ -79,64 +86,59 @@ if "!DEV!"=="" (
 )
 echo   目標裝置: !DEV!
 
-rem ---- 檢查 OBB ----
+rem ---- 檢查遊戲資料目錄 ----
 echo.
-echo   檢查裝置上的 OBB...
-"!ADB!" -s !DEV! shell "ls -l %DEVICE_OBB%" 2>&1
-"!ADB!" -s !DEV! shell "ls %DEVICE_OBB%" >nul 2>&1
+echo   檢查裝置上的遊戲資料目錄...
+"!ADB!" -s !DEV! shell "ls -l %RES_DIR%/" 2>&1
+"!ADB!" -s !DEV! shell "ls %RES_DIR%/" >nul 2>&1
 if errorlevel 1 (
     echo.
-    echo   [錯誤] 裝置上找不到 OBB：
-    echo          %DEVICE_OBB%
-    echo          請先完整安裝並啟動過一次遊戲，讓它下載/放置 OBB。
+    echo   [錯誤] 裝置上找不到：
+    echo          %RES_DIR%
+    echo          請先完整安裝並「啟動過一次」遊戲，讓它建立此目錄。
     pause & popd & exit /b 1
 )
 
-rem ---- 試 root ----
+rem ---- 備份現有檔案（只備份一次）----
 echo.
-echo   嘗試 adb root（模擬器通常可用；真機多半不行）...
-"!ADB!" -s !DEV! root >nul 2>&1
-timeout /t 2 /nobreak >nul
-"!ADB!" -s !DEV! wait-for-device >nul 2>&1
+echo   備份裝置現有設定...
+"!ADB!" -s !DEV! shell "[ -f %DEVICE_URL%.bak ] || cp %DEVICE_URL% %DEVICE_URL%.bak" 2>&1
+"!ADB!" -s !DEV! shell "[ -f %DEVICE_SHASD%.bak ] || cp %DEVICE_SHASD% %DEVICE_SHASD%.bak" 2>&1
 
-rem ---- 推送並就地寫入 ----
+rem ---- 推送並覆蓋兩個位置 ----
 echo.
 echo   推送 UrlList 到裝置暫存區...
 "!ADB!" -s !DEV! push "output\UrlList_Android.txt" /data/local/tmp/UrlList_new.txt
 
 echo.
-echo   就地寫入 OBB（offset !DATA_OFF!，598 bytes）...
-"!ADB!" -s !DEV! shell "dd if=/data/local/tmp/UrlList_new.txt of=%DEVICE_OBB% bs=1 seek=!DATA_OFF! count=598 conv=notrunc" 2>&1
+echo   寫入兩個位置（遊戲兩份都會讀）...
+"!ADB!" -s !DEV! shell "cp /data/local/tmp/UrlList_new.txt %DEVICE_URL%" 2>&1
+"!ADB!" -s !DEV! shell "cp /data/local/tmp/UrlList_new.txt %DEVICE_SHASD%" 2>&1
 if errorlevel 1 (
     echo.
-    echo   [錯誤] 寫入失敗。
-    echo          真機沒有 root 時無法改 OBB。替代做法（見 docs\新設備部署.md）：
-    echo           1^) 把 OBB 複製到電腦
-    echo           2^) 用 tools 裡的 write_urllist.py 就地改寫
-    echo           3^) 推回裝置
+    echo   [錯誤] 寫入失敗，請確認裝置已連接且遊戲安裝過。
     pause & popd & exit /b 1
 )
 
 echo.
-echo   驗證寫入結果（前 120 字元）...
-"!ADB!" -s !DEV! shell "dd if=%DEVICE_OBB% bs=1 skip=!DATA_OFF! count=120 2>/dev/null"
+echo   驗證寫入結果（前 150 字元）...
+"!ADB!" -s !DEV! shell "cat %DEVICE_URL%" 2>&1 | more +0
 echo.
 
 echo ==================================================================
 echo    部署完成
 echo ==================================================================
 echo.
-echo   重要：必須清除遊戲快取，否則它會繼續讀舊的 UrlList！
+echo   接下來【重啟遊戲】即可（不需要 pm clear）。
 echo.
-set /p "CLR=   現在就執行 adb shell pm clear %PKG% 嗎？(Y/N) "
-if /i "!CLR!"=="Y" (
-    echo   清除中...
-    "!ADB!" -s !DEV! shell "pm clear %PKG%"
-    echo   完成。請重新啟動遊戲。
-) else (
-    echo   已略過。稍後請自行執行：
-    echo       "!ADB!" -s !DEV! shell "pm clear %PKG%"
-)
+echo   注意：本工具已將 server 值保留為 tw_debug_888（開發者模式）。
+echo         這個值決定遊戲是否走 SDK 登入彈窗：
+echo           tw_debug_888   - 關閉 SDK，直接開開發者登入界面  ← 正確
+echo           tw_release_*   - 啟用 SDK，會跳出官方/FB/Google 登入彈窗
+echo.
+echo   若要還原成原本的設定：
+echo       adb shell "cp %DEVICE_URL%.bak %DEVICE_URL%"
+echo       adb shell "cp %DEVICE_SHASD%.bak %DEVICE_SHASD%"
 echo.
 pause
 popd
