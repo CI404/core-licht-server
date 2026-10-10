@@ -30,6 +30,12 @@ config/server.local.json
 # ---- OBB 解包資源（3.2 GB，使用者自備）----
 obb/
 
+# ---- 瞳專項素材包（遊戲版權素材，僅留本機，不進公開倉庫）----
+#   素材由 licht-offline 提取，版權屬原開發／發行方
+#   倉庫只保留 assets\README.md 說明與清單
+瞳/assets/
+!瞳/assets/README.md
+
 # ---- 內嵌執行環境（走 GitHub Release 附件，不進版控）----
 #   若你想讓倉庫「解壓即用」，把下面兩行註解掉即可（倉庫會變成約 163 MB）
 python/

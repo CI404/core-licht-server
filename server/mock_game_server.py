@@ -343,13 +343,18 @@ def _handle_2_1(conn, msg):
 
 
 def _push_children(conn):
-    """主動推送 11_1 children_all_s2c（全部角色滿級）。"""
+    """主動推送 11_1 children_all_s2c（全部角色滿級）。
+
+    ★ 只推已實裝角色（`is_informal == 0`），見 PD.formal_children() 的說明。
+    """
     m = _new_s2c(11, 1)
     cls = _pb_cls("p_children")
-    for cid in PD.all_children():
+    ids = PD.formal_children()
+    for cid in ids:
         m.children_list.append(PD.build_maxed_child(cid, cls))
     _send_msg(conn, 11, 1, m)
-    log(f"  -> 主動推送 {len(m.children_list)} 個角色")
+    log(f"  -> 主動推送 {len(m.children_list)} 個角色"
+        f"（已過濾未實裝 is_informal!=0，原始 113 個）")
 
 
 def _push_player_state(conn):
@@ -688,14 +693,17 @@ def _handle_31_15(conn, msg):
 def _handle_11_46(conn, msg):
     """children_bag_skin_list_c2s → 全部皮膚解鎖。
 
-    ★ 2026-10-10 修正：`PD.all_skins()` 現在會用 `DataTable_children_skin`
-    做白名單過濾（見 player_data.valid_skin_ids 的說明）。
-    過濾前 332 個（含 4 個配置表查不到的假 id：1701 / 91000071 / 91000072 / 91000073），
-    過濾後 328 個。客戶端原本每次都會印：
-        [Logger][ERROR] not find 91000071, in table children_skin
+    兩層過濾：
+    1. `DataTable_children_skin` 白名單（`valid_skin_ids()`）—— 濾掉配置表
+       查不到的假 id（1701 / 91000071 / 91000072 / 91000073）。
+    2. ★ 2026-10-10 新增：只推**已實裝角色**的皮膚（`formal_skins()`）——
+       未實裝角色（`is_informal != 0`）的卡面／Spine 資源不在 OBB 裡，
+       推了客戶端只會 404：
+           [ERROR] card_pic_100903.ab not in res version
+           [ERROR] Spine表找不到对应的id 100903
     """
     m = _new_s2c(11, 46)
-    skins = PD.all_skins()
+    skins = PD.formal_skins()
     for s in skins:
         m.skin_list.append(s)
     _send_msg(conn, 11, 46, m)
@@ -707,13 +715,21 @@ def _handle_11_46(conn, msg):
 
 
 def _handle_children_all(conn, s_id, m_id):
-    """children_all_s2c：全部角色、滿級滿星（等級來自 children_lvl 的星級上限）。"""
+    """children_all_s2c：全部角色、滿級滿星（等級來自 children_lvl 的星級上限）。
+
+    ★ 2026-10-10：只推**已實裝**角色（`is_informal == 0`，83 個）。
+    原本推 113 個，多出的 30 個未實裝角色（含 7 個「瞳」9100001~9100007）
+    缺少 `children_favor_lvl` / `children_favor` 資料，客戶端打開其檔案時
+    `UpdateFavorInfo` 會 `attempt to index a nil value`（見 player_data.formal_children）。
+    """
     m = _new_s2c(s_id, m_id)
     cls = _pb_cls("p_children")
-    for cid in PD.all_children():
+    ids = PD.formal_children()
+    for cid in ids:
         m.children_list.append(PD.build_maxed_child(cid, cls))
     _send_msg(conn, s_id, m_id, m)
-    log(f"  -> 已回覆 {len(m.children_list)} 個角色（滿級全解鎖）")
+    log(f"  -> 已回覆 {len(m.children_list)} 個角色（滿級全解鎖；"
+        f"已過濾未實裝 is_informal!=0，原始 113 個）")
 
 
 def _push_open_func(conn):

@@ -267,9 +267,77 @@ def all_children():
     return sorted(int(r.get("id") or r["_key"]) for r in children_rows())
 
 
+@functools.lru_cache(maxsize=1)
+def formal_children():
+    """**已實裝**（`is_informal == 0`）的角色 id 清單。
+
+    ★ 2026-10-10：修正「適格體檔案沒解鎖／好感度無法讀取」。
+
+    症狀（logcat）：
+        LuaException: attempt to index a nil value
+          ?: in method 'UpdateFavorInfo'        （DocumentView.lua:891）
+          ?: in method 'HandleAfterOpenView'
+          :? in method 'RefreshCardInfoDetail' → RefreshCardGrid → Open
+
+    崩潰點 `DocumentView.lua:891-930`：
+        cfg = DataBase.GetSyschildren_favor_lvlByKey(role_sys_id, favor_lvl)
+        ...
+        L5_2 = A0_2.friendExp
+        L6_2 = L1_2.range_min        -- cfg 是 nil → 崩潰
+
+    根因：`DataTable_children` 有 113 個角色，但
+      - `DataTable_children_favor_lvl` 只有 106 個 id
+      - `DataTable_children_favor`     只有 106 個 id
+      缺的正是 **7 個「瞳」佔位符**：9100001~9100007（全都 is_informal=1）。
+      伺服器原本把 113 個全推 → 客戶端打開這些角色的檔案 → 查表回 nil → 崩潰。
+      （同時這也是適格體列表出現 14 張重複「瞳」的原因）
+
+    過濾依據（實測驗證）：
+      `DataTable_children.is_informal`：0 = 正式（83 個）、1 = 未實裝（30 個）。
+      **83 個正式角色全部都有 favor_lvl 資料**，交叉驗證無一遺漏。
+
+    注意：`DataTable_children` 的 `id` 與 `_key` 不一定相同，
+    這裡以 `id` 為準（`_key` 可能是複合鍵）。
+    """
+    out = []
+    for r in children_rows():
+        try:
+            if int(r.get("is_informal", 0) or 0) != 0:
+                continue
+            out.append(int(r.get("id") or r["_key"]))
+        except Exception:
+            continue
+    return sorted(set(out))
+
+
+@functools.lru_cache(maxsize=1)
+def formal_children_set():
+    return set(formal_children())
+
+
+def is_formal_child(cid):
+    """該角色是否已實裝（可安全推送給客戶端）。"""
+    try:
+        return int(cid) in formal_children_set()
+    except Exception:
+        return False
+
+
 def all_skins():
     out = []
     for cid in all_children():
+        out.extend(skin_by_child().get(cid, []))
+    return sorted(set(out))
+
+
+def formal_skins():
+    """**已實裝角色**的皮膚（給 11_46 用）。
+
+    未實裝角色的皮膚 id 就算存在於 `children_skin`，其對應的卡面／Spine
+    資源（如 `card_pic_100903.ab`）也不在 OBB 裡，推了只會讓客戶端 404。
+    """
+    out = []
+    for cid in formal_children():
         out.extend(skin_by_child().get(cid, []))
     return sorted(set(out))
 
