@@ -828,6 +828,37 @@ def max_vip_exp():
     return max((int(r.get("exp", 0)) for r in table("vip")), default=0)
 
 
+# ======================================================================
+# 🚫 紅線：**禁止**推送 `dynamicBg`（屬性 624）
+# ======================================================================
+# 本節僅為警告與證據記錄 —— **此處刻意不提供任何推送函式**。
+#
+# 客戶端確實需要 `dynamicBg` 才會切換「映像（動態背景）」：
+#   `PlayerControl` proto 0.21（處理 `2_2 role_info_s2c`）逐條讀出：
+#       for _, v in ipairs(msg.ks_list) do
+#           Player[v.k] = v.v                       -- 以【字串鍵】寫入
+#       end
+#       if v["dynamicBg"] then                      -- ★ 偵測到才觸發
+#           EventManager:TriggerEvent(PlayerEvent.DYNAMIC_BG_ATTR_CHANGE)
+#       end
+#   `MainFrameView.UpdateDynamicBgInfo`（proto 21）：
+#       staticBg:SetActive(Player.dynamicBg <= 0)   -- 0 ⇒ 顯示靜態背景
+#       dynamicBg:SetActive(Player.dynamicBg > 0)   -- >0 ⇒ 播放影片
+#       CardModel.playingDynamicBgId = Player.dynamicBg
+#
+# ⚠⚠ 但**兩次推送嘗試都破壞了正常功能**：
+#     1. 前人 `put("dynamicBg", 1)`            ⇒ **主界面全黑**
+#     2. 本輪 `dynamicBg='2'` 進 `ks_list`      ⇒ **登入後主界面卡死**
+#   （資源本身存在：`dynamicBg1_HD.mp4` 14.5MB、`dynamicBg2_HD.mp4` 10.4MB，
+#     故非缺資源問題；真因未明，可能與 `CardModel.playingDynamicBgId` 的
+#     影片解碼路徑／模擬器相容性有關。）
+#
+# ⇒ **現狀：`player_str_resources()` 只回 `name`，永不推送 `dynamicBg`。**
+#   「映像」功能因此為**部分可用**：使用者能看到並選擇兩張映像，
+#   但儲存後主界面不切換（**不破壞遊戲**，優於推送後的卡死）。
+#   詳見 `docs\知識庫_合併版.md` §0.5.6 與 `解包後資源\README_總索引.md`。
+
+
 def player_str_resources():
     """字串型屬性（role_info_s2c 的 ks_list）。"""
     ids = attr_id_by_name()
@@ -836,6 +867,11 @@ def player_str_resources():
         aid = ids.get(name)
         if aid is not None:
             out.append((aid, value))
+    # ⚠⚠ 2026-10-11：**不要**在 `ks_list` 塞 `dynamicBg`（屬性 624）。
+    #   曾推送 `dynamicBg='2'`，結果使用者**登入後主界面卡死**。
+    #   （前人亦曾推 `dynamicBg=1` 導致主界面全黑 —— 見下方舊註解。）
+    #   故此處維持「永不推送」，`player_str_resources()` 只回 `name`。
+    #   詳見交接文件 §0.5.5。
     return out
 
 

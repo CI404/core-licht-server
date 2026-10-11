@@ -1336,19 +1336,63 @@ def _handle_2_27(conn, msg):
     ⇒ 完全不寫 ⇒ 序列化後 body=0B ⇒ 客戶端 C# 端的列表未被初始化為空表而是 nil
     ⇒ `pairs(nil)` 直接崩（注意：空表不會崩，nil 才會）。
 
-    ⇒ 修法：明確 `m.list` 存在（即使為空也要讓欄位被建立）。本專案為滿進度帳號，
-      但 `UpdateUnlockDynamicBg` 需要真實的背景 id，故這裡送**空清單**（安全：
-      `pairs({})` 不迭代，只是沒有已解鎖背景，不會崩）。
+    ★★ 2026-10-11 追加修正「助理設定 → 映像（背景）無法儲存」：
+      先前只送**空清單**（僅為避免崩潰），導致「映像」格線只有預設的「元」，
+      其餘背景全未解鎖 ⇒ 使用者選不到東西 ⇒ 儲存失敗。
+
+      資料源（實測）`DataTable_back_ground` 僅 **2 條**：
+          id=1  unlock_type=1  name=「元」             ← default，本來就看得到
+          id=2  unlock_type=2  name=「心匣裡的假日」    ← itemUnlock，未解鎖 ⇒ 看不到
+      客戶端 `CardAssistBackGroundSubView` proto 6 的判定（逐條讀出）：
+          for _, v in pairs(DataBase:GetSysback_ground()) do
+              if v.unlock_type == DynamicBgUnlockType.default
+                 or CardModel:IsUnlockDynamicBg(v.id) then
+                  table.insert(backGroundConfigList, v)
+              end
+          end
+      （`CardDefine.DynamicBgUnlockType` 順序 = default / itemUnlock / conditionUnlock，
+        對應 `unlock_type` 1 / 2 / 3。）
+
+      ⇒ 本專案為**滿進度懷舊帳號**，故送出**全部背景 id** ⇒ 兩張映像都可選。
     """
     m = _new_s2c(2, 27)
-    # 明確建立 list（即使為空）——這是修復的關鍵：
-    # protobuf 的 repeated 欄位本身已是空列表，這裡只是確保它被序列化/送出。
+    n = 0
+    for r in PD.table("back_ground"):
+        bid = r.get("id")
+        if bid is None:
+            continue
+        try:
+            m.list.append(int(bid))
+            n += 1
+        except Exception:
+            continue
+    _send_msg(conn, 2, 27, m)
+    log(f"  -> 已回覆背景清單（2_27）：{n} 個 id = {list(m.list)}"
+        f"（全部視為已解鎖；來源 DataTable_back_ground）")
+
+
+def _handle_2_23(conn, msg):
+    """role_set_background_c2s（設定目前映像／動態背景）。
+
+    ★ 2026-10-11 新增。「助理設定 → 儲存」會依序送出三個包：
+        `11_25`（看板娘清單，通知型）
+        `11_7` （設定看板娘，有 s2c）
+        `2_23` （設定背景／映像，**通知型**）
+    協定表中 **沒有 `role_set_background_s2c`**（實測查無）⇒ 屬通知型，不需回應。
+    先前走通用回應器路徑（`無 s2c 對照，略過`）其實行為相同，但加上明確 handler 是為了
+    **記錄使用者選了哪個背景 id**，方便日後除錯與延續「目前映像」狀態。
+    """
+    bid = 0
     try:
-        m.list.clear()
+        bid = int(msg.id)
     except Exception:
         pass
-    _send_msg(conn, 2, 27, m)
-    log(f"  -> 已回覆背景清單（2_27，list 存在但為空；修 pairs(nil) 崩潰）")
+    log(f"  ★ 設定映像／背景：id={bid}（2_23 為通知型，本協定無 s2c，不回應）")
+    # ⚠⚠ 2026-10-11：**不要**在這裡重推 `_push_player_state()`。
+    #   曾加了 `PD.set_current_dynamic_bg(bid)` + `_push_player_state(conn)`，
+    #   結果**主界面卡死**（使用者實測）。詳見交接文件 §0.5.5。
+    #   故僅記錄，不推送 —— 也就是回到「儲存只寫本地、主界面不變」的狀態
+    #   （該功能暫不可用，但不會破壞遊戲）。
 
 
 def _handle_11_7(conn, msg):
@@ -1871,6 +1915,8 @@ def _dispatch(conn, raw):
             _handle_52_12(conn, msg)
         elif key == "2_27":                        # role_background_info → 動態背景清單
             _handle_2_27(conn, msg)
+        elif key == "2_23":                        # role_set_background → 設定映像（通知型）
+            _handle_2_23(conn, msg)
         elif key == "4_17":
             _handle_4_17(conn, msg)
         elif key == "13_1":
