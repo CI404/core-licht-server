@@ -334,6 +334,11 @@ def _handle_2_1(conn, msg):
         #   24_1 open_func_all_s2c，否則客戶端的 FunOpenControl 不會重新
         #   評估按鈕開放狀態（先前只推 2_4/2_2/11_1/2_9，漏了這一條）。
         _push_open_func(conn)
+        # ★ 2026-10-11：`#pass_all_dup` 的語意是「通關全部副本」，
+        #   必須推 17_1 dup_info_s2c（`CheckDungeonPassById` 只看
+        #   dungeonInfo 裡有沒有該 dup_id）。先前只推通用狀態 ⇒ 副本仍顯示未通關。
+        if name == "pass_all_dup":
+            _push_dup_info(conn)
         log(f"  -> 已依 {name} 推送完整狀態"
             f"（等級／資源／113 角色／教程完成／功能全開）")
     elif name == "add_children_all" or name == "add_children":
@@ -345,7 +350,8 @@ def _handle_2_1(conn, msg):
 def _push_children(conn):
     """主動推送 11_1 children_all_s2c（全部角色滿級）。
 
-    ★ 只推已實裝角色（`is_informal == 0`），見 PD.formal_children() 的說明。
+    ★ 2026-10-11：只排除「缺 favor 資料」者（7 個瞳佔位符），
+      未實裝但資料完整的角色照樣顯示 → 106 個。見 PD.formal_children()。
     """
     m = _new_s2c(11, 1)
     cls = _pb_cls("p_children")
@@ -354,7 +360,7 @@ def _push_children(conn):
         m.children_list.append(PD.build_maxed_child(cid, cls))
     _send_msg(conn, 11, 1, m)
     log(f"  -> 主動推送 {len(m.children_list)} 個角色"
-        f"（已過濾未實裝 is_informal!=0，原始 113 個）")
+        f"（只排除缺 favor 資料者，原始 113 個）")
 
 
 def _push_player_state(conn):
@@ -409,6 +415,12 @@ def _handle_1_3(conn, msg):
     # 客戶端不會主動要 2_4 / 2_2，必須由伺服器推，否則主界面一直是預設值。
     _push_noob_stage(conn)
     _push_player_state(conn)
+    # ★ 2026-10-11：登入時一併推 `17_1 dup_info_s2c`（全部副本已通關）。
+    #   為什麼必須在登入時推：`DungeonModel.InitDungeonInfo/UpdateDungeonInfo`
+    #   只在「收到 17_1 的那一刻」填充 `dungeonInfo`；而 `CheckDungeonPassById`
+    #   是查這張表。若等到使用者發 GM 才推，副本介面早已初始化完畢
+    #   ⇒ 進度條仍顯示 00/17（實測截圖）。與 `_push_children` 同理。
+    _push_dup_info(conn)
 
 
 def _push_noob_stage(conn):
@@ -717,10 +729,17 @@ def _handle_11_46(conn, msg):
 def _handle_children_all(conn, s_id, m_id):
     """children_all_s2c：全部角色、滿級滿星（等級來自 children_lvl 的星級上限）。
 
-    ★ 2026-10-10：只推**已實裝**角色（`is_informal == 0`，83 個）。
-    原本推 113 個，多出的 30 個未實裝角色（含 7 個「瞳」9100001~9100007）
-    缺少 `children_favor_lvl` / `children_favor` 資料，客戶端打開其檔案時
-    `UpdateFavorInfo` 會 `attempt to index a nil value`（見 player_data.formal_children）。
+    ★ 2026-10-11（使用者要求）：改為**只排除資料不全者**，未實裝角色照樣顯示。
+      113 個角色 → 106 個（只濾掉 7 個缺 favor 資料的「瞳」佔位符
+      9100001~9100007，見 player_data.formal_children / unsafe_children）。
+
+    歷史：2026-10-10 曾排除全部 is_informal != 0（83 個），
+      理由是「未實裝角色的卡面／Spine 資源不在 OBB 裡，推了只會 404」。
+      但 2026-10-11 實測 OBB 後發現該理由**不成立於真實未實裝角色**：
+        id=1008 多蘿西 → 有 10081_f.ab
+        id=2002 洛思特 → 有 A02002_kdcommon_ani.ab
+        id=3011 維穆爾 / id=4010 荊索 → 均有資源
+      只有「測試系列」(80001~80004) 與「瞳」佔位符才真的沒資源。
     """
     m = _new_s2c(s_id, m_id)
     cls = _pb_cls("p_children")
@@ -729,7 +748,7 @@ def _handle_children_all(conn, s_id, m_id):
         m.children_list.append(PD.build_maxed_child(cid, cls))
     _send_msg(conn, s_id, m_id, m)
     log(f"  -> 已回覆 {len(m.children_list)} 個角色（滿級全解鎖；"
-        f"已過濾未實裝 is_informal!=0，原始 113 個）")
+        f"只排除缺 favor 資料者，原始 113 個）")
 
 
 def _push_open_func(conn):
@@ -933,6 +952,223 @@ def _handle_13_1(conn, msg):
     log(f"  -> 已回覆精神力 {vmax}/{vmax}（取 DataTable_lvl 的 vit_max）")
 
 
+def _handle_11_20(conn, msg):
+    """children_use_skin_c2s → children_use_skin_s2c（換裝／穿皮膚）。
+
+    ★ 2026-10-11 新增。修復「時裝界面點『穿戴』無反應」。
+
+    為什麼原本無反應（實測證據）：
+      `11_20` 沒有明確 handler → 走 `_generic_reply`，只填 required 欄位中的
+      `code`（實測回覆 body 僅 **6 bytes** = `08 00`）。
+      但 proto 定義要求回三個欄位：
+          children_use_skin_s2c {
+            required uint32 code    = 1;
+            required uint64 id      = 2;   ← 通用回應器沒填
+            required uint64 skin_id = 3;   ← 通用回應器沒填
+          }
+      → 客戶端收到的回應缺 id/skin_id，無法確認換裝結果 → 丟棄 → **看起來無反應**。
+
+    實測請求（logcat/伺服器日誌解碼）：
+        FRAME 11_20 body hex = 08c13e1093d2dcc105
+          id      = 8001
+          skin_id = 1480010003
+
+    修法：明確回 `code=0` + 原樣帶回 `id` / `skin_id`。
+    """
+    cid = int(getattr(msg, "id", 0) or 0)
+    skin = int(getattr(msg, "skin_id", 0) or 0)
+    m = _new_s2c(11, 20)
+    m.code = 0
+    m.id = cid
+    m.skin_id = skin
+    _send_msg(conn, 11, 20, m)
+    log(f"  -> 已回覆換裝成功 id={cid} skin_id={skin}"
+        f"（原本通用回應器只回 code，缺 id/skin_id → 客戶端無反應）")
+
+
+def _handle_11_23(conn, msg):
+    """children_assist_info_c2s → children_assist_info_s2c（看板娘／助理清單）。
+
+    ★ 2026-10-11 新增。修復「點個人訊息右側齒輪 → 白屏」。
+
+    為什麼原本會白屏（證據鏈）：
+      1. `11_23` 沒有明確 handler → 走 `_generic_reply` → 只填 required 欄位，
+         `list` 是空的（實測回覆 body 僅 15 bytes）
+      2. 客戶端 `x.Module.Card.CardControl` proto 0.30 處理這個 s2c：
+             if <list> then
+                 CardModel:InitAssistInfo(<list>, <index>)
+                 EventManager:TriggerEvent(CardEvent.SetAssistIndex,
+                     <list>[1].id)          ← ★ L1148 GETI 3 3 1
+             end
+         它直接取 `list[1].id` → list 空 ⇒ index nil 的 .id ⇒
+         `attempt to index a nil value` ⇒ CardAssistView 只載入一半 ⇒ 白屏。
+
+    資料結構（from proto，已解碼確認）：
+      children_assist_info_s2c {
+        required uint32 mode  = 1;   // CardDefine.CardAssistMode = 1
+        required uint32 index = 2;   // 當前看板娘在 list 中的位置
+        repeated p_assist_info list = 3;
+      }
+      p_assist_info {
+        required uint32 index       = 1;
+        required uint64 id          = 2;   // 角色 id
+        required uint32 type        = 3;   // 用途未確認，填 0
+        required uint64 skin_sys_id = 4;   // 皮膚 id
+      }
+
+    設計（依使用者 2026-10-11 說明）：
+      * 「理論上點擊看板娘可以設定成任何一個已經擁有的適格體」
+        → `list` = 全部可安全顯示的角色（`formal_children()`，106 個）
+      * 「每個角色的皮膚理論應該是在選擇角色的時候就可以選擇」
+        → `list` 展開為「角色 × 皮膚」的組合，每個皮膚一筆，
+          這樣選角色時就能連皮膚一起選
+      * 當前看板娘 = `ROLE_ASSIST_DEFAULT_ID`（100001，使用者指定）
+
+    ⚠ `type = 0` 是**推斷值**（依同族 `HeroType.Common = 0` 的慣例），
+      不是實測證據。若助理列表仍是空的，優先懷疑這個欄位。
+    """
+    _build_assist_info(conn)
+
+
+def _push_assist_info(conn):
+    """主動推送 `11_23 children_assist_info_s2c`（看板娘清單）。
+
+    ★ 2026-10-11 由 `_handle_11_23` 抽出來，讓 `_handle_11_7`（設定看板娘）
+      也能重推 —— 這是修「助理設定無法儲存」的關鍵：客戶端只有在收到
+      `11_23` 時才會更新「當前看板娘 index」，否則 UI 仍顯示舊的。
+    """
+    _build_assist_info(conn)
+
+
+def _build_assist_info(conn):
+    m = _new_s2c(11, 23)
+    m.mode = 1
+
+    # 當前看板娘：優先用使用者剛設定的（_assist_sel），否則用預設
+    sel = _assist_sel or {}
+    cur_id = int(sel.get("id") or PD.ROLE_ASSIST_DEFAULT_ID)
+    cur_skin = sel.get("skin_id") or None
+    want_index = int(sel.get("index") or 0)
+    idx = 0
+    cur_index = 0
+    exact_index = 0          # (id, skin) 完全相符的那一筆
+    id_index = 0             # 只論 id 相符的第一筆
+
+    for cid in PD.formal_children():
+        skins = PD.skin_by_child().get(cid) or []
+        if not skins:
+            continue
+        # ⚠ 2026-10-11 曾嘗試「每角色一筆（103 筆）」，結果**破壞了使用者確認正常的
+        #   「左右箭頭切換該角色皮膚」**（箭頭變成切換角色）⇒ 已回退為「角色×皮膚展開」。
+        #   使用者明確表示：左右箭頭切換皮膚是**正常行為**，不可破壞。
+        for sk in skins:
+            idx += 1
+            e = m.list.add()
+            e.index = idx
+            e.id = cid
+            e.type = 0                      # ⚠ 推斷值，見 docstring
+            e.skin_sys_id = sk
+            if cid == cur_id:
+                if not id_index:
+                    id_index = idx
+                if cur_skin is not None and sk == cur_skin and not exact_index:
+                    exact_index = idx
+
+    # ★ 選定 `m.index`：用「由 skin/id 精確算出」的位置。
+    #
+    #   ⚠ 2026-10-11 教訓：曾改成「優先採信用戶端回報的 `want_index`」，
+    #     結果**退化成「點誰都存成厄莉希」**（因為 `_assist_sel.index` 被存成
+    #     用戶端的 1，而 1 = 厄莉希）。
+    #     ⇒ **不可採用 `want_index`**。理由：
+    #        用戶端的 `index` 是它自己那份清單的位置，而我方 322 筆的展開順序
+    #        與它不同（例：skin=401 我方在第 308 筆），採用它就會指向錯誤條目。
+    #
+    #   現行策略（已驗證：其他角色顯示與儲存皆正確）：
+    #     1. `exact_index`（id + skin 都相符）
+    #     2. `id_index`（只論 id）
+    #     3. 退回第一筆
+    cur_index = 0
+    if cur_skin is not None:
+        cur_index = exact_index
+    if not cur_index:
+        cur_index = id_index
+    if not cur_index:                       # 指定角色不存在 → 退回第一筆
+        cur_index = 1
+        if len(m.list):
+            entry = m.list[0]
+            cur_id = entry.id
+            cur_skin = entry.skin_sys_id
+    else:
+        entry = m.list[cur_index - 1]
+        cur_id = int(entry.id)
+        cur_skin = int(entry.skin_sys_id)
+    m.index = cur_index
+
+    _send_msg(conn, 11, 23, m)
+    log(f"  -> 已回覆看板娘清單：{len(m.list)} 筆 當前 index={m.index} "
+        f"id={cur_id} skin={cur_skin}"
+        f"（want_index={want_index} exact={exact_index} id_idx={id_index}）")
+
+
+def _push_dup_info(conn):
+    """推送 `17_1 dup_info_s2c`：把全部副本標記為「已通關」。
+
+    ★ 2026-10-11 新增，實作 GM 指令 `#pass_all_dup`（DataTable_gm id=16）。
+
+    為什麼這樣就能「通關」（客戶端位元組碼實證）：
+      `x.Module.Dungeon.DungeonModel` `CheckDungeonPassById`（proto 0.40）：
+          function CheckDungeonPassById(dupId)
+              result = false
+              if dungeonInfo[dupId] ~= nil then result = true end
+              return result
+          end
+      ⇒ **只要該 dup_id 存在於 `dungeonInfo` 表就算已通關**，
+        而 `dungeonInfo` 正是由本訊息的 `info` 清單填充。
+
+    訊息結構：
+      `dup_info_s2c { repeated p_role_dup info = 1 }`
+      `p_role_dup { dup_id=1(REQ) star=2(REQ) is_agent=3(REQ)
+                    task=4(rep,可空) challenge_times=5(REQ) sweep_lineup=6(rep,可空) }`
+
+    取值依據：
+      * `dup_id` 取自 `DataTable_dungeon`（**468 條**），只送配置表真實存在的 id
+      * `star` = **3**（滿星；`DataTable_dungeon` 有 `rec_lvl_1_star`/`rec_lvl_2_star`
+        與 `first_3_reward`，3 星是通關判定上限）
+      * `is_agent` = 0、`challenge_times` = 0（保守值，兩者皆 only-display）
+    """
+    m = _new_s2c(17, 1)
+    n = 0
+    for r in PD.table("dungeon"):
+        did = r.get("id")
+        if did is None:
+            continue
+        try:
+            did = int(did)
+        except Exception:
+            continue
+        e = m.info.add()
+        e.dup_id = did
+        e.star = 3
+        e.is_agent = 0
+        e.challenge_times = 0
+        n += 1
+    _send_msg(conn, 17, 1, m)
+    log(f"  -> 已推送 {n} 個副本通關狀態（17_1 dup_info，star=3）")
+    return n
+
+
+def _handle_17_1(conn, msg):
+    """dup_info_c2s → dup_info_s2c（副本清單）。
+
+    ★ 2026-10-11 新增。客戶端在此離線流程中會主動請求 17_1（實測日誌 30 次），
+      原先前走通用回應器 ⇒ `info` 為空 ⇒ `dungeonInfo` 空 ⇒
+      `CheckDungeonPassById` 恆為 false ⇒ 所有副本顯示未通關。
+
+    回全部副本並標記已通關，使 GM 指令 `#pass_all_dup` 的語意成立。
+    """
+    _push_dup_info(conn)
+
+
 def _handle_35_1(conn, msg):
     """hero_info_c2s → hero_info_s2c（英雄清單）。
 
@@ -970,6 +1206,18 @@ def _handle_35_1(conn, msg):
       * `form_list` = 1 個滿級 form，use_skin 取 `children.skin_list` 第一個合法皮膚
     """
     hid = PD.init_hero_sys_id()
+    # ★★ 2026-10-11（**關鍵修復**）：`children_id` 必須是**瞳的角色 id（100000）**，
+    #   不是 `init_hero`（1001）。
+    #
+    #   為什麼（這是「助理界面點瞳卻顯示厄莉希」的真正根因）：
+    #     `DataTable_config['init_hero'] = 1001` 是**瞳的「英雄 id」**（`hero.id`）；
+    #     `DataTable_hero` 顯示 `hero.id=1001 → children_id=100000`（瞳-強襲形態，order=1）
+    #     ⇒ 瞳的**角色 id 是 100000**。
+    #     而 `1001` 同時又是**角色 1001（厄莉希）的 children id** —— 兩套 id 撞號。
+    #     先前直接 `h.children_id = hid (=1001)` ⇒ 客戶端解析成厄莉希
+    #     ⇒ 助理大圖與名字都顯示厄莉希。
+    #   ⇒ 改為 `PD.default_hero_children_id()`（由 `hero` 表按 order 最小者解析 = 100000）。
+    cid = PD.default_hero_children_id()
     m = _new_s2c(35, 1)
     h = m.list.add()
     h.id = hid
@@ -983,6 +1231,8 @@ def _handle_35_1(conn, msg):
                 pass
     h.awaketimes = max(times) if times else 0
     h.sys_id = hid
+    # ⚠ 2026-10-11：曾改為 `cid`(=100000)，結果**助理界面白屏**（回應 child id 與客戶端
+    #   既有結構不符）⇒ 已回退為 `hid`。詳見交接文件 §0.5.3。
     h.children_id = hid
     f = h.form_list.add()
     f.form = 1
@@ -1062,6 +1312,222 @@ def _handle_4_17(conn, msg):
     log("  -> login_switch type=0（讓客戶端走「開主界面」分支）")
 
 
+def _handle_2_27(conn, msg):
+    """role_background_info_c2s → role_background_info_s2c（已解鎖的動態背景清單）。
+
+    ★ 2026-10-11 修「助理設定界面卡死」。
+
+    崩潰堆疊（logcat 實測，每次點該界面必崩）：
+        LuaException: bad argument #1 to 'for iterator' (table expected, got nil)
+        [C]: in function 'next'
+          ?: in field '?'          ← CardControl.On_2_27（proto 0.46）
+          ?: in field 'ProcessPacket'
+
+    根因（`CardControl` proto 0.46 逐條讀出）：
+        function On_2_27(msg)
+            for _, v in pairs(msg.list) do            -- ★ msg.list 為 nil ⇒ pairs(nil) 崩
+                CardModel:UpdateUnlockDynamicBg(v)
+            end
+            EventManager:TriggerEvent(CardEvent.RefreshDynamicBg)
+        end
+
+    `role_background_info_s2c { repeated int64 list = 1 }`。
+    先前走通用回應器，`_fill_required` 只補 **required** 欄位，而 `list` 是 repeated
+    ⇒ 完全不寫 ⇒ 序列化後 body=0B ⇒ 客戶端 C# 端的列表未被初始化為空表而是 nil
+    ⇒ `pairs(nil)` 直接崩（注意：空表不會崩，nil 才會）。
+
+    ⇒ 修法：明確 `m.list` 存在（即使為空也要讓欄位被建立）。本專案為滿進度帳號，
+      但 `UpdateUnlockDynamicBg` 需要真實的背景 id，故這裡送**空清單**（安全：
+      `pairs({})` 不迭代，只是沒有已解鎖背景，不會崩）。
+    """
+    m = _new_s2c(2, 27)
+    # 明確建立 list（即使為空）——這是修復的關鍵：
+    # protobuf 的 repeated 欄位本身已是空列表，這裡只是確保它被序列化/送出。
+    try:
+        m.list.clear()
+    except Exception:
+        pass
+    _send_msg(conn, 2, 27, m)
+    log(f"  -> 已回覆背景清單（2_27，list 存在但為空；修 pairs(nil) 崩潰）")
+
+
+def _handle_11_7(conn, msg):
+    """children_set_assistant_c2s → children_set_assistant_s2c（設定當前看板娘）。
+
+    ★ 2026-10-11 新增。修「助理設定無法儲存」。
+
+    客戶端儲存流程（實測日誌）：
+        FRAME 11_25 (children_set_assistant_list_c2s)   ← 通知型，無 s2c
+        FRAME 11_7  (children_set_assistant_c2s)        ← 本函式
+        FRAME 2_23  (role_set_background_c2s)           ← 通知型，無 s2c
+
+    `children_set_assistant_c2s { index, id, type, skin_id }` —— 客戶端把
+    「在清單中的位置、角色 id、類型、皮膚 id」送來。
+
+    先前走通用回應器：只填 required 欄位、**不記錄選擇**，且不重推 `11_23`
+    ⇒ 客戶端模型仍是舊的 `index`/當前看板娘 ⇒ 使用者看到「存不上」。
+
+    ⇒ 修法：
+      1. 記錄使用者選的 `id` / `skin_id`（模組級 `_assist_sel`），
+         讓後續 `11_23` 能回報正確的當前看板娘；
+      2. 回 `code=0` + 原樣帶回四個欄位（與 11_20 換裝同理，required 都要填）；
+      3. 重推 `11_23`，讓客戶端列表／主頁看板娘立即刷新。
+    """
+    global _assist_sel
+    try:
+        a_index = int(msg.index)
+        a_id = int(msg.id)
+        a_type = int(msg.type)
+        a_skin = int(msg.skin_id)
+    except Exception:
+        a_index = a_id = a_type = a_skin = 0
+
+    # ★★ 2026-10-11：**用 `skin_id` 反查角色 id**，不要信任用戶端送的 `id`。
+    #
+    #   為什麼（實測日誌，這是「點瞳顯示厄莉希」的真正根因）：
+    #     用戶端點瞳的頭像時送出 `id=1001, skin_id=101`。
+    #     而 `skin 101` 在 `children.skin_list` 中屬於 **角色 100001（瞳）**；
+    #     `id=1001` 卻是 **角色 1001（厄莉希）** —— 兩者相差一個數量級的命名空間，
+    #     用戶端送的 `id` 在此為不可靠值（疑似它用的是另一套內部 id）。
+    #     先前直接採信 `id=1001` ⇒ 取到厄莉希 ⇒ 大圖與名字都顯示厄莉希。
+    #
+    #   為什麼反查可靠：
+    #     `skin_by_child()` 是「角色 → 皮膚」的權威映射（源自 `DataTable_children.skin_list`），
+    #     實測 **328 顆皮膚中沒有任何一顆被兩個角色引用**（無歧義，可安全反查）。
+    #     驗證：skin=101→[100001]、skin=1001→[100000]、skin=1410010001→[1001]。
+    #
+    #   策略：若能由 `skin_id` 唯一反查出角色，就以它為準；否則退回用戶端送的 `id`。
+    resolved_id = a_id
+    if a_skin:
+        cand = PD.skin_to_child().get(a_skin)
+        if cand is not None:
+            resolved_id = cand
+            if cand != a_id:
+                log(f"  (以 skin={a_skin} 反查角色: 用戶端送 id={a_id} → 修正為 {cand})")
+
+    if resolved_id:
+        # ★ 一併記下用戶端送的 `index`：客戶端 `CardControl` proto 0.30（On_11_23）
+        #   L1147-1149 是 `TriggerEvent(CardEvent.SetAssistIndex, list[1].id)`
+        #   —— 它固定取 `list[1]`，故我方 `11_23` 的 `m.index` 必須與之一致。
+        _assist_sel = {"index": a_index, "id": resolved_id,
+                       "skin_id": a_skin, "type": a_type}
+    log(f"  ★ 設定看板娘：id={a_id} skin={a_skin} type={a_type} index={a_index}"
+        f" → 採用角色 id={resolved_id}")
+
+    m = _new_s2c(11, 7)
+    # ⚠ `children_set_assistant_s2c` 只有 4 個 required 欄位：
+    #     index / id / type / skin_id —— **沒有 `code`**。
+    #   先前誤抄 11_20 的模板寫了 `m.code = 0`，導致
+    #     AttributeError: Protocol message ... has no "code" field
+    #   ⇒ 回應根本沒送出去 ⇒ 使用者看到「點擊無反應、存不上」。
+    # ★ 回應必須用**反查後的正確值**，否則大圖會顯示錯角色。
+    #
+    #   為什麼（這是「瞳顯示厄莉希」的**顯示層根因**）：
+    #     使用者點瞳時，用戶端送 `id=1001, skin_id=401, index=1`。
+    #     若照抄回 `m.id = a_id (=1001)`，用戶端拿 `1001` 去查卡 ⇒ 顯示**厄莉希**。
+    #     （儲存之所以正確，是因為儲存用的是我方反查後的 `resolved_id`；
+    #       顯示與儲存走不同欄位 ⇒ 出現「大圖錯、但存對」的怪象。）
+    #   ⇒ 回應中的 `id` 用 `resolved_id`，`index` 用「與之一致的清單位置」，
+    #     讓用戶端的顯示與儲存來源統一。
+    #
+    #   ⚠ 注意：**不可**用 `a_index` 當 `m.index` —— 用戶端的 index 是它自己
+    #     那份清單的位置，與我方 322 筆展開列表不同（教訓：曾改成用它，
+    #     結果退化成「點誰都存成厄莉希」）。
+    m.index = _assist_index_of(resolved_id, a_skin) or a_index
+    m.id = resolved_id
+    m.type = a_type
+    m.skin_id = a_skin
+    _send_msg(conn, 11, 7, m)
+    # 重推 11_23：客戶端才會把「當前看板娘」更新成剛選的這一筆
+    _push_assist_info(conn)
+    log(f"  -> 11_7 回應已送出（index={m.index} id={m.id} skin={m.skin_id}）")
+
+
+def _assist_index_of(cid, skin):
+    """回傳 `(cid, skin)` 在「角色×皮膚展開」清單中的 1-based 位置。
+
+    供 `_handle_11_7` 計算與 `resolved_id` 一致的 `m.index`。
+    找不到完全相符的 skin 時，退回該角色的第一筆。
+    """
+    i = 0
+    first_of_cid = 0
+    for c in PD.formal_children():
+        for s in (PD.skin_by_child().get(c) or []):
+            i += 1
+            if c == cid:
+                if not first_of_cid:
+                    first_of_cid = i
+                if skin and s == skin:
+                    return i
+    return first_of_cid
+
+
+def _handle_11_25(conn, msg):
+    """children_set_assistant_list_c2s（通知型，無 s2c）。
+
+    ★ 2026-10-11 新增。客戶端在儲存看板娘時會把**整份清單**送來
+    （`repeated p_assist_info list`）。此訊息在協定表中沒有 s2c
+    （`proto_num_map` 查無），屬通知型 —— 回應反而可能造成問題。
+
+    ⇒ 只記錄，不回應。這樣 `11_7` 的重推就能讓 UI 刷新。
+    """
+    n = 0
+    try:
+        n = len(msg.list)
+    except Exception:
+        pass
+    log(f"  (11_25 設定看板娘清單：{n} 筆；通知型，不回應)")
+
+
+def _handle_52_12(conn, msg):
+    """common_activity_task_list_c2s → 活動任務清單（必須用配置表真實 sys_id）。
+
+    ★ 2026-10-11 修正「活動面板崩潰」。崩潰堆疊（logcat 實測）：
+        LuaException: attempt to index a nil value
+            ?: in field 'InitTaskInfo'
+            ?: in field 'ProcessPacket'
+
+    根因鏈（客戶端位元組碼 `SummerActivityModel` proto 0.6 `InitTaskInfo`）：
+        for _, cur in ipairs(info.task_list or {}) do
+            local cfg = DataBase:GetSysactivity_taskByKey(cur.sys_id)   -- L11-14
+            ...
+        end
+      ⇒ `task_list` 的每個元素都必須有**存在於 `DataTable_activity_task` 的 sys_id**。
+        查不到 ⇒ cfg 為 nil ⇒ 後續索引崩潰。
+
+    為什麼原本會壞（設計衝突）：
+      `52_12` 原本列在 `EMPTY_LIST_REPLY` 裡，流程是
+        ① 清空所有 repeated 欄位  ② 呼叫 `_fill_required(m)`
+      但 `_fill_required` 的規則之一是「repeated 訊息欄位若子項有 required 欄位，
+      就補『一個』最小合法元素」——而 `p_activity_task { sys_id, cur, state }`
+      三個都是 required ⇒ **剛清空立刻又被補回一個假元素**，
+      其 `sys_id` 是保守預設值（別張表的 id）⇒ 查不到配置 ⇒ 崩潰。
+
+    修法：不再靠「清空 + 自動補」，改為**明確依配置表建構合法任務清單**。
+    """
+    m = _new_s2c(52, 12)
+    n_done = n_doing = 0
+    for r in PD.table("activity_task"):
+        sid = r.get("id")
+        if sid is None:
+            continue
+        try:
+            sid = int(sid)
+        except Exception:
+            continue
+        e = m.task_list.add()
+        e.sys_id = sid
+        # 狀態：1=已完成（可領獎）、0=進行中。此處給「已完成」，
+        # 因為本專案是滿進度懷舊帳號；cur 為已完成次數。
+        e.cur = 1
+        e.state = 1
+        n_done += 1
+    _send_msg(conn, 52, 12, m)
+    log(f"  -> 已回覆活動任務 {len(m.task_list)} 筆"
+        f"（52_12，全部標記為已完成；來源 DataTable_activity_task）")
+    return n_done
+
+
 def _handle_52_3(conn, msg):
     """common_activity_get_activity_list_c2s → 活動列表（必須非空且結構完整）。
 
@@ -1117,9 +1583,17 @@ NO_REPLY = set()
 # 造出半殘元素會讓它 ipairs(nil) 而中斷整個封包處理（畫面全黑）。
 # 注意：`52_3` **不能**放這裡 —— 客戶端 x.Module.Activity.ActivityControl.lua:570
 # 直接讀 `A0_3.activity_list` 且沒有 nil 保護，空清單會炸 → 由 _handle_52_3 專門處理。
-EMPTY_LIST_REPLY = {
-    "52_1",    # common_activity_get_activity_info_s2c -> gift_list
-    "52_12",   # common_activity_task_list_s2c -> task_list
+# ★ 2026-10-11：使用者設定的看板娘（由 `_handle_11_7` 寫入，`_build_assist_info` 讀取）。
+#   為什麼需要：客戶端儲存後必須收到重推的 `11_23` 才會更新「當前看板娘」，
+#   而重推時要知道「使用者選了哪一筆」⇒ 用這個模組級狀態記住。
+#   `None` = 尚未設定過 ⇒ 用 `PD.ROLE_ASSIST_DEFAULT_ID`。
+_assist_sel = None
+
+EMPTY_LIST_REPLY = {    "52_1",    # common_activity_get_activity_info_s2c -> gift_list
+    # ★ 2026-10-11 移除 "52_12"：它的 task_list 子項 p_activity_task 三個欄位皆 required，
+    #   而 _fill_required 會「清空後又補一個最小元素」⇒ 該元素的 sys_id 查不到配置表
+    #   ⇒ 客戶端 SummerActivityModel.InitTaskInfo 索引 nil 崩潰。
+    #   改由 _handle_52_12() 明確建構合法清單（見該函式註解）。
 }
 
 
@@ -1375,6 +1849,16 @@ def _dispatch(conn, raw):
             _handle_31_15(conn, msg)
         elif key == "35_1":                        # hero_info_c2s → 英雄清單
             _handle_35_1(conn, msg)
+        elif key == "17_1":                        # dup_info_c2s → 副本清單（已通關）
+            _handle_17_1(conn, msg)
+        elif key == "11_23":                       # children_assist_info_c2s → 看板娘清單
+            _handle_11_23(conn, msg)
+        elif key == "11_20":                       # children_use_skin_c2s → 換裝
+            _handle_11_20(conn, msg)
+        elif key == "11_7":                        # children_set_assistant → 設定看板娘
+            _handle_11_7(conn, msg)
+        elif key == "11_25":                       # children_set_assistant_list → 通知型
+            _handle_11_25(conn, msg)
         elif key == "2_5":
             _handle_2_5(conn, msg)
         elif key == "2_4":
@@ -1383,6 +1867,10 @@ def _dispatch(conn, raw):
             _handle_2_2(conn, msg)
         elif key == "52_3":
             _handle_52_3(conn, msg)
+        elif key == "52_12":                       # common_activity_task_list → 活動任務
+            _handle_52_12(conn, msg)
+        elif key == "2_27":                        # role_background_info → 動態背景清單
+            _handle_2_27(conn, msg)
         elif key == "4_17":
             _handle_4_17(conn, msg)
         elif key == "13_1":

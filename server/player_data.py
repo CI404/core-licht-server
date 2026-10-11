@@ -38,6 +38,11 @@ ROLE_ID = 10001
 ROLE_NAME = "指揮官"
 SERVER_ID = 1
 
+# 預設看板娘（助理）角色 id —— 使用者 2026-10-11 指定為 100001。
+# 用於 11_23 children_assist_info_s2c 的 `index`（指向 list 中該角色的第一筆皮膚）。
+# 100001 是「正式瞳」（is_informal=0，有 4 個皮膚），資源齊全。
+ROLE_ASSIST_DEFAULT_ID = 100001
+
 
 # ======================================================================
 # 配置表存取
@@ -223,13 +228,91 @@ def valid_skin_ids():
 
 @functools.lru_cache(maxsize=1)
 def skin_by_child():
-    """角色 id -> 皮膚 id 清單（已用 `valid_skin_ids()` 過濾掉配置表不存在的 id）。"""
+    """角色 id -> 皮膚 id 清單（已用 `valid_skin_ids()` 過濾掉配置表不存在的 id）。
+
+    ⚠ 2026-10-11 曾在此加入「跨角色污染」與「id 空間碰撞」兩種過濾，
+      但兩者都**經實測否定**，已全部回退（勿再嘗試，詳見 docs §0.5.3）：
+        * 「跨角色污染」：誤判 —— `children_skin` 中 `id=101/401/…` 的 `name`
+          都是「瞳」、`model` 各異、`spine_id=10000000` ⇒ 都是瞳的合法皮膚。
+        * 「id 空間碰撞」（剔除 `1001`）：會**導致瞳無法儲存為看板娘**。
+      結論：`DataTable_children.skin_list` 的內容是正確的，不需過濾。
+    """
     valid = valid_skin_ids()
     out = {}
     for r in children_rows():
         cid = int(r.get("id") or r["_key"])
         out[cid] = [int(x) for x in (r.get("skin_list") or []) if int(x) in valid]
     return out
+
+
+@functools.lru_cache(maxsize=1)
+def skin_to_child():
+    """皮膚 id -> **擁有該皮膚的角色 id**（`skin_by_child()` 的反查）。
+
+    ★ 2026-10-11 新增。用於修「助理設定點瞳的頭像卻顯示厄莉希」。
+
+    為什麼需要反查：客戶端點頭像時送出的 `11_7` 是
+        `{ index, id, skin_id }`，其中 **`id` 不可靠** ——
+    實測點「瞳」時送來 `id=1001, skin_id=101`，而
+        `skin 101`  屬於角色 **100001（瞳）**
+        `id 1001`   卻是角色 **1001（厄莉希）**
+    兩者相差一個數量級的命名空間。若採信 `id` 就會取到厄莉希。
+
+    反查安全性：實測 328 顆皮膚中**沒有任何一顆被兩個角色引用**（0 筆衝突），
+    故可無歧義地由 `skin_id` 決定角色 id。
+    驗證：`101→[100001]`、`1001→[100000]`、`1410010001→[1001]`。
+
+    回傳值為 `{skin_id: child_id}`；若同一顆皮膚意外對應多個角色，
+    該鍵不會出現（呼叫端應退回其他依據）。
+    """
+    rev = {}
+    for cid, skins in skin_by_child().items():
+        for s in skins:
+            rev.setdefault(s, []).append(cid)
+    return {s: cs[0] for s, cs in rev.items() if len(cs) == 1}
+
+
+@functools.lru_cache(maxsize=1)
+def default_hero_children_id():
+    """**預設英雄的 `children_id`**（= 瞳的基礎角色 id，實測 `100000`）。
+
+    ★★ 2026-10-11 新增。這是「助理界面點瞳的頭像卻顯示厄莉希」的**真正根因修復**。
+
+    【為什麼需要這個函式】
+      `DataTable_config['init_hero'].value` = **1001**，那是**瞳的「英雄 id」**
+      （`hero.id`，見 `DataTable_hero`）。而同表顯示：
+          hero.id=1001  children_id=100000  form=1  order=1  name=瞳-強襲形態
+          hero.id=1001  children_id=100002  form=2  order=2  瞳-火力形態
+          …（共 8 個形態，order 1..8）
+      ⇒ **瞳的「角色 id」是 100000，不是 1001。**
+
+      但 `1001` 同時又是**角色 1001（厄莉希）的 children id** —— 兩套 id 撞號。
+      先前的 `_handle_35_1()` 直接把 `h.children_id = init_hero`（=1001），
+      客戶端拿 `children_id=1001` 去解析 ⇒ 得到**厄莉希** ⇒ 助理大圖顯示厄莉希。
+      （這正是使用者觀察到的「點瞳顯示厄莉希」。）
+
+    【取值規則】
+      在 `DataTable_hero` 中取 `id == init_hero` 的所有列，
+      選 **`order` 最小**者（實測 order=1 ⇒ 瞳-強襲形態），回傳其 `children_id`（=100000）。
+      `order` 缺失時退回最小 `children_id`。
+    """
+    hid = init_hero_sys_id()
+    rows = []
+    for r in table("hero"):
+        try:
+            if int(r.get("id")) != int(hid):
+                continue
+        except Exception:
+            continue
+        try:
+            rows.append((int(r.get("order", 999) or 999),
+                         int(r.get("children_id"))))
+        except Exception:
+            continue
+    if not rows:
+        return hid
+    rows.sort()
+    return rows[0][1]
 
 
 @functools.lru_cache(maxsize=1)
@@ -263,50 +346,145 @@ def max_favor_lvl_by_child():
     return out
 
 
+@functools.lru_cache(maxsize=1)
+def max_awake_times_by_child():
+    """角色 id -> **該角色在 `children_awake` 的真實覺醒上限（`times`）**。
+
+    ★ 2026-10-11 新增。修「所有角色最後兩條語音永遠上鎖」。
+
+    實測 `DataTable_children_awake`（537 條，欄位含 `id` / `times` / `max_lvl` …）：
+        每角色最大 times 分布 = {4: 106, 0: 7}
+        瞳(100001) = 4、赫茲(4008) = 4
+
+    用途：`p_children.awake_times`。客戶端 `GetDocumentVoiceInfo` 用它判定
+    「突破等級N解鎖」的語音是否開放（詳見 `build_maxed_child` 的註解）。
+    """
+    out = {}
+    for r in table("children_awake"):
+        cid = r.get("id")
+        if cid is None:
+            continue
+        try:
+            cid = int(cid)
+            out[cid] = max(out.get(cid, 0), int(r.get("times", 0) or 0))
+        except Exception:
+            continue
+    return out
+
+
+@functools.lru_cache(maxsize=1)
+def favor_value_by_child():
+    """角色 id -> **滿好感度時 `favor` 該填的值**（= 最高等級的 `range_max`）。
+
+    ★ 2026-10-11（使用者指正後定案）：`favor_lvl` 就是該角色的最高等級（多為 **5**），
+      **不是畸形** —— 使用者明確指出「上限就是 lv5 而不是 lv4」。
+      要讓客戶端顯示 100%，`favor` 必須填該等級的 `range_max`。
+
+    以瞳(100001) 為例（實測資料）：
+        lvl=0  [       0 ~    1999]
+        lvl=1  [    2000 ~   31999]
+        lvl=2  [   32000 ~  111999]
+        lvl=3  [  112000 ~  351999]
+        lvl=4  [  352000 ~ 1251999]
+        lvl=5  [ 1252000 ~ 1252000]   ← 上限
+
+    客戶端公式（`DocumentView` L1187-1246）：
+        文本 = (favor - cur.range_min) .. "/" .. (cur.range_max - cur.range_min)
+    代入 lvl=5、favor=1252000 ⇒ (1252000-1252000)/(1252000-1252000) = 0/0
+
+    ⇒ **滿級時進度條走另一條分支**（`favor_lvl == DocumentDefine.MaxFavorLvl` ⇒ 直接設 1），
+      所以文字為 0/0 是「滿級」的正常表現，不是資料錯誤。
+
+    歷史（勿重蹈）：
+      * `favor = 0` 寫死 ⇒ 顯示 `-1252000/0`（明顯錯誤）
+      * `favor = range_min` ⇒ 仍 `0/0`
+      * 把 `favor_lvl` 改成 1 ⇒ 顯示 `-7%`，且**檔案仍未解鎖**（已回退）
+    """
+    lvl_of = max_favor_lvl_by_child()
+    out = {}
+    for r in table("children_favor_lvl"):
+        cid = r.get("id")
+        if cid is None:
+            continue
+        try:
+            cid = int(cid)
+            if int(r.get("lvl", 0)) != lvl_of.get(cid):
+                continue
+            out[cid] = int(r.get("range_max", 0) or 0)
+        except Exception:
+            continue
+    return out
+
+
 def all_children():
     return sorted(int(r.get("id") or r["_key"]) for r in children_rows())
 
 
 @functools.lru_cache(maxsize=1)
-def formal_children():
-    """**已實裝**（`is_informal == 0`）的角色 id 清單。
+def unsafe_children():
+    """**資料不全、推送會讓客戶端崩潰**的角色 id 集合。
 
-    ★ 2026-10-10：修正「適格體檔案沒解鎖／好感度無法讀取」。
+    ★ 2026-10-11 修訂（使用者要求：未實裝的適格體也應顯示）。
 
-    症狀（logcat）：
-        LuaException: attempt to index a nil value
-          ?: in method 'UpdateFavorInfo'        （DocumentView.lua:891）
-          ?: in method 'HandleAfterOpenView'
-          :? in method 'RefreshCardInfoDetail' → RefreshCardGrid → Open
+    前一次做法是「排除所有 is_informal == 1」→ 113 個只剩 83 個，
+    把 30 個**未實裝但資料完整**的角色（多蘿西、洛思特、霞珀、朱心亞、
+    盧卡、維穆爾、荊索、鏡莉、潘昔、妮瑟琳、測試系列…）一起藏掉了。
 
-    崩潰點 `DocumentView.lua:891-930`：
-        cfg = DataBase.GetSyschildren_favor_lvlByKey(role_sys_id, favor_lvl)
-        ...
-        L5_2 = A0_2.friendExp
-        L6_2 = L1_2.range_min        -- cfg 是 nil → 崩潰
+    實測資料（data/decoded）：
+      children            113 筆
+      children_favor_lvl  106 筆
+      children_favor      106 筆
+      → 缺的正是 7 個「瞳」佔位符：9100001 ~ 9100007
 
-    根因：`DataTable_children` 有 113 個角色，但
-      - `DataTable_children_favor_lvl` 只有 106 個 id
-      - `DataTable_children_favor`     只有 106 個 id
-      缺的正是 **7 個「瞳」佔位符**：9100001~9100007（全都 is_informal=1）。
-      伺服器原本把 113 個全推 → 客戶端打開這些角色的檔案 → 查表回 nil → 崩潰。
-      （同時這也是適格體列表出現 14 張重複「瞳」的原因）
-
-    過濾依據（實測驗證）：
-      `DataTable_children.is_informal`：0 = 正式（83 個）、1 = 未實裝（30 個）。
-      **83 個正式角色全部都有 favor_lvl 資料**，交叉驗證無一遺漏。
-
-    注意：`DataTable_children` 的 `id` 與 `_key` 不一定相同，
-    這裡以 `id` 為準（`_key` 可能是複合鍵）。
+    故改為**只排除真正缺資料者**：凡在 children_favor_lvl 或
+    children_favor 查不到的 id，開啟檔案時 cfg 為 nil，
+    DocumentView.UpdateFavorInfo 會 attempt to index a nil value。
+    113 - 7 = **106** 個角色可安全顯示，與 favor 表覆蓋數一致。
     """
+    have = set()
+    for tname in ("children_favor_lvl", "children_favor"):
+        for r in table(tname):
+            v = r.get("id")
+            if v is None:
+                v = r.get("children_id")
+            try:
+                if v is not None:
+                    have.add(int(v))
+            except Exception:
+                continue
+    missing = set()
+    for r in children_rows():
+        try:
+            cid = int(r.get("id") or r["_key"])
+        except Exception:
+            continue
+        if cid not in have:
+            missing.add(cid)
+    return missing
+
+
+@functools.lru_cache(maxsize=1)
+def formal_children():
+    """可安全推送給客戶端的角色 id 清單（106 個）。
+
+    ★ 2026-10-11：改為「排除資料不全者」而非「排除未實裝者」。
+      未實裝（is_informal == 1）但資料完整的角色**照樣顯示**。
+      113 個角色中只有 7 個「瞳」佔位符缺 favor 資料 → 保留 106 個。
+
+    歷史（保留供回溯）：原本排除全部 is_informal != 0，理由是同批「瞳」
+    佔位符缺表會崩潰（DocumentView.lua:891 UpdateFavorInfo）；
+    但連帶藏掉了 23 個資料完整的角色，使用者要求改回顯示。
+    """
+    bad = unsafe_children()
     out = []
     for r in children_rows():
         try:
-            if int(r.get("is_informal", 0) or 0) != 0:
-                continue
-            out.append(int(r.get("id") or r["_key"]))
+            cid = int(r.get("id") or r["_key"])
         except Exception:
             continue
+        if cid in bad:
+            continue
+        out.append(cid)
     return sorted(set(out))
 
 
@@ -493,15 +671,56 @@ def build_maxed_child(cid, p_children_cls):
     star = star_by_child().get(cid, 5)
     m = p_children_cls()
     m.id = cid
-    m.type = 1
+    # ★★ 2026-10-11：`type` 的取值（本專案最曲折的一處，完整證據鏈見下）
+    #
+    # 【消費方一】適格體卡列表 —— 要求 type == 1
+    #   `CardModel.GetCardBagDic(cardList, type)`（proto 0.21）L23-40：
+    #       for _, card in pairs(cardList) do
+    #           if card.type == type then table.insert(out, card) end
+    #       end
+    #   適格體界面呼叫 `GetCardBagDic(CardTypeIndex.Common)` ⇒ 只收 `type == 1` 的卡。
+    #   另外 `CardModel.UpdateCardInfo`（proto 0.9）L46-53 用
+    #       `card.isHadRedPoint = (card.type == CardTypeIndex.Common)`
+    #
+    # 【消費方二】助理界面 —— 要求 hero.cardType == 7
+    #   `HeroModel.UpdateHeroInfo`（proto 0.3）L101-108：
+    #       card = CardModel:GetCardInfoById(hero.children_id)
+    #       hero.cardType = card and card.type or nil        ← card.type 即本欄位
+    #   `HeroModel.GetHeroInfoBySysId(sysId, type, cardType)`（proto 0.7）三條件全匹配，
+    #       cardType 預設 = `CardDefine.CardTypeIndex.Hero` = **7**
+    #   `HeroModel.GetDefaultHeroCardInfo`（proto 0.14）：
+    #       hero = GetHeroInfoBySysId(DefaultHeroSysId)
+    #       return CardModel:GetCardInfoById(hero.children_id)   -- hero=nil ⇒ 崩
+    #
+    # 【CardTypeIndex 完整值】（由 CardDefine 的 `SETFIELD 1 <常量索引> K[<值>]` 序列
+    #   + int 常量表雙重驗證；注意第一行 Common 極易漏讀）：
+    #       Common=1  Secret=2  Assist=3  Teach=4  Explore=5
+    #       WarFight=6  Hero=7  HeroTeach=8  PVP=9
+    #
+    # 【解法】兩者衝突（同一個 `type` 欄位、相反要求），故**只讓預設英雄那一張卡**取 7：
+    #   `DataTable_config['init_hero'].value == 1001`
+    #   `CardModel.GetCardInfoById(id)` 按 **`card.id`** 查找（proto 0.46）
+    #   ⇒ 只要 `id == 1001` 的卡 type=7，其餘 105 張維持 type=1：
+    #       * 助理：`GetCardInfoById(hero.children_id=1001).type == 7` ⇒ 找到 hero ⇒ 不崩
+    #       * 適格體：其餘 Common 卡仍在 ⇒ 列表非空
+    #   （伺服器 `35_1` 送 `children_id = init_hero`，與此處的 1001 一致。）
+    #
+    # 【歷史教訓】曾把**全部** 106 張卡改成 7 ⇒ 助理恢復但適格體清單變空
+    #   （「暫無適格體」）；改回全 1 ⇒ 適格體恢復但助理白屏。
+    #   註：`DataTable_children` 沒有 `type` 欄位，此值純由伺服器決定。
+    m.type = 7 if cid == init_hero_sys_id() else 1
     m.sys_id = cid
     m.exp = 0
     m.lvl = child_level(cid)
     m.sync_times = 0
-    m.awake_times = 0
+    # awake_times 於下方依 `children_awake` 設為該角色真實上限（見 L629 註解）
     m.get_time = 0
+    # ★ 2026-10-11：好感度「自洽」修法（依使用者指正：lv5 就是上限，不是畸形）
+    #   favor_lvl = 該角色的最高好感度等級（正確值為 5）
+    #   favor     = 該等級的 range_max（滿值），使客戶端算出 100%
+    #   兩者配對後不再出現 `-1252000/0` 或 `0/0`。
     m.favor_lvl = max_favor_lvl_by_child().get(cid, 1) or 1
-    m.favor = 0
+    m.favor = favor_value_by_child().get(cid, 0)
     m.fight_skill = 1
     m.skill_lvl = max_skill_lvl_by_child().get(cid, 1) or 1
     skins = skin_by_child().get(cid, [])
@@ -514,7 +733,16 @@ def build_maxed_child(cid, p_children_cls):
     m.power = 0
     m.auth_equip_id = 0
     m.is_new = 0
-    m.fetter_break = 0
+    # ★ 2026-10-11：修「所有角色最後兩條語音永遠上鎖」。
+    #   客戶端 `DocumentModel.GetDocumentVoiceInfo`（proto 0.10）的鎖定判定（逐條讀出）：
+    #     limit 類型 5 : if card.fetter_break == 0            then lock  （"觸摸-交談"）
+    #     limit 類型 6 : if card.awake_times < need(1)        then lock  （"觸摸-突破1" 312 條）
+    #     limit 類型 7 : if card.awake_times < need(2)        then lock  （"突破-1"     2 條）
+    #   原本 `awake_times = 0`、`fetter_break = 0` ⇒ 兩類突破語音（共 314 條）永遠鎖定。
+    #   修法：awake_times 取該角色在 `children_awake` 的真實上限（實測 106 個角色皆為 4），
+    #        fetter_break 設 1（非 0 即解鎖類型 5）。
+    m.awake_times = max_awake_times_by_child().get(cid, 0)
+    m.fetter_break = 1
     m.patrol_id = 0
     return m
 
