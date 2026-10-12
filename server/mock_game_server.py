@@ -1054,7 +1054,10 @@ def _build_assist_info(conn):
     exact_index = 0          # (id, skin) 完全相符的那一筆
     id_index = 0             # 只論 id 相符的第一筆
 
-    for cid in PD.formal_children():
+    # ★★ 2026-10-12 **實驗**：`_assist_ordered_children()` 把瞳系排到最前，
+    #   用於測定 `11_23.index` 的語意（詳見該函式的 docstring）。
+    #   ⚠ 回退：把 `_assist_ordered_children()` 改成 `list(PD.formal_children())`。
+    for cid in _assist_ordered_children():
         skins = PD.skin_by_child().get(cid) or []
         if not skins:
             continue
@@ -1066,7 +1069,20 @@ def _build_assist_info(conn):
             e = m.list.add()
             e.index = idx
             e.id = cid
-            e.type = 0                      # ⚠ 推斷值，見 docstring
+            # ★★ 2026-10-12 **實驗 3**：`type` 改用**真實卡牌類型**（原本硬編 `0`）。
+            #
+            #   為什麼（推論鏈，基於使用者兩個關鍵觀察）：
+            #     觀察 A：點瞳的頭像 → 大圖顯示厄莉希（**移除厄莉希後仍如此**）
+            #             ⇒ 與清單內容無關，是 `id=1001` 被解析成厄莉希。
+            #     觀察 B：厄莉希**不在適格體界面** ⇒ 其卡 `type=7` ≠ `Common(1)`
+            #             ⇒ 被 `GetCardBagDic(cardList, 1)` 濾掉。
+            #   ⇒ 假設：客戶端解析助理條目時，用 `(id, type)` 去**卡池**查卡；
+            #     而瞳的卡 `type=1`、厄莉希的卡 `type=7`。
+            #     若我方一律送 `type=0`，客戶端查不到 ⇒ 可能回退到 `id` 命中的卡。
+            #   ⇒ 測法：送真實 type（瞳=1、厄莉希=7），看點瞳是否變成瞳。
+            #
+            #   ⚠ 回退：把下面兩行改回 `e.type = 0`。
+            e.type = _card_type_of(cid)
             e.skin_sys_id = sk
             if cid == cur_id:
                 if not id_index:
@@ -1105,6 +1121,21 @@ def _build_assist_info(conn):
     m.index = cur_index
 
     _send_msg(conn, 11, 23, m)
+    # ★ 2026-10-12：把**實際送出的 11_23** 也寫進捕獲檔，便於核對「服務端發了什麼」
+    #   （先前 `_capture` 只記 c2s，導致無法確認回應內容）。截取前 8 筆即可。
+    try:
+        _capture({"t": datetime.datetime.now().isoformat(), "ev": "s2c",
+                  "key": "11_23", "cname": "children_assist_info_s2c",
+                  "mode": int(m.mode), "index": int(m.index),
+                  "list_len": len(m.list),
+                  "list_head": [
+                      {"index": int(e.index), "id": int(e.id),
+                       "type": int(e.type), "skin": int(e.skin_sys_id)}
+                      for e in list(m.list)[:8]],
+                  "cur": {"id": cur_id, "skin": cur_skin},
+                  "login_time": LAST_LOGIN_TIME["v"]})
+    except Exception as _e:
+        log(f"  (11_23 捕獲失敗: {_e})")
     log(f"  -> 已回覆看板娘清單：{len(m.list)} 筆 當前 index={m.index} "
         f"id={cur_id} skin={cur_skin}"
         f"（want_index={want_index} exact={exact_index} id_idx={id_index}）")
@@ -1219,7 +1250,26 @@ def _handle_35_1(conn, msg):
     #   ⇒ 改為 `PD.default_hero_children_id()`（由 `hero` 表按 order 最小者解析 = 100000）。
     cid = PD.default_hero_children_id()
     m = _new_s2c(35, 1)
+    # 🚫 **紅線：`35_1` 必須送出 1 筆英雄，不可清空。**
+    #
+    #   2026-10-12 實驗 6：清空 `m.list`（令 `GetHeroInfoBySysId` 回 nil）
+    #       ⇒ **助理界面白屏**（使用者實測截圖）
+    #   ⇒ 證實 `GetAssistCloneHeroCardInfo()` 的回傳值是**必要欄位**，
+    #     清空會讓 `cardInfo.roleImg` 取 nil ⇒ 白屏。
+    #   ⚠ 回退開關留在原處（改 `False` 即恢復原邏輯）。
+    _SKIP_HERO_LIST = False
+    if _SKIP_HERO_LIST:
+        _send_msg(conn, 35, 1, m)
+        log("  -> [實驗 6] 已回覆**空**英雄清單（35_1 list=0）——測預覽是否依賴 p_hero")
+        return
     h = m.list.add()
+    # 🚫 **紅線：`h.id` 必須維持 `hid`（= 1001），不可改為 100000。**
+    #
+    #   2026-10-12 實驗 8b：把 `h.id`（與 `h.sys_id`）改為 `default_hero_children_id()`
+    #       （= 100000）⇒ **助理界面白屏**（使用者實測）。
+    #   ⇒ 原因：`h.id` 是 `GetHeroInfoBySysId(DefaultHeroSysId=1001)` 的查找鍵，
+    #     改成 100000 後客戶端查不到 ⇒ 取 nil ⇒ 白屏。
+    #   ⇒ 故 `h.id` 保持 `hid`；但 `h.sys_id` 仍可為 100000（實驗 8c，見下）。
     h.id = hid
     h.type = 0                       # ★ HeroType.Common（客戶端 GetHeroInfoBySysId 的比對條件）
     times = []
@@ -1230,16 +1280,51 @@ def _handle_35_1(conn, msg):
             except Exception:
                 pass
     h.awaketimes = max(times) if times else 0
-    h.sys_id = hid
-    # ⚠ 2026-10-11：曾改為 `cid`(=100000)，結果**助理界面白屏**（回應 child id 與客戶端
-    #   既有結構不符）⇒ 已回退為 `hid`。詳見交接文件 §0.5.3。
+    # 🚫 **紅線：`h.id` 與 `h.sys_id` 都必須維持 `hid`（= 1001），皆不可改為 100000。**
+    #
+    #   2026-10-12 實驗 8b：`h.id` 與 `h.sys_id` 同改 100000 ⇒ **助理界面白屏**
+    #   2026-10-12 實驗 8c：只改 `h.sys_id`（`h.id` 保持 1001）⇒ **仍白屏**
+    #   ⇒ 兩個欄位**各自**都會造成白屏。
+    #
+    #   【名字仍為厄莉希的真正原因】
+    #     `CardAssistCardSubView` proto 13 L1410-1413：
+    #         self:RefreshSkinBtn(cardInfo.sys_id)
+    #     proto 14（RefreshSkinBtn）L1494-1502：
+    #         skinName.text = DataBase:GetSyschildrenByKey(<參數>).name
+    #     ⇒ 名字 = `GetSyschildrenByKey(英雄卡.sys_id).name`
+    #     而 `cardInfo` = `HeroModel:GetAssistCloneHeroCardInfo()`（我方 `35_1` 的英雄）。
+    #   ⇒ 但 `sys_id` 一改成 100000 就白屏 ⇒ **此欄位無法用來修名字**。
+    #   ⇒ 名字與立繪由**不同欄位**驅動：
+    #       立繪 ✅ 由 `p_hero.form_list` 的 `skin_list`（實驗 7 已修好）
+    #       名字 ❌ 由 `p_hero.sys_id`（改不得）
+    _HERO_SYS_SRC = hid                  # ← 實驗 8c 已回退（改 100000 會白屏）
+    h.sys_id = _HERO_SYS_SRC
+    # 🚫 **紅線：`children_id` 必須維持 `hid`（= 1001），不可改為 100000。**
+    #
+    #   2026-10-12 實驗 4（只改這一處，其餘 `f.lvl` / `skin_list` 皆保持用 `hid`）：
+    #       改為 `PD.default_hero_children_id()`（= 100000，瞳的真實角色 id）
+    #       ⇒ **助理界面白屏**（使用者實測截圖）
+    #   ⇒ 證實白屏**確由本欄位造成**（2026-10-11 那次三處齊改，元凶就是這裡）。
+    #
+    #   為什麼不能用 100000（推測）：客戶端 `GetHeroInfoBySysId` 以 `hero.id`/`sys_id`
+    #   建索引，`children_id` 必須與其內部「英雄→角色」對應一致；改成 100000 後
+    #   客戶端在預載/初始化階段取不到對應項 ⇒ 白屏。
     h.children_id = hid
     f = h.form_list.add()
     f.form = 1
     f.sync_times = 0
-    f.lvl = PD.child_level(hid)
+    # ★★ 2026-10-12 **實驗 8**：`f.lvl` 也改用瞳（與 `_SKIN_SRC` 同源）。
+    #
+    #   為什麼：實驗 7 證實「把 `skin_list` 改成瞳的皮膚」**讓預覽立繪恢復正常**（使用者實測），
+    #     但**名字仍為厄莉希**（名字走 `RefreshSkinBtn(cardInfo.sys_id)` → `GetSyschildrenByKey`）。
+    #   ⇒ 推測 form 內仍有殘留「厄莉希」語意的欄位（`lvl` 目前取 `child_level(1001)`）。
+    #   ⇒ 本實驗把整個 form 統一改為瞳，測名字是否跟著變。
+    #
+    #   ⚠ **回退方法**：把 `_SKIN_SRC` 那行的 `if True` 改為 `if False`。
+    _SKIN_SRC = PD.default_hero_children_id() if True else hid   # ← 實驗開關（實驗 7+8）
+    f.lvl = PD.child_level(_SKIN_SRC)
     f.exp = 0
-    skins = PD.skin_by_child().get(hid) or []
+    skins = PD.skin_by_child().get(_SKIN_SRC) or []
     f.use_skin = skins[0] if skins else 0
     for s in skins:
         f.skin_list.append(s)
@@ -1487,15 +1572,62 @@ def _handle_11_7(conn, msg):
     log(f"  -> 11_7 回應已送出（index={m.index} id={m.id} skin={m.skin_id}）")
 
 
+def _card_type_of(cid):
+    """角色 id -> 助理清單（`p_assist_info.type`）該填的值。
+
+    ★★ 2026-10-12 **依客戶端原始碼推導**（實驗 3 的修正版）。
+
+    來源（`CardAssistCardSubView` proto 3.0.1.0，行 704-727 —— 點縮圖時的構造）：
+        local info = CardAssistInfo:New()
+        info.id     = id                                   -- 被點格子的 id
+        info.index  = 1                                    -- ★ 硬編為 1
+        info.skin_id = use_skin
+        info.type   = (basicConfig.is_hero == 1) and 0 or 1 -- ★★ 就是這條
+    ⇒ **`type` = 瞳系（`is_hero==1`）取 `0`；其餘角色（`is_hero==0`）取 `1`。**
+
+    另註：`DataTable_children.is_hero` 是**配置表真實欄位**
+    （實測分布 `{0: 98, 1: 15}`，`is_hero==1` 的 15 個**全部是瞳系**
+      —— `100000~100007` + `9100001~9100007`）。
+
+    ⚠ 與 `_handle_11_1` 的卡牌 `type`（`CardTypeIndex`）**不是同一個東西**：
+      卡牌 `type`：`init_hero(1001)`=7、其餘=1（見 §0.5.1）
+      助理 `type`：瞳系=0、其餘=1（本函式）
+    """
+    try:
+        cid = int(cid)
+    except Exception:
+        return 1
+    try:
+        rows = PD.children_rows()
+        for r in rows:
+            if int(r.get("id") or r.get("_key") or 0) == cid:
+                return 0 if str(r.get("is_hero")) in ("1", "True", "true") else 1
+    except Exception:
+        pass
+    return 1
+
+
+def _assist_ordered_children():
+    """助理清單的角色順序。
+
+    ⚠ 2026-10-12 **實驗 1 已結束**：曾把瞳系排到最前（測 `index` 語意），
+      結果 ⇒ 格線第 1 格確實變瞳，但**點縮圖的大圖預覽仍顯示厄莉希**
+      ⇒ 證明預覽與清單順序無關 ⇒ **已恢復原順序**。
+      （要重做：把 `return` 改成 `[c for c in kids if is_tong(c)] + [c for c in kids if not is_tong(c)]`。）
+    """
+    return list(PD.formal_children())
+
+
 def _assist_index_of(cid, skin):
     """回傳 `(cid, skin)` 在「角色×皮膚展開」清單中的 1-based 位置。
 
     供 `_handle_11_7` 計算與 `resolved_id` 一致的 `m.index`。
     找不到完全相符的 skin 時，退回該角色的第一筆。
+    ⚠ 順序**必須**與 `_build_assist_info()` 相同 ⇒ 一律走 `_assist_ordered_children()`。
     """
     i = 0
     first_of_cid = 0
-    for c in PD.formal_children():
+    for c in _assist_ordered_children():
         for s in (PD.skin_by_child().get(c) or []):
             i += 1
             if c == cid:
