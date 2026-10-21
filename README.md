@@ -13,6 +13,12 @@
 >
 > 紅線：**禁止推送 `dynamicBg`（屬性 624）** —— 兩次嘗試分別導致主界面全黑／卡死。
 
+> ## 🗓️ 最後除錯：**2026-10-22**（凌晨，實機驗證）
+>
+> 本輪修復 **作戰進度全解鎖、共鳴/招募解鎖、活動系統可用、編隊 8 槽位解鎖、
+> 編隊可加人與保存、頭像/頭像框全部解鎖並可更換、基建核心面板**。
+> 詳細證據鏈見 `docs\知识库_合并版.md` §0.5.10 ~ §0.5.13。
+
 ```
 ┌──────────────┐   HTTP 9001（登入服）    ┌─────────────────────┐
 │  遊戲客戶端   │ ◄──────────────────────► │  server/            │
@@ -178,6 +184,12 @@ CDN 伺服器會從**已解包的原廠 OBB 資源**讀取檔案（約 3.2 GB）
 - 玩家等級 100 / 精神力 140 / 113 個適格體 / 328 個皮膚（**全部由配置表推導**）
 - 主界面、個人訊息、適格體列表、GM 指令面板（177 條）可正常使用
 - 劇情完成狀態、英雄清單、簽到資料
+- **作戰**：章節全解鎖（進度 6-10）、468 副本滿星通關
+- **共鳴 / 招募**：76 個卡池全部可用
+- **活動系統**：40 條活動全部開啟（含「精神溫養」等可領取活動）
+- **編隊**：8 個隊員槽位全解鎖、可加人／換人／保存
+- **頭像 / 頭像框**：204 頭像 + 16 框全部解鎖，更換即時生效
+- **空島基建**：6 個核心（中樞／貿易／調度／通訊／榮譽／合成）
 
 ### ✅ 近期修復（2026-10-11，皆經實機驗證）
 
@@ -204,6 +216,43 @@ CDN 伺服器會從**已解包的原廠 OBB 資源**讀取檔案（約 3.2 GB）
 > `cardInfo = GetCardInfoById(curSelectId)`，若 `is_hero==1` 則換成
 > `HeroModel:GetAssistCloneHeroCardInfo()`，立繪取 `cardInfo.roleImg`。
 
+### ✅ 近期修復（2026-10-22，皆經實機驗證）
+
+> **本輪方法論**：凡是 `notify` / `info` 型協議走「通用回應器」時，客戶端會拿到一堆
+> **假 id** → 查配置表得 `nil` → 整塊功能失效（顯示未解鎖／空白／崩潰）。
+> 把它換成 `DataTable_*` 裡的**真實配置資料**，功能就通了。
+
+| 問題 | 根因（附證據） | 修法 | 驗證 |
+|---|---|---|---|
+| **作戰進度永遠卡在 0-1、章節不解鎖、編隊槽位顯示「通關 IN-1 後解鎖」** | `17_1 dup_info` 的 `p_role_dup.task` **完全沒填**。客戶端 `DungeonModel.On_17_1`（反匯編）：`dungeonInfo[v.dup_id] = n`，其中 `n` = `v.task` 裡 `v==1` 的**任務完成數**；`star` 只進 `dungeonServerStarInfo`，**不參與進度判定**。⇒ `n=0` ⇒ 進度不推進（以前只改 `star` 怎麼改都無效） | `_push_dup_info()` 每個副本補 `task = [{k=1..3, v=1}]`（3 星 = 3 任務完成）⇒ `dungeonInfo=3` | ✅ **作戰全解鎖（6-10）**；回應 5527B → **13951B** |
+| **共鳴（招募）顯示 `NotActive 暫未連線`、點擊無反應** | `12_1 recruit_pool_s2c` 走通用回應器 ⇒ 只回**一個假卡池**（37B）⇒ 共鳴界面沒有可用卡池。<br>（已先排除 `open_func_id=16`：`open_limit={}`、`24_1` 已送 85 功能含 16 —— **不是功能解鎖問題**） | 新增 `_handle_12_1()`：送 `DataTable_recruit_pool` **全部 76 個卡池** | ✅ **共鳴解鎖、正常顯示卡池** |
+| **各類限時活動不出現** | `30_1 open_act_info_s2c` 走通用回應器 ⇒ 只回一個假 `act_id`（12B） | 新增 `_handle_30_1()`：送 `DataTable_open_act` **全部 40 條活動**（`open_time=0`、`close_time=2100-01-01`） | ✅ **「精神溫養 SPIRIT SUPPLY」自動彈出並可領取（+30 精神力 ×2）** |
+| **編隊只有 3 個槽位可用、4~8 全 `LOCKED`** | `player_data.player_resources()` 把屬性 **619 `slots_num`** 填成 `spell_slots(lv)`（=3，法術槽位）。但 `PlayerDefine` 屬性映射表（反匯編：`LOADI 5 619` + `LOADK 7 "slots_num"`）證實 619 = `slots_num`，而 `TeamMainView` 用法是 `for i = 1, Player.slots_num` ⇒ 是**編隊隊員槽位數**。`DataTable_config['team_slots']` = 8 槽（1~3 免費、4~8 需通關 `20105/20101/20002/20003/20008`） | 新增 `team_slot_unlocks()` / `team_slots_num()`；`put("slots_num", team_slots_num())` ⇒ **8** | ✅ **8 槽全解鎖** |
+| **編隊點「確定」無反應** | 兩個坑：<br>① `15_4` 只要送「帶成員的隊伍」，客戶端 `CompareToTempTeam` 就索引 `nil` 崩潰；<br>② `_fill_required()` 對 **repeated message** 欄位會**自動補一個元素** ⇒ 空清單被它塞進「假隊伍」⇒ 同樣崩 | `_handle_15_4()` 永遠回**空 `children_team`**（客戶端走 `InitTeamData` 安全分支自動建 4 隊）；且該分支**禁止呼叫 `_fill_required()`**。<br>`_handle_15_2()` 的 `result=0` 必須放在 `_fill_required()` **之後**（否則被覆蓋成 1 ⇒ 彈「編隊失敗」） | ✅ **可加人、可保存、不報錯** |
+| **頭像框更換後不生效** | `On_41_3`（處理 `headshots_change_frame_s2c`）把回應交給 `InitMainViewInfo(msg)`，它讀 `entry/head/id/frame_id`；但該協議 proto **只有 `id`** ⇒ `frame_id=nil` ⇒ 框不生效 | 新增 `41_1/41_2/41_3/41_4/41_5` 全套；換頭像/換框後**主動重推完整的 `41_1`**（含 `frame_id`）；`player_data` 加 `_CURRENT_HEADSHOT` 狀態 | ✅ **更換頭像框已生效**；頭像 204 + 框 16 全解鎖 |
+| **基建核心面板缺項** | `31_32` 走通用回應器 ⇒ body=11B（一個假元素，`sys_id` 查不到 `DataTable_core`） | `_handle_31_32()`：送 6 個核心（`sys_id`=`DataTable_core._key`，`lvl`=`core_lvl` 最大等級） | ✅ body 11B → **72B** |
+
+#### 🔴 本輪最嚴重的踩坑（務必記住）
+
+**`_fill_required()` 會給 `repeated message` 欄位自動補一個元素。**
+
+```python
+if f.message_type is not None and getattr(f, "is_repeated", False):
+    sub_required = [g for g in f.message_type.fields if getattr(g, "is_required", False)]
+    if not sub_required:
+        continue
+    if len(getattr(msg, f.name)) == 0:
+        elem = getattr(msg, f.name).add()      # ★★★ 空清單被塞進一個「最小合法元素」
+        _fill_required(elem, depth + 1)
+```
+
+`15_4.children_team` 正是 repeated message ⇒ 明明想送**空清單**，卻被塞進
+一個「假隊伍」⇒ 客戶端崩潰 ⇒ 點「確定」無反應。
+
+**⇒ 判斷規則：先問「這個 repeated 欄位空著是不是合法語意？」
+* 是（如「沒有隊伍」「沒有加成」）⇒ **禁止呼叫 `_fill_required()`**
+* 否（客戶端會 nil 迭代崩潰，如 `lottery_pool_s2c`）⇒ 才需要補
+
 ### ✅ 新功能
 
 - **GM 指令 `#pass_all_dup`（通關全部副本）** —— 新增 `17_1` 推送（468 副本），登入時一併送出
@@ -219,7 +268,10 @@ CDN 伺服器會從**已解包的原廠 OBB 資源**讀取檔案（約 3.2 GB）
 | 檔案（適格體檔案）無法解鎖 | 客戶端讀 `children_doc.remember`，但 94 筆資料中 **0 筆**填此欄位（配置表層面無資料）⇒ 伺服器端無法修 |
 | 瞳的 2 條突破語音仍鎖 | `limit=[[7,9999,N]]`，`9999` 不存在於任何表；`GetHeroInfoBySysId` 需 `cardType` 而 `p_hero` 無此欄位 |
 | GM 資訊欄首次不顯示 | 純客戶端 UI 時序問題，第二次進入即正常，**不影響功能** |
-| 副本界面進度條仍顯示 0 | `17_1` 已送達客戶端，但 UI 未更新；原因待查（§0.5 待辦 #6） |
+| ~~副本界面進度條仍顯示 0~~ | ✅ **已修復（2026-10-22）**：`17_1` 的 `p_role_dup.task` 未填是根因，補 `task` 後作戰進度正常前進到 6-10 |
+| **編隊保存後重進會被重置**（2026-10-22 新增） | `15_4` 只能回**空清單**，否則客戶端必崩。三次嘗試回顯（自造成員／客戶端自存成員+原始 `event_id`／再補 `friend_assist` 14 欄位+`up_flag`+`_fill_required`）**全部崩潰** ⇒ 客戶端對 `p_children_team` 有反匯編描述檔沒列出的隱藏必填子結構。原始伺服器已關，**無真實 s2c 可對照** ⇒ 本路線硬邊界。<br>現狀：可加人／可保存／不報錯，但返回主界面再進會重置 |
+| **強制新手引導無法關閉**（2026-10-22 新增） | 引導會隨功能解鎖推進（共鳴鎖著時要求點共鳴、解鎖後改要求點作戰→協同預演 ⇒ 是主線新手教程在按進度前進）。**已排查全部服務端槓桿均無效**：`2_9 noob_stage=29`、`2_2` 112 個屬性（無 guide 欄位）、`24_1` 85 功能全開、GM `#pass_all_scenario`。<br>⇒ 引導進度存在**客戶端本地存檔**，服務端無協議欄位可關 ⇒ 需走「客戶端補丁路線」 |
+| **`item config not found` 936 條**（2026-10-22 新增） | 有 **312 個 id** 被當 item 發送但 `DataTable_item` 裡不存在，其中含皮膚 id（`1000001~1000003`、`1001` 等）。來源待查（疑似 `11_1` 的 `skin_list` 被客戶端當 item 查）。目前只刷日誌，未見功能性阻塞 |
 | 真機改 OBB | 需要 root；無 root 請見 `docs\新設備部署.md` 的替代做法 |
 
 > **接手前請先讀 `docs\知识库_合并版.md`**（唯一權威入口）——

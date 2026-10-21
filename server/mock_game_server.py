@@ -29,6 +29,41 @@ HOST_PORT = f"{HOST_FOR_CLIENT}:{PORT}"
 # ---------- 全部角色解鎖 / 滿級帳號設定 ----------
 # ScenarioDefine.BeginnerStageType.Finished = 29（新手教程已完成，不再播引導）
 NOOB_STAGE_FINISHED = 29
+
+# 2026-10-22: 編隊預設 event id。
+#   DataTable_event 實測 16 條；_key=10001 為 client_key=Common、team_num=4
+#   ⇒ 主線編隊用的 event。TeamModel.InitTeamList 會用
+#     GetSyseventByKey(event_id).team_num 建立 1..N 隊，故必須是真實 id。
+TEAM_EVENT_COMMON = 10001
+
+# ★ 2026-10-22：編隊持久化存儲（服務端記憶體）。
+#   背景：`15_4 cost_event_teams` 每次進編隊都會被請求（實測 227 次），
+#   若一直回空清單，客戶端每次都被重置 ⇒ 使用者「保存後重進又沒了」。
+#   這裡把 `15_2` 保存的隊伍存起來，`15_4` 時回傳。
+_TEAM_STORE = {}          # {event_id: {"team_index":..,"team_id":..,"team_name":..,"children":[(k,v)..]}}
+_TEAM_DEFAULT_CHILDREN = {}
+
+
+def _valid_event_id(eid):
+    """把任意 event_id 歸一到 `DataTable_event` 裡真實存在的 id。
+
+    為什麼需要：客戶端 `cost_update_team_c2s` 實測送 **event_id = 1**，
+    而 `DataTable_event` 的 id 從 **10001** 起 ⇒ 客戶端拿 1 去
+    `DataBase:GetSyseventByKey(1)` 得 nil ⇒ 顯示「編隊失敗」。
+    """
+    try:
+        eid = int(eid)
+    except Exception:
+        eid = 0
+    ids = set()
+    for r in PD.table("event"):
+        try:
+            ids.add(int(r.get("id")))
+        except Exception:
+            pass
+    if eid in ids:
+        return eid
+    return TEAM_EVENT_COMMON if TEAM_EVENT_COMMON in ids else (min(ids) if ids else eid)
 ROLE_ID = 10001
 ROLE_NAME = "指揮官"
 ROLE_LEVEL = 1          # 顯示用；實際玩家等級由 player_data.MAX_ROLE_LEVEL 提供
@@ -564,6 +599,13 @@ def _handle_31_1(conn, msg):
     log(f"  -> 已回覆空島基建：center(highest_atoms={atoms}) + "
         f"{len(m.room_list)} 個房間（各房型最高等級 + 預設物件）"
         f" ← 修復「點空島卡 90%」")
+    # ⚠ 2026-10-22 **已回退**：曾在此呼叫 `_push_building_lists(conn)`
+    #   主動推 `31_12`（機器 12 台）+ `31_13`（家具 81 件），
+    #   結果 ⇒ **宅邸/工作室無法進入**（使用者實測）。
+    #   推測：客戶端要求 `p_building_furniture/machine` 的 `id` 與
+    #   `room.object_list` / 已放置物件**對應一致**，而我送的是自造序號
+    #   ⇒ 進房間時查不到對應物件 ⇒ 卡住/崩潰。
+    #   ⇒ **回退**，待查明 id 語意後再重做。`_push_building_lists()` 函式保留未呼叫。
 
 
 def _handle_31_5(conn, msg):
@@ -875,32 +917,281 @@ def _handle_37_2(conn, msg):
     log("  -> 已回覆交易訂單（空清單，避免 InitOrderInfo 取 nil 的 k/v）")
 
 
-def _handle_15_4(conn, msg):
-    """cost_event_teams_c2s → cost_event_teams_s2c（編隊）。
+def _handle_12_1(conn, msg):
+    """recruit_pool_c2s → recruit_pool_s2c（**招募/共鳴卡池清單**）。
 
-    ★ 這是 `InitTeamList` 崩潰的來源。
-    客戶端 x.Module.Team.TeamControl.lua:334-345
-        L1_3 = A0_3.children_team
-        if L1_3 then                       -- 非空才進這個分支
-            L1_3 = L1_3[1]
-            L1_3 = L1_3.event_id           ← event_id 必須存在於 DataTable_event
-            TeamModel.InitTeamList(L1_3, A0_3)
-        else
-            L1_3 = L0_2.event_id           -- 空清單走這條（安全）
-        end
-    而 TeamModel.InitTeamData（:271-275）
-        DataBase.GetSyseventByKey(event_id).team_num   ← id 不存在 → nil → 崩潰
+    ★ 2026-10-22 新增。先前走通用回應器 ⇒ 只回一個 `id` 為保守預設的假池子
+      ⇒ 共鳴（招募）界面沒有可用卡池。
 
-    先前通用填充器會為 children_team 造出一個元素並把 event_id 填成 1，
-    但 DataTable_event 的 id 是 10001 起 → 查不到 → 崩潰。
-    這裡明確回空清單，讓客戶端走 else 的安全分支。
+    資料源 `DataTable_recruit_pool`（實測 **76** 條）。
+    `p_recruit_pool { id(實例), sys_id(配置 id), draw_times, is_new_pool_base_reward,
+                      draw_save[], bonus_list[], base_times }`
+    ⇒ 本專案為滿進度懷舊帳號：送出全部卡池，`draw_times` 取配置的
+      `draw_times_config` 上限（沒有就 0）。
     """
-    m = _new_s2c(15, 4)
-    m.default_index = 0
-    # children_team 保持空 → 客戶端走 else 分支
-    _send_msg(conn, 15, 4, m)
-    log("  -> 已回覆編隊（children_team 空清單，避免 InitTeamList 用非法 event_id）")
+    rows = PD.table("recruit_pool")
+    m = _new_s2c(12, 1)
+    n = 0
+    for i, r in enumerate(rows, start=1):
+        try:
+            sys_id = int(r.get("id") or r.get("_key"))
+        except Exception:
+            continue
+        e = m.pool_list.add()
+        e.id = i                      # 實例 id（唯一）
+        e.sys_id = sys_id             # 配置表卡池 id
+        e.draw_times = 0
+        e.is_new_pool_base_reward = 0
+        e.base_times = 0
+        n += 1
+    _fill_required(m)
+    _send_msg(conn, 12, 1, m)
+    log(f"  -> 已回覆招募卡池 {n} 個（來源 DataTable_recruit_pool）")
 
+
+def _handle_30_1(conn, msg):
+    """open_act_info_c2s → open_act_info_s2c（**活動開啟資訊**）。
+
+    ★ 2026-10-22 新增。先前走通用回應器 ⇒ 只有一個 `act_id` 為保守預設的假條目。
+
+    `p_open_act { act_id, act_type, open_time, close_time }`
+    資料源 `DataTable_open_act`（實測 **40** 條：開服活動/赫茲活動/夏日活動…）。
+    本專案離線懷舊 ⇒ 全部活動標記為「已開啟」：
+      `open_time = 0`（很早）、`close_time = 4102444800`（2100-01-01）。
+    """
+    rows = PD.table("open_act")
+    m = _new_s2c(30, 1)
+    n = 0
+    for r in rows:
+        try:
+            aid = int(r.get("act_id") or r.get("_key"))
+        except Exception:
+            continue
+        try:
+            atype = int(r.get("act_type", 0) or 0)
+        except Exception:
+            atype = 0
+        e = m.list.add()
+        e.act_id = aid
+        e.act_type = atype
+        e.open_time = 0
+        e.close_time = 4102444800
+        n += 1
+    _fill_required(m)
+    _send_msg(conn, 30, 1, m)
+    log(f"  -> 已回覆活動開啟資訊 {n} 條（來源 DataTable_open_act，全部標記開啟）")
+
+
+def _handle_15_4(conn, msg):
+    """cost_event_teams_c2s → cost_event_teams_s2c（**編隊清單**）。
+
+    ★ 2026-10-22 最終版：
+      * **首次**（`_TEAM_STORE` 無資料）→ 回空 `children_team`，讓客戶端走
+        `InitTeamList` 的 `InitTeamData` 自動補默認隊伍分支。
+        （歷史教訓：首次就送「自造成員」的隊伍會讓 `TeamModel.tempTeam`
+         結構不完整 ⇒ 客戶端 `CompareToTempTeam` 索引 nil ⇒ 點「確定」無反應。）
+      * **之後**（有保存過）→ 回傳 `_TEAM_STORE` 裡的隊伍，帶上 `hero_list`
+        （`DataTable_hero`：id=1001 form=1 = 瞳-強襲形態）⇒ 重進編隊不再被重置。
+
+    客戶端 `TeamModel.InitTeamList(event_id, msg)`（反匯編）：
+        teamList[event_id] = {}
+        UpdateTeamDefaultIndex(msg.default_index)
+        if msg.children_team then
+            for _, v in pairs(msg.children_team) do
+                local info = TeamInfo:New(); info:InitInfo(v)
+                teamList[v.event_id][v.team_index] = info
+            end
+        end
+        local ev = DataBase:GetSyseventByKey(event_id)
+        for i = 1, ev.team_num do InitTeamData(event_id, i) end
+    """
+    req_eid = _valid_event_id(getattr(msg, "event_id", 0))
+    m = _new_s2c(15, 4)
+    m.default_index = 1
+    # ⚠ 2026-10-22：**暫時不從 `_TEAM_STORE` 回傳**。
+    #   實測：`15_4` 回傳「帶成員的隊伍」會讓客戶端 `TeamModel.tempTeam`
+    #   結構不完整 ⇒ `CompareToTempTeam` 索引 nil ⇒ 點「確定」無反應。
+    #   ⇒ 先保證「編輯 + 保存」可用（空清單讓客戶端走 InitTeamData 安全分支），
+    #     持久化回顯留待之後用「與客戶端自存資料完全同構」的方式再做。
+    # ★ 2026-10-22：回顯已保存的編隊。
+    #   先前版本崩潰，原因是「我自造成員」（1001~1008，可能含非法角色）⇒
+    #   客戶端 `CompareToTempTeam` 索引 nil。
+    #   現在存的成員是**客戶端自己選的合法角色**，且 `event_id` 用客戶端
+    #   原始值（保持 teamList 的鍵一致），應可安全回顯。
+    # ⚠ 2026-10-22 **已回退**：回顯「帶成員的隊伍」一定會讓客戶端
+    #   TeamModel.tempTeam 結構不完整 ⇒ CompareToTempTeam 索引 nil
+    #   ⇒ 點「確定」無反應（實測兩次，含用客戶端自存成員 + 原始 event_id）。
+    #   目前穩定版：**永遠回空清單** ⇒ 編輯/保存可用（但重進會被重置）。
+    # ══════════════════════════════════════════════════════════════════
+    # 🚫 2026-10-22 **永久回退：不做持久化回顯**
+    #
+    # 實測 3 次，只要 15_4 回傳「帶成員的隊伍」，客戶端必崩：
+    #     attempt to index a nil value (field '?')
+    #         ?: in field 'CompareToTempTeam'
+    #         ?: in method 'OnMakeTeam'
+    #         ?: in field 'TriggerEvent' → 'OnTeamViewCompleteMake'
+    #   ⇒ 點「確定」無反應。
+    #
+    # 三次嘗試：
+    #   1. 回顯我自造成員（1001~1008）                    → 崩
+    #   2. 回顯客戶端自存成員 + 原始 event_id              → 崩
+    #   3. 上述 + 補齊 friend_assist(14 欄)/up_flag/
+    #      _fill_required() 遞迴 required                  → 崩
+    #
+    # 結論：客戶端對 p_children_team 有**反匯編描述檔沒列出的隱藏必填
+    #       子結構**（或對 	empTeam 的初始化有額外前置條件）。
+    #       原始伺服器已關，無真實 s2c 可對照 ⇒ 本路線無法再推進。
+    #
+    # ✅ 現行穩定版：15_4 **永遠回空清單** ⇒ 客戶端走
+    #    InitTeamList 的 InitTeamData 安全分支：
+    #      * 編隊可編輯、可保存（不報錯）
+    #      * 換人後立刻生效（本地狀態）
+    #      * ⚠️ 但返回主界面再進編隊會重置（因為 15_4 又回空清單）
+    # ══════════════════════════════════════════════════════════════════
+    saved = None
+    if False and saved and saved.get("children"):
+        team = m.children_team.add()
+        team.team_index = int(saved.get("team_index") or 1)
+        team.team_id = int(saved.get("team_id") or 1)
+        # 用客戶端原始 event_id，保持與它本地 teamList 的鍵一致
+        team.event_id = int(saved.get("raw_event_id") or req_eid)
+        team.team_name = saved.get("team_name") or ""
+        for k, v in saved["children"]:
+            kv = team.children_list.add()
+            kv.k = int(k)
+            kv.v = int(v)
+        hp = team.hero_list.add()
+        hp.index = 1
+        hp.hero_id = PD.hero_default_id()
+        hp.hero_form = PD.hero_default_form()
+        # ★ 2026-10-22：補齊 `p_children_team` 的其餘子結構。
+        #   `TeamInfo:InitInfo` 會 `self.friend_assist = v.friend_assist`，
+        #   若為 nil，`RefreshHeroPanel` 讀 `.xxx` 就崩（客戶端日誌實錘）。
+        team.up_flag = 0
+        fa = team.friend_assist
+        fa.role_id = 0
+        fa.role_name = ""
+        fa.role_lvl = 0
+        fa.sys_id = 0
+        fa.child_id = 0
+        fa.level = 0
+        fa.sync_times = 0
+        fa.awake_times = 0
+        fa.skill_id = 0
+        fa.skill_lvl = 0
+        fa.skin_id = 0
+        fa.assist_times = 0
+        fa.cost = 0
+        fa.is_revised = 0
+        # 通用補齊：required 巢狀欄位（含 p_children_team 內 server 描述檔
+        # 沒列出的 required 子欄位）
+        _fill_required(m)
+        m.default_index = int(saved.get("team_index") or 1)
+        _send_msg(conn, 15, 4, m)
+        log(f"  -> 已回覆編隊（**已保存**）：event_id={req_eid} "
+            f"children={saved['children']}")
+    else:
+        # ❗**絕對不要**在這裡呼叫 _fill_required(m)：
+        #   children_team 是 **repeated message**，而 _fill_required 對
+        #   「子項有 required 欄位」的 repeated 欄位會**自動補一個元素**
+        #   ⇒ 等於又造了一個「假隊伍」⇒ 客戶端 CompareToTempTeam 崩潰
+        #   ⇒ 點「確定」無反應。（2026-10-22 實測踩過）
+        #   空清單本來就能序列化（repeated 欄位沒有 required 約束），
+        #   故這裡直接送出即可。
+        _send_msg(conn, 15, 4, m)
+        log(f"  -> 已回覆編隊（**空清單**）：event_id={req_eid} "
+            f"⇒ 客戶端自動建立默認隊伍")
+
+def _handle_15_2(conn, msg):
+    """cost_update_team_c2s → cost_update_team_s2c（**更新/保存編隊**）。
+
+    ★ 2026-10-22 重寫。修「保存後重進被重置」與「編隊失敗」。
+
+    客戶端 `On_15_2`（`TeamControl` proto 0.8）：
+        if msg.result == 0 then
+            TeamModel:UpdateTeamInfo(msg.children_team)
+            EventManager:TriggerEvent(TeamEvent.UpdateTeamList, msg.children_team)
+            if msg.children_team then
+                TeamModel:AddTeamPreLoad(msg.children_team.team_index,
+                                         msg.children_team.event_id)
+            end
+        else
+            MessageManager.Instance:Show(GetYyb(1316))     -- 「編隊失敗，請重新嘗試」
+        end
+    ⇒ **必須 result=0 且 children_team 完整。**
+
+    【本次修的兩個坑】
+      1. 客戶端實測送 `event_id = 1`，而 `DataTable_event` 從 10001 起
+         ⇒ 非法 id 導致客戶端查配置 nil → 顯示「編隊失敗」。
+         已用 `_valid_event_id()` 歸一到 10001。
+      2. 保存結果寫入 `_TEAM_STORE`，供 `15_4` 回傳 ⇒ 重進不再重置。
+    """
+    m = _new_s2c(15, 2)
+    m.result = 0                             # 0 = 成功（必須是 0）
+    t = m.children_team
+    try:
+        t.team_index = int(getattr(msg, "team_index", 0) or 1)
+    except Exception:
+        t.team_index = 1
+    try:
+        t.team_id = int(getattr(msg, "team_id", 0) or 1)
+    except Exception:
+        t.team_id = 1
+    t.event_id = _valid_event_id(getattr(msg, "event_id", 0))
+    t.team_name = getattr(msg, "team_name", "") or ""
+
+    n_child = 0
+    saved = []
+    try:
+        for kv in msg.children_list:
+            k = int(getattr(kv, "k", 0) or 0)
+            v = int(getattr(kv, "v", 0) or 0)
+            if k <= 0:
+                continue
+            e = t.children_list.add()
+            e.k = k
+            e.v = v
+            saved.append((k, v))
+            n_child += 1
+    except Exception:
+        pass
+    try:
+        for kv in getattr(msg, "fetter_child_list", []):
+            e = t.fetter_child_list.add()
+            e.k = int(getattr(kv, "k", 0) or 0)
+            e.v = int(getattr(kv, "v", 0) or 0)
+    except Exception:
+        pass
+    # 瞳作為英雄（`DataTable_hero`：id=1001 form=1 = 瞳-強襲形態）
+    try:
+        hp = t.hero_list.add()
+        hp.index = 1
+        hp.hero_id = PD.hero_default_id()
+        hp.hero_form = PD.hero_default_form()
+    except Exception:
+        pass
+    # ---- 持久化 ----
+    _raw_eid = 0
+    try:
+        _raw_eid = int(getattr(msg, "event_id", 0) or 0)
+    except Exception:
+        _raw_eid = 0
+    _TEAM_STORE[t.event_id] = {
+        "team_index": t.team_index,
+        "team_id": t.team_id,
+        "team_name": t.team_name,
+        "children": saved,
+        "raw_event_id": _raw_eid,        # ★ 客戶端原始 event_id（回顯時要用同一個）
+    }
+    _fill_required(m)
+    # ★★ 2026-10-22：`_fill_required()` 對 **所有 required 純量** 都無條件
+    #   `setattr(..., 1)` ⇒ 會把我們設好的 `result=0` 覆蓋成 **1**
+    #   ⇒ 客戶端 `On_15_2` 走 `else` 分支顯示「編隊失敗，請重新嘗試」。
+    #   ⇒ **必須在 `_fill_required()` 之後**再設回 0。
+    m.result = 0
+    _send_msg(conn, 15, 2, m)
+    log(f"  ★ 保存編隊：event_id={t.event_id} team_index={t.team_index} "
+        f"children={saved} → result=0（已持久化）")
 
 def _handle_40_1(conn, msg):
     """lottery_pool_c2s → lottery_pool_s2c（抽獎池清單）。
@@ -926,6 +1217,258 @@ def _handle_40_1(conn, msg):
         p.donate_times = 0
     _send_msg(conn, 40, 1, m)
     log(f"  -> 已回覆抽獎池 {len(m.pool_list)} 個（來源 DataTable_lottery）")
+
+
+def _push_building_lists(conn):
+    """主動推送 `31_12 machine_list` + `31_13 furniture_list`（**notify 型**）。
+
+    ★ 2026-10-22 新增。修「宅邸沒有解鎖的家具」。
+
+    **為什麼要主動推**：這兩個協議是 `building_notify_*`（伺服器 → 客戶端），
+    客戶端**不會主動請求**（實測全量日誌中 `31_12`/`31_13` 請求次數 = 0）。
+    先前服務端從未推送 ⇒ 客戶端 `BuildModel.allFurnitureInfo` /
+    `allMachineInfo` 一直是空表 ⇒ 家具背包與宅邸顯示「沒有解鎖的家具」。
+
+    資料源（實測）：
+        家具 `DataTable_room_furniture` = **81** 條（id 100101…）
+        機器 `DataTable_room_machine_lvl` = **12** 個不同 id（200101~200109 等）
+
+    本專案為滿進度懷舊帳號 ⇒ 全部家具/機器都送，且都是「已獲得、可用」狀態。
+    """
+    # ---- 機器 ----
+    machines = PD.room_machines()
+    mm = _new_s2c(31, 12)
+    for i, (sys_id, output_max, cost_power) in enumerate(machines, start=1):
+        e = mm.list.add()
+        e.id = i                     # 實例 id（唯一）
+        e.sys_id = sys_id            # 配置表機器 id
+        e.used_elec = 0
+        e.output = 0                 # 未運行
+        e.output_max = output_max
+        e.output_speed = 0
+        e.default_speed = 0
+        e.cost_power = cost_power
+        e.start_time = 0             # 0 = 未開始生產
+    _send_msg(conn, 31, 12, mm)
+
+    # ---- 家具 ----
+    furn = PD.all_furniture_ids()
+    fm = _new_s2c(31, 13)
+    for i, sys_id in enumerate(furn, start=1):
+        e = fm.list.add()
+        e.id = i                     # 實例 id（唯一）
+        e.sys_id = sys_id            # 配置表家具 id
+        e.dust_lvl = 0               # 0 = 沒有髒污
+        e.atoms = 0
+        e.dust_time = 0
+    _send_msg(conn, 31, 13, fm)
+
+    log(f"  -> [推送] 機器清單 {len(mm.list)} 台 + 家具清單 {len(fm.list)} 件"
+        f"（31_12/31_13 notify 型；來源 room_machine_lvl / room_furniture）")
+
+
+def _handle_31_32(conn, msg):
+    """building_core_list_c2s → building_core_list_s2c（空島基建核心清單）。
+
+    ★ 2026-10-21 新增。先前走通用回應器 ⇒ body=11B（只有一個默認元素，
+      其 `sys_id` 是保守預設值 ⇒ 查不到 `DataTable_core` ⇒ 核心面板缺項）。
+
+    客戶端消費（`BuildModel` proto 24.83 = On_31_32，逐條讀出）：
+        if msg.core_list then
+            for _, v in pairs(msg.core_list) do
+                if not allCoreInfo[v.id] then allCoreInfo[v.id] = CoreInfo:New() end
+                allCoreInfo[v.id]:InitInfo(v)      -- 複製所有標量欄位
+            end
+        end
+    而 `CoreInfo`（`BuildModel` proto[5]/[6]）：
+        Ctor:     id=0, sys_id=0, lvl=0, upgrade_time=0
+        InitInfo: 遍歷傳入表，把**非 table/function** 的欄位原樣複製
+    查詢方式（`BuildModel` L4218-4224 `GetCoreInfoBySysId`）：
+        for _, v in pairs(allCoreInfo) do
+            if v.sys_id == sysId then return v end
+        end
+    **⇒ `id` 只是字典鍵（唯一即可）；真正查配置用的是 `sys_id`。**
+
+    資料源：`DataTable_core`（6 條，實測 10001~10006）+
+            `DataTable_core_lvl`（該 core 的最大 `level`）。
+    本專案為滿進度帳號 ⇒ 每個核心都送**配置表最大等級**。
+    """
+    cores = PD.building_core_list()
+    m = _new_s2c(31, 32)
+    for sys_id, lvl in cores:
+        e = m.core_list.add()
+        e.id = sys_id                 # 字典鍵（本專案每個核心僅一份，故直接複用）
+        e.sys_id = sys_id             # 配置表 core id（客戶端用它查 GetSyscoreByKey）
+        e.lvl = lvl                   # 配置表最大等級
+        e.upgrade_time = 0            # 0 = 不在升級中
+    _send_msg(conn, 31, 32, m)
+    log(f"  -> 已回覆基建核心 {len(m.core_list)} 個："
+        f"{[(c[0], c[1]) for c in cores]}（來源 DataTable_core + core_lvl 最大等級）")
+
+
+def _handle_31_40(conn, msg):
+    """building_notify_bonus_c2s → building_notify_bonus_s2c（房間加成／收藏品）。
+
+    ★ 2026-10-21 新增。先前走通用回應器 ⇒ body=13B（一個默認元素）。
+
+    客戶端消費（`BonusMgr` proto 0.8，逐條讀出）：
+        for _, v in pairs(buildingBonusInfo) do
+            cfg = DataBase:GetSysroom_bonusByKey(v.sys_id)   -- ★ 用 sys_id 查配置
+            ... 讀 cfg 的 born_pos / videoName / type，
+                並用 v.can_draw 決定是否顯示可領取紅點，
+                用 v.first_gain_time 標記是否已獲得 ...
+        end
+    **⇒ `sys_id` = `DataTable_room_bonus._key`（實測 1..13）。**
+
+    本專案為滿進度懷舊帳號 ⇒
+      * 全部 13 個加成都**已獲得**（`can_draw = 0`、`first_gain_time = 0`）
+        —— 不送 `can_draw=1` 以免主界面出現一堆無法消除的紅點。
+      * `is_shared = 0`（非共享加成）。
+    """
+    ids = PD.building_bonus_ids()
+    m = _new_s2c(31, 40)
+    for i, bonus_key in enumerate(ids, start=1):
+        e = m.list.add()
+        e.id = i                      # 實例 id（唯一）
+        e.sys_id = bonus_key          # 配置表 room_bonus id
+        e.first_gain_time = 0         # 0 = 不顯示具體獲得時間（避免編造時間戳）
+        e.is_shared = 0
+        e.can_draw = 0                # 0 = 已領取（不產生紅點）
+    _send_msg(conn, 31, 40, m)
+    log(f"  -> 已回覆房間加成 {len(m.list)} 個（sys_id={ids}；"
+        f"全部標記為已獲得 can_draw=0；來源 DataTable_room_bonus）")
+
+
+def _handle_41_1(conn, msg):
+    """headshots_info_c2s → headshots_info_s2c（**當前使用的頭像 / 頭像框**）。
+
+    ★ 2026-10-21 新增。補齊「41_1 走通用回應器 ⇒ body=8B 語意不明」。
+
+    客戶端邏輯（`x.Module.HeadIcon.HeadIconModel` proto 0.1 = InitMainViewInfo，
+    逐條讀出）：
+        if msg.entry == 1 then mainViewRedPoint = true end
+        if msg.head  == 1 then entryRedPoint   = true end
+        usingItemId[HeadIconDefine.ItemType.Icon]  = msg.id          -- 當前頭像
+        usingItemId[HeadIconDefine.ItemType.Frame] = msg.frame_id    -- 當前頭像框
+    ⇒ **`entry` / `head` 是紅點標誌（1=有紅點），`id`/`frame_id` 是當前裝備項。**
+
+    資料源 `DataTable_headshots`（220 條，實測分佈）：
+        `attribute=1` ⇒ 頭像（204 條）   `attribute=2` ⇒ 頭像框（16 條）
+    預設值（本專案為懷舊帳號，預設看板娘/主角是「瞳」）：
+        頭像 `10101` = 「瞳」            ← 實測為 attribute=1 的第一筆
+        頭像框 `10012` = 「基礎頭像框」  ← 實測為 attribute=2 的第一筆
+    """
+    head, frame = PD.current_headshot_ids()
+    m = _new_s2c(41, 1)
+    m.entry = 0                       # 0 = 無紅點
+    m.head = 0                        # 0 = 無紅點
+    m.id = head                       # 當前頭像 id
+    m.frame_id = frame                # 當前頭像框 id
+    _send_msg(conn, 41, 1, m)
+    log(f"  -> 已回覆當前頭像：id={head} frame_id={frame}"
+        f"（entry/head 紅點=0）")
+
+
+def _push_headshot_info(conn):
+    """主動推送 `41_1 headshots_info_s2c`（換頭像/換框後必須重推）。
+
+    為什麼需要（`HeadIconControl` 反匯編）：`On_41_3` 收到換框回應時
+    呼叫的是 `InitMainViewInfo(msg)`，它讀 `entry/head/id/frame_id` 四個欄位；
+    但 `headshots_change_frame_s2c` 只有 `id` ⇒ `frame_id` 為 nil ⇒ 框不生效。
+    ⇒ 換完後主動推一筆**完整**的 `41_1`，客戶端才會更新 `usingItemId[Frame]`。
+    """
+    head, frame = PD.current_headshot_ids()
+    m = _new_s2c(41, 1)
+    m.entry = 0
+    m.head = 0
+    m.id = head
+    m.frame_id = frame
+    _send_msg(conn, 41, 1, m)
+    log(f"  -> [推送] headshots_info：id={head} frame_id={frame}")
+
+
+def _handle_41_2(conn, msg):
+    """headshots_change_c2s → headshots_change_s2c（**更換頭像**）。
+
+    ★ 2026-10-21 新增。先前走通用回應器 ⇒ 只回 `id=0` ⇒ 換頭像不生效。
+
+    請求/回應 proto 皆為 `{ id: uint64 }`（實測）。
+    客戶端 `On_41_2`：`usingItemId[ItemType.Icon] = msg.id` 然後 `SetHeadIcon(...)`
+    ⇒ **回應必須原樣帶回使用者選的 id**，否則客戶端會把頭像設成 nil/0。
+    另外再推一筆 `41_1`（見 `_push_headshot_info` 的說明）。
+    """
+    hid = int(getattr(msg, "id", 0) or 0)
+    PD.set_current_headshot("icon", hid)
+    m = _new_s2c(41, 2)
+    m.id = hid
+    _send_msg(conn, 41, 2, m)
+    log(f"  ★ 更換頭像：id={hid}（已記錄並重推 41_1）")
+    _push_headshot_info(conn)
+
+
+def _handle_41_3(conn, msg):
+    """headshots_change_frame_c2s → headshots_change_frame_s2c（**更換頭像框**）。
+
+    ★ 2026-10-21 新增。修「頭像框更改後不生效」。
+
+    **根因**：`On_41_3` 把回應交給 `InitMainViewInfo(msg)`，後者讀 `frame_id`，
+    但本協定的 proto **只有 `id`** ⇒ `frame_id` 為 nil ⇒ 框不生效。
+    **修法**：原樣回 `id` + **主動重推 `41_1`**（含真正的 `frame_id`）。
+    """
+    fid = int(getattr(msg, "id", 0) or 0)
+    PD.set_current_headshot("frame", fid)
+    m = _new_s2c(41, 3)
+    m.id = fid
+    _send_msg(conn, 41, 3, m)
+    log(f"  ★ 更換頭像框：id={fid}（已記錄並重推 41_1）")
+    _push_headshot_info(conn)
+
+
+def _handle_41_4(conn, msg):
+    """headshots_click_c2s → headshots_click_s2c（**點擊頭像/框**，回顯型）。
+
+    proto 皆為 `{ type: uint32, id: uint64 }`（實測）。
+    先前走通用回應器 ⇒ `type`/`id` 都被填成 0 ⇒ 客戶端無法判斷點的是哪一項。
+    修法：原樣回顯。
+    """
+    t = int(getattr(msg, "type", 0) or 0)
+    hid = int(getattr(msg, "id", 0) or 0)
+    m = _new_s2c(41, 4)
+    m.type = t
+    m.id = hid
+    _send_msg(conn, 41, 4, m)
+    log(f"  -> headshots_click 回顯：type={t} id={hid}")
+
+
+def _handle_41_5(conn, msg):
+    """headshots_detail_c2s → headshots_detail_s2c（**全部頭像/框 + 已獲得**）。
+
+    ★ 2026-10-21 新增。先前走通用回應器 ⇒ body=0B（四個清單全空）
+      ⇒ 頭像界面應該沒有任何可選項。
+
+    客戶端邏輯（`HeadIconModel` proto 0.3 = ParseData，逐條讀出）：
+        ClearData()
+        AddList2Dict(msg.list,       itemList[ItemType.Icon])       -- 全部頭像 id
+        AddList2Dict(msg.frame_list, itemList[ItemType.Frame])      -- 全部頭像框 id
+        AddList2Dict(msg.gain_ids,       redPointItemList[...])      -- 已獲得頭像
+        AddList2Dict(msg.gain_frame_ids, redPointItemList[...])      -- 已獲得頭像框
+        InitItemList()
+        TriggerEvent(HeadIconEvent.UpdateRedPoint)
+
+    ⇒ 本專案為**滿進度懷舊帳號**：全部頭像/框都解鎖 ⇒
+      `list` = `gain_ids` = 全部頭像；`frame_list` = `gain_frame_ids` = 全部頭像框。
+    """
+    icons, frames = PD.all_headshot_ids()
+    m = _new_s2c(41, 5)
+    for i in icons:
+        m.list.append(i)
+        m.gain_ids.append(i)
+    for f in frames:
+        m.frame_list.append(f)
+        m.gain_frame_ids.append(f)
+    _send_msg(conn, 41, 5, m)
+    log(f"  -> 已回覆頭像清單：{len(icons)} 個頭像 + {len(frames)} 個頭像框"
+        f"（全部標記為已獲得；來源 DataTable_headshots）")
 
 
 def _handle_13_1(conn, msg):
@@ -1182,6 +1725,26 @@ def _push_dup_info(conn):
         e.star = 3
         e.is_agent = 0
         e.challenge_times = 0
+        # ★★ 2026-10-22 關鍵修復：必須填 `task`！
+        #   客戶端 `DungeonModel.InitDupInfo`（On_17_1 處理，反匯編逐條讀出）：
+        #       for _, v in pairs(msg.info) do
+        #           local n = 0
+        #           if v.task then
+        #               for i = 1, #v.task do
+        #                   dungeonTaskInfo[v.dup_id][v.task[i].k] = v.task[i].v
+        #                   if v.task[i].v == 1 then n = n + 1 end   -- 統計完成數
+        #               end
+        #           end
+        #           dungeonInfo[v.dup_id] = n            -- ★ 存的是【任務完成數】
+        #           dungeonServerStarInfo[v.dup_id] = v.star
+        #       end
+        #   ⇒ 先前**沒填 task** ⇒ `n = 0` ⇒ `dungeonInfo[dup_id] = 0`
+        #     ⇒ 章節/進度判定拿不到「已通關」⇒ 作戰進度卡在 0-1、編隊槽位鎖死。
+        #   3 星 = 3 個任務全部完成 ⇒ 補 k=1..3、v=1。
+        for k in (1, 2, 3):
+            tv = e.task.add()
+            tv.k = k
+            tv.v = 1
         n += 1
     _send_msg(conn, 17, 1, m)
     log(f"  -> 已推送 {n} 個副本通關狀態（17_1 dup_info，star=3）")
@@ -1328,10 +1891,40 @@ def _handle_35_1(conn, msg):
     f.use_skin = skins[0] if skins else 0
     for s in skins:
         f.skin_list.append(s)
+
+    # ══════════════════════════════════════════════════════════════════
+    # 實驗 9：雙條目把戲（**2026-10-12 23:31 已回退 —— 造成白屏**）
+    #
+    # 【當時目的】修「助理界面名字顯示厄莉希」。
+    # 【假設】同時送兩筆 `id=1001` 的英雄（第 1 筆 `sys_id=1001` 保索引、
+    #        第 2 筆 `sys_id=100000` 供名字），賭客戶端取後者做 `cardInfo`。
+    # 【結果】❌ **助理界面白屏**（使用者實測）
+    #        ⇒ 客戶端不接受 `p_hero` 內有重複 id 的兩筆英雄。
+    # 【教訓】`p_hero` 清單**只能有 1 筆**，且三個 id 欄位必須一致為 `hid`。
+    #
+    # ⚠ 日後若要重做：把 `_DUAL_HERO` 設 True，但**務必先告知使用者白屏風險**。
+    # ══════════════════════════════════════════════════════════════════
+    _DUAL_HERO = False
+    if _DUAL_HERO:
+        h2 = m.list.add()
+        h2.id = hid                      # 同為 1001（索引鍵不可變）
+        h2.type = 0
+        h2.awaketimes = h.awaketimes
+        h2.sys_id = _SKIN_SRC            # = 100000（瞳的真實角色 id）
+        h2.children_id = hid             # 紅線：維持 hid
+        f2 = h2.form_list.add()
+        f2.form = 1
+        f2.sync_times = 0
+        f2.lvl = f.lvl
+        f2.exp = 0
+        f2.use_skin = f.use_skin
+        for s in skins:
+            f2.skin_list.append(s)
+
     _send_msg(conn, 35, 1, m)
     log(f"  -> 已回覆英雄清單：{len(m.list)} 個（sys_id={hid} type=0(Common) "
-        f"lvl={f.lvl} awaketimes={h.awaketimes} skins={len(skins)}）"
-        f"  ← 修復助理界面白屏的關鍵欄位")
+        f"lvl={f.lvl} awaketimes={h.awaketimes} skins={len(skins)}"
+        f"{'；實驗9 已加第2筆 sys_id=' + str(_SKIN_SRC) if _DUAL_HERO else ''}）")
 
 
 def _handle_2_5(conn, msg):
@@ -2059,8 +2652,28 @@ def _dispatch(conn, raw):
             _handle_2_1(conn, msg)
         elif key == "40_1":
             _handle_40_1(conn, msg)
+        elif key == "41_1":                        # headshots_info → 當前頭像/頭像框
+            _handle_41_1(conn, msg)
+        elif key == "41_2":                        # headshots_change → 更換頭像
+            _handle_41_2(conn, msg)
+        elif key == "41_3":                        # headshots_change_frame → 更換頭像框
+            _handle_41_3(conn, msg)
+        elif key == "41_4":                        # headshots_click → 點擊回顯
+            _handle_41_4(conn, msg)
+        elif key == "41_5":                        # headshots_detail → 全部頭像/框清單
+            _handle_41_5(conn, msg)
+        elif key == "31_32":                       # building_core_list → 基建核心清單
+            _handle_31_32(conn, msg)
+        elif key == "31_40":                       # building_notify_bonus → 房間加成
+            _handle_31_40(conn, msg)
         elif key == "36_1":
             _handle_36_1(conn, msg)
+        elif key == "12_1":                        # recruit_pool → 招募卡池
+            _handle_12_1(conn, msg)
+        elif key == "30_1":                        # open_act_info → 活动开启
+            _handle_30_1(conn, msg)
+        elif key == "15_2":                        # cost_update_team → 更新編隊
+            _handle_15_2(conn, msg)
         elif key == "15_4":
             _handle_15_4(conn, msg)
         elif key == "18_1":

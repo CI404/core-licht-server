@@ -824,7 +824,22 @@ def player_resources():
     put("sex", 1)
     put("identity", 0)                 # PlayerDefine.IDENTITY_NORMAL
     put("nameNum", 0)
-    put("slots_num", spell_slots(lv))
+    # ★★ 2026-10-22 關鍵修復：屬性 **619 `slots_num` 是【編隊隊員槽位數】**，
+    #   不是法術槽位！
+    #   證據鏈：
+    #     1) `x.Game.PlayerDefine` 屬性映射表（反匯編）：`LOADI 5 619` +
+    #        `LOADK 7 "slots_num"` ⇒ 屬性 619 名為 `slots_num`。
+    #     2) `TeamMainView` 的「確定」按鈕處理器：
+    #            for i = 1, Player.slots_num do ... end
+    #            TeamControl:Send_15_2(...)
+    #        ⇒ `Player.slots_num` 就是編隊隊員槽位數。
+    #     3) `DataTable_config.team_slots` 實測：
+    #            [[1,0,1],[1,0,2],[1,0,3],[1,20105,4],
+    #             [1,20101,5],[1,20002,6],[1,20003,7],[1,20008,8]]
+    #        ⇒ 槽位 1~3 免費、4~8 需通關對應副本 ⇒ **共 8 個**。
+    #   先前錯用 `spell_slots(lv)`（`DataTable_lvl.spell_slots`）⇒ 值 = 3
+    #   ⇒ 編隊只有 3 個槽位可用、4~8 顯示 `LOCKED`（與使用者截圖完全一致）。
+    put("slots_num", team_slots_num())
     # 注意：**不要**在這裡塞 dynamicBg（屬性 624）。
     # 曾試過 put("dynamicBg", 1)，結果主界面變全黑（screencap 5896 bytes）。
     # 原因未完全確認（CardModel.playingDynamicBgId / 影片資源可能沒載入），
@@ -836,6 +851,397 @@ def player_resources():
 def max_vip():
     """VIP 上限（DataTable_vip 的最大 id）。"""
     return max((int(r.get("id", 0)) for r in table("vip")), default=0)
+
+
+# ======================================================================
+# 頭像 / 頭像框（DataTable_headshots）
+# ======================================================================
+# ★ 2026-10-21 新增。供 `41_1`（當前頭像）與 `41_5`（全部頭像清單）使用。
+#
+# `DataTable_headshots`（實測 **220 條**）欄位：id / name / type / attribute /
+#   head_show / sprite_name / effect_number / desc / arg / arg2 …
+#
+# **關鍵欄位 `attribute`（實測分佈）**：
+#     `attribute=1` ⇒ **頭像**（204 條）
+#     `attribute=2` ⇒ **頭像框**（16 條）
+#
+# **`type` 分佈**：{1:2, 2:82, 3:81, 4:17, 5:38}（子類型，本專案不細分）
+# **`head_show`**：{1:192, 2:28}（顯示方式，本專案不細分）
+#
+# 客戶端消費（`HeadIconModel`，反匯編逐條讀出）：
+#   proto 0.1 `InitMainViewInfo`：`usingItemId[Icon] = msg.id`、`[Frame] = msg.frame_id`
+#   proto 0.3 `ParseData`：`AddList2Dict(msg.list, itemList[Icon])` 等四個清單
+
+
+def _headshot_ids_by_attribute(attr):
+    out = []
+    for r in table("headshots"):
+        if str(r.get("attribute")) != str(attr):
+            continue
+        try:
+            out.append(int(r.get("id")))
+        except Exception:
+            continue
+    return sorted(set(out))
+
+
+@functools.lru_cache(maxsize=1)
+def all_headshot_ids():
+    """回傳 `(全部頭像 id 昇冪, 全部頭像框 id 昇冪)`。
+
+    實測：頭像 **204** 個（`attribute=1`）、頭像框 **16** 個（`attribute=2`）。
+    本專案為滿進度帳號 ⇒ `41_5` 直接把這兩個清單原樣送出（並同時標記為已獲得）。
+    """
+    return (_headshot_ids_by_attribute(1), _headshot_ids_by_attribute(2))
+
+
+@functools.lru_cache(maxsize=1)
+def default_headshot_ids():
+    """回傳 `(預設頭像 id, 預設頭像框 id)`。
+
+    規則：各取該類別中 **`head_show == "1"` 且 id 最小** 的一筆。
+    實測結果：
+        頭像   → `10101` = 「瞳」            ← 本專案主角，正好合適
+        頭像框 → `10012` = 「基礎頭像框」    ← 初始贈送款
+    若配置表異常，則退回各類別的 id 最小值。
+    """
+    out = []
+    for attr in (1, 2):
+        best = None
+        for r in table("headshots"):
+            if str(r.get("attribute")) != str(attr):
+                continue
+            try:
+                rid = int(r.get("id"))
+            except Exception:
+                continue
+            if str(r.get("head_show")) == "1":
+                if best is None or rid < best:
+                    best = rid
+        if best is None:
+            ids = _headshot_ids_by_attribute(attr)
+            best = ids[0] if ids else 0
+        out.append(best)
+    return (out[0], out[1])
+
+
+# ======================================================================
+# 空島基建核心 / 房間加成（DataTable_core / core_lvl / room_bonus）
+# ======================================================================
+# ★ 2026-10-21 新增。供 `31_32`（building_core_list）與 `31_40`（building_notify_bonus）。
+#
+# **`DataTable_core`（實測 6 條）**：
+#     _key=10001 中樞系統 / 10002 貿易系統 / 10003 調度系統
+#     _key=10004 通訊系統 / 10005 榮譽系統 / 10006 合成系統
+# **`DataTable_core_lvl`（36 條）**：`{id, level, ...}` ⇒ 每個 core 的最大等級
+#     實測最大值：10001→1、10002→15、10003→1、10004→15、10005→1、10006→1
+#     （另有 20001/20002 各 1 級，不在 DataTable_core 內，屬其他用途，此處不送）
+#
+# **客戶端消費**（`BuildModel` proto 24.83 = On_31_32）：
+#     for _, v in pairs(msg.core_list) do
+#         if not allCoreInfo[v.id] then allCoreInfo[v.id] = CoreInfo:New() end
+#         allCoreInfo[v.id]:InitInfo(v)      -- InitInfo 複製所有標量欄位
+#     end
+#   而 `GetCoreInfoBySysId(sysId)`（BuildModel L4218-4224）：
+#     for _, v in pairs(allCoreInfo) do
+#         if v.sys_id == sysId then return v end
+#     end
+# **⇒ `id` = 字典鍵（唯一即可）；`sys_id` = `DataTable_core._key`（配置 id）。**
+
+
+# ----------------------------------------------------------------------
+# 當前頭像 / 頭像框（可變狀態）
+# ----------------------------------------------------------------------
+# ★ 2026-10-21 新增。修「頭像框更改後不生效」。
+#
+# **根因**（`HeadIconControl` 反匯編，逐條讀出）：
+#     `On_41_3`（處理 `headshots_change_frame_s2c`）的實作是
+#         HeadIconModel:InitMainViewInfo(msg)      -- ★ 把「換框回應」當完整資訊解析
+#     而 `InitMainViewInfo`（`HeadIconModel` proto 0.1）讀的是
+#         msg.entry / msg.head / msg.id / msg.frame_id
+#     **但 `headshots_change_frame_s2c` 的 proto 只有 `id` 一個欄位**
+#     ⇒ `msg.frame_id` = nil ⇒ `usingItemId[Frame] = nil` ⇒ **框不生效**。
+#
+# **修法**：伺服器保存使用者選擇，並在換頭像/換框後**主動重推 `41_1`**
+#   （`headshots_info_s2c` 含完整四欄位）⇒ 客戶端 `InitMainViewInfo` 才會拿到 frame_id。
+_CURRENT_HEADSHOT = {"icon": None, "frame": None}
+
+
+def set_current_headshot(kind, hid):
+    """設定當前頭像（`kind="icon"`）或頭像框（`kind="frame"`）。
+
+    由 `_handle_41_2`（換頭像）與 `_handle_41_3`（換框）呼叫。
+    """
+    global _CURRENT_HEADSHOT
+    try:
+        hid = int(hid)
+    except Exception:
+        return _CURRENT_HEADSHOT.get(kind)
+    if kind in ("icon", "frame"):
+        _CURRENT_HEADSHOT[kind] = hid
+    return _CURRENT_HEADSHOT.get(kind)
+
+
+def current_headshot_ids():
+    """回傳 `(當前頭像 id, 當前頭像框 id)`。
+
+    未設定過則退回 `default_headshot_ids()`（瞳的頭像 + 基礎頭像框）。
+    """
+    di, df = default_headshot_ids()
+    return (_CURRENT_HEADSHOT.get("icon") or di,
+            _CURRENT_HEADSHOT.get("frame") or df)
+
+
+@functools.lru_cache(maxsize=1)
+def building_core_list():
+    """回傳 `[(sys_id, 最大等級), ...]`（來自 `DataTable_core` + `DataTable_core_lvl`）。
+
+    本專案為滿進度帳號 ⇒ 每個 core 都取**配置表最大等級**。
+    實測結果：`[(10001,1), (10002,15), (10003,1), (10004,15), (10005,1), (10006,1)]`
+    """
+    max_lvl = {}
+    for r in table("core_lvl"):
+        try:
+            cid = int(r.get("id"))
+            lv = int(r.get("level"))
+        except Exception:
+            continue
+        if lv > max_lvl.get(cid, 0):
+            max_lvl[cid] = lv
+    out = []
+    for r in table("core"):
+        try:
+            cid = int(r.get("_key"))
+        except Exception:
+            continue
+        out.append((cid, max_lvl.get(cid, 1)))
+    return out
+
+
+@functools.lru_cache(maxsize=1)
+def building_bonus_ids():
+    """回傳 `DataTable_room_bonus` 的全部 `_key`（昇冪）。
+
+    實測 **13** 條（`_key` 1..13）。
+    客戶端 `BonusMgr` proto 0.8：
+        for _, v in pairs(buildingBonusInfo) do
+            cfg = DataBase:GetSysroom_bonusByKey(v.sys_id)   -- ★ 用 sys_id 查配置
+            ... type / can_draw / roleList ...
+        end
+    ⇒ `p_building_bonus.sys_id` = `room_bonus._key`。
+    """
+    out = []
+    for r in table("room_bonus"):
+        try:
+            out.append(int(r.get("_key")))
+        except Exception:
+            continue
+    return sorted(set(out))
+
+
+# ----------------------------------------------------------------------
+# 家具 / 機器（DataTable_room_furniture / room_machine_lvl）
+# ----------------------------------------------------------------------
+# ★ 2026-10-22 新增。修「宅邸沒有解鎖的家具」。
+#
+# **為什麼需要**：`31_12 building_notify_machine_list` 與
+#   `31_13 building_notify_furniture_list` 都是 **notify 型（伺服器主動推）**，
+#   而先前服務端從未推送 ⇒ 客戶端 `BuildModel.allFurnitureInfo` /
+#   `allMachineInfo` 一直是空的 ⇒ 家具背包/宅邸顯示「沒有解鎖的家具」。
+#
+# 配置表（實測）：
+#   `DataTable_room_furniture`（**81 條**）：`id` = 家具配置 id（100101…）
+#   `DataTable_room_machine_lvl`（**12 條**）：`id` = 機器配置 id
+#       實測 id：200101~200109、200201、200205、200208
+#   客戶端查配置用 `GetSysroom_furnitureByKey(sys_id)` ⇒
+#   **`p_building_furniture.sys_id` / `p_building_machine.sys_id` = 配置 id**。
+#
+# `p_building_furniture { id, dust_lvl, atoms, dust_time, sys_id }`
+#   ⇒ 滿進度帳號：全部 81 件家具都「已獲得」；
+#     `dust_lvl=0 / dust_time=0`（不髒污）、`atoms=0`。
+# `p_building_machine { id, used_elec, output, output_max, output_speed,
+#                       default_speed, cost_power, start_time, sys_id }`
+#   ⇒ 全部 12 台機器；數值取配置表（`output_limit` / `cost_power`），
+#     未運行狀態（`start_time=0`、`output=0`、`used_elec=0`）。
+
+
+@functools.lru_cache(maxsize=1)
+@functools.lru_cache(maxsize=1)
+@functools.lru_cache(maxsize=1)
+@functools.lru_cache(maxsize=1)
+def team_slot_unlocks():
+    """回傳 `[(槽位號, 所需副本 id), ...]`（來自 `DataTable_config.team_slots`）。
+
+    ★ 2026-10-22 新增。修「編隊槽位鎖死 / 無法變更角色保存」。
+
+    **`DataTable_config['team_slots']` 實測原值**：
+        `[[1, 0, 1], [1, 0, 2], [1, 0, 3], [1, 20105, 4],
+          [1, 20101, 5], [1, 20002, 6], [1, 20003, 7], [1, 20008, 8]]`
+    格式 = `[type, 所需副本 id, 槽位號]`：
+        * 槽位 1~3：所需副本 = 0 ⇒ **默認免費**
+        * 槽位 4：需通關副本 **20105**（`DataTable_dungeon` name=「清場」number=「IN-1」）
+        * 槽位 5：**20101**（「異能」IN-2）
+        * 槽位 6：**20002**（「輕行」IN-3）
+        * 槽位 7：**20003**（「戰術」IN-4）
+        * 槽位 8：**20008**（「解離」IN-9）
+    """
+    out = []
+    for r in table("config"):
+        if str(r.get("key")) != "team_slots":
+            continue
+        raw = str(r.get("value") or "")
+        import json as _json
+        try:
+            arr = _json.loads(raw)
+        except Exception:
+            return out
+        for item in arr:
+            if not isinstance(item, (list, tuple)) or len(item) < 3:
+                continue
+            try:
+                out.append((int(item[2]), int(item[1])))
+            except Exception:
+                continue
+        break
+    out.sort()
+    return out
+
+
+@functools.lru_cache(maxsize=1)
+def team_slots_num():
+    """已解鎖的編隊槽位數量（**屬性 id 619 `slots_num`**）。
+
+    ★ 2026-10-22 新增。**這是「編隊無法變更角色保存」的根因**。
+
+    【客戶端證據】（`x.Game.PlayerDefine` 屬性映射表反匯編）：
+        LOADI 5 619              -- ★ 屬性 id = 619
+        LOADK 7 "slots_num"      -- ★ 欄位名
+    ⇒ `Player.slots_num` 來自 **`2_2 role_info_s2c` 的 `kv_list`（k=619）**。
+    而 `TeamMainView` 的「確定」按鈕：
+        for i = 1, Player.slots_num do ... end
+        TeamControl:Send_15_2(...)
+    ⇒ **`slots_num = 0`（我們從未送 619）⇒ 迴圈不執行 ⇒ 點「確定」無反應。**
+
+    計算方式：`team_slots` 中「所需副本 = 0」的槽位一律解鎖；其餘槽位要求
+    對應副本已通關。本專案 `17_1` 已把所有副本標記為滿星通關（且補了 `task`
+    ⇒ `dungeonInfo[dup_id] = 3`）⇒ **全部 8 個槽位都算已解鎖**。
+    這裡不依賴 17_1 的實際結果，而是按「滿進度帳號」語意直接全開
+    （`17_1` 的資料源 `DataTable_dungeon` 已全送）。
+    """
+    slots = team_slot_unlocks()
+    if not slots:
+        return 8
+    passed = set()
+    for r in table("dungeon"):
+        try:
+            passed.add(int(r.get("id")))
+        except Exception:
+            continue
+    n = 0
+    for slot_idx, need_dup in slots:
+        if need_dup == 0 or need_dup in passed:
+            n = slot_idx if slot_idx > n else n
+    return n if n else len(slots)
+
+
+def hero_default_id():
+    """默認英雄 id（`DataTable_hero.id`，實測 **1001**）。
+
+    ★ 2026-10-22 新增。供 `15_4` 的 `p_hero_index.hero_id` 使用。
+    """
+    ids = []
+    for r in table("hero"):
+        try:
+            ids.append(int(r.get("id")))
+        except Exception:
+            pass
+    return min(ids) if ids else 1001
+
+
+@functools.lru_cache(maxsize=1)
+def hero_default_form():
+    """默認英雄形態（`DataTable_hero.form`，`id=1001` 中 `order` 最小的 form）。
+
+    實測 `DataTable_hero` 有 `id=1001` 的 form 1..8，
+    其中 `form=1` = 「瞳-強襲形態」（`_key='1001|=|1'`）。
+    """
+    best = None
+    for r in table("hero"):
+        try:
+            if int(r.get("id")) != hero_default_id():
+                continue
+            form = int(r.get("form"))
+            order = int(r.get("order", 999) or 999)
+        except Exception:
+            continue
+        if best is None or order < best[0]:
+            best = (order, form)
+    return best[1] if best else 1
+
+
+def team_default_children(n=4):
+    """編隊預設角色 id 清單（默認 **4 個**；可傳 n 指定數量）。
+
+    `_handle_15_4` 目前傳 8（與屬性 619 `slots_num = 8` 對齊）。
+
+    ★ 2026-10-22 新增。
+
+    **為什麼不能用瞳（`100000~100007`）**：它們的 `DataTable_children.is_hero == 1`
+    ⇒ 屬「英雄」，客戶端應放在 `p_children_team.hero_list`（`p_hero_index`）而非
+    `children_list`。塞進 `children_list` 可能被拒絕。
+
+    **選法**：取 `formal_children()` 中 `is_hero != 1` 的前 4 個（昇冪），
+    本專案實測 = `[1001(厄莉希), 1002(牙人), 1003(冰見優奈), 1004(哈提)]`。
+    （`1001` 厄莉希的 `is_hero` 為 0，可正常放在編隊裡。）
+    """
+    out = []
+    hero = set()
+    for r in table("children"):
+        if str(r.get("is_hero")) in ("1", "True", "true"):
+            try:
+                hero.add(int(r.get("id") or r.get("_key")))
+            except Exception:
+                pass
+    for cid in formal_children():
+        if cid in hero:
+            continue
+        out.append(cid)
+        if len(out) >= int(n):
+            break
+    return out
+
+
+def all_furniture_ids():
+    """回傳 `DataTable_room_furniture` 的全部家具 id（昇冪）。實測 **81** 條。"""
+    out = []
+    for r in table("room_furniture"):
+        try:
+            out.append(int(r.get("id")))
+        except Exception:
+            continue
+    return sorted(set(out))
+
+
+@functools.lru_cache(maxsize=1)
+def room_machines():
+    """回傳 `[(機器 id, output_limit, cost_power), ...]`（來自 `room_machine_lvl`）。
+
+    同一機器 id 可能有多個 `level` 列；取**最大 level** 那一列作為滿級數值。
+    實測 **12** 個不同 id：200101~200109、200201、200205、200208。
+    """
+    best = {}
+    for r in table("room_machine_lvl"):
+        try:
+            mid = int(r.get("id"))
+            lv = int(r.get("level", 0) or 0)
+        except Exception:
+            continue
+        cur = best.get(mid)
+        if cur is None or lv > cur[0]:
+            best[mid] = (lv,
+                         int(r.get("output_limit", 0) or 0),
+                         int(r.get("cost_power", 0) or 0))
+    return [(mid, v[1], v[2]) for mid, v in sorted(best.items())]
 
 
 @functools.lru_cache(maxsize=1)
